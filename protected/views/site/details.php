@@ -1,46 +1,12 @@
 <?php
 Yii::app()->getClientScript()->registerScriptFile(Yii::app()->assetManager->baseUrl."/js/slides.min.jquery.js",CClientScript::POS_END);
+Yii::app()->getClientScript()->registerScriptFile(Yii::app()->assetManager->baseUrl."/js/maps.js",CClientScript::POS_END);
+Yii::app()->getClientScript()->registerScriptFile(Yii::app()->assetManager->baseUrl."/js/details.js",CClientScript::POS_END);
 Yii::app()->getClientScript()->registerCssFile(Yii::app()->assetManager->baseUrl."/css/global.css");
 $images = explode(';',$hotel->HotelImages);
 ?>
-<script>
-    function ShowOrHide(id)
-    {
-        var block = document.getElementById(id).style;
-
-        if(block.display == 'none')
-        {
-            block.display = 'block';
-        }
-        else
-        {
-            block.display = 'none';
-        }
-    }
-</script>
-<script>
-    $(function(){
-        $('#slides').slides({
-            preload: true,
-            play: 5000,
-            pause: 2500,
-            hoverPause: true,
-            animationStart: function(){
-                $('.caption').animate({
-                    bottom:-35
-                },100);
-            },
-            animationComplete: function(current){
-                $('.caption').animate({
-                    bottom:0
-                },200);
-                if (window.console && console.log) {
-                    // example return of current slide number
-                    console.log(current);
-                };
-            }
-        });
-    });
+<script type="text/javascript"
+        src="http://maps.googleapis.com/maps/api/js?key=<?php echo GOOGLE_MAPS_API_KEY; ?>&sensor=true&language=ru">
 </script>
 <div id="container">
     <div id="example">
@@ -154,29 +120,35 @@ $images = explode(';',$hotel->HotelImages);
     <br>
     <br>
     <br>
-    <a href="javascript:ShowOrHide('nl')" style="padding-left: 30px">Побдробная информация о отеле  [кликнуть для раскрытия]</a>
-    <div id="nl" style="display:none;">
+    <a href="javascript:ShowOrHide('first')" style="padding-left: 30px">Побдробная информация о отеле  [кликнуть для раскрытия]</a>
+    <div id="first" style="display:none;">
     <p align="left" style="padding-left: 30px">
         <i>Информация о отеле: </i><br>
-        <b><?php echo $hotel->description[0]->HotelInfo ?></b><br>
+            <b><?php echo $hotel->description[0]->HotelInfo ?></b><br>
         <i>Территория отеля: </i><br>
-        <b><?php echo $hotel->HotelArea ?></b><br>
+            <b><?php echo $hotel->HotelArea ?></b><br>
         <i>Тип отеля: </i><br>
-        <b><?php echo $hotel->description[0]->HotelType ?></b><br>
+            <b><?php echo $hotel->description[0]->HotelType ?></b><br>
         <i>Связи: </i><br>
-        <b><?php echo $hotel->Chain ?></b><br>
+            <b><?php echo $hotel->Chain ?></b><br>
         <i>Тематика отеля: </i><br>
-        <b><?php echo $hotel->description[0]->HotelTheme ?></b><br>
+            <b><?php echo $hotel->description[0]->HotelTheme ?></b><br>
         <i>Категория: </i><br>
-        <b><?php echo $hotel->description[0]->HotelCategory ?></b><br>
+            <b><?php echo $hotel->description[0]->HotelCategory ?></b><br>
         <i>PAmenities: </i><br>
-        <b><?php echo $hotel->amenities[0]->PAmenities ?></b><br>
+            <b><?php echo $hotel->amenities[0]->PAmenities ?></b><br>
         <i>RAmenities: </i><br>
-        <b><?php echo $hotel->amenities[0]->RAmenities ?></b><br>
+            <b><?php echo $hotel->amenities[0]->RAmenities ?></b><br>
         <i>Количество комнат: </i><br>
-        <b><?php echo $hotel->amenities[0]->RoomsNumber ?></b><br>
+            <b><?php echo $hotel->amenities[0]->RoomsNumber ?></b><br>
         </p>
     </div>
+    <br>
+    <br>
+    <body onload="initialize(<?php echo $hotel->Latitude;?>,<?php echo $hotel->Longitude;?>)">
+        <div id="map_canvas" style="width:100%; height:500px">
+        </div>
+    </body>
     <?
     if (is_object($allocateResponse->availableHotels)) {
         $hotels[] = $allocateResponse->availableHotels;
