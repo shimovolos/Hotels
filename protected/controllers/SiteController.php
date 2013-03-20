@@ -44,7 +44,7 @@ class SiteController extends Controller
     public function actionDetails()
     {
         $responseData = json_decode(Yii::app()->request->cookies['responseData']);
-        $hotelCode = mysql_real_escape_string($_GET['HotelCode']);
+        $hotelCode = $_GET['HotelCode'];
         $allocateHotelCode = $this->client->allocateHotelCode($hotelCode, $responseData->searchID);
         $this->render('details',array(
             'hotel'=>$this->dataDB->getHotelDescription($hotelCode),
@@ -54,28 +54,19 @@ class SiteController extends Controller
 
     public function actionAutocomplete(){
         if (Yii::app()->request->isAjaxRequest && isset($_GET['term'])) {
-            echo CJSON::encode($this->dataDB->getAutocomplete(mysql_real_escape_string($_GET['term'])));
+            echo CJSON::encode($this->dataDB->getAutocomplete($_GET['term']));
         }
     }
 
     public function actionHotels(){
         if(isset($_POST['search']) && Yii::app()->cache->get('response')===false){
-            $search_data = array();
-            foreach($_POST as $key=>$value){
-                $search_data[$key] = mysql_real_escape_string($value);
-            }
-            $response =  $this->client->getAvailableHotel($search_data);
-            if(!is_soap_fault($response)){
-                Yii::app()->cache->set('response', serialize($response));
-                Yii::app()->cache->set('parameters', serialize($search_data));
-                Yii::app()->request->cookies['responseData'] = new CHttpCookie('responseData',json_encode(array(
-                    'responseID' => $response->responseId,
-                    'searchID' => $response->searchId
-                )));
-            }
-            else{
-                throw new CHttpException($response->getCode(), $response->getMessage());
-            }
+            $response =  $this->client->getAvailableHotel($_POST['param']);
+            Yii::app()->cache->set('response', serialize($response));
+            Yii::app()->cache->set('parameters', serialize($_POST['param']));
+            Yii::app()->request->cookies['responseData'] = new CHttpCookie('responseData',json_encode(array(
+                'responseID' => $response->responseId,
+                'searchID' => $response->searchId
+            )));
         }
         $hotelsCode = $this->client->removeDuplicateHotels(unserialize(Yii::app()->cache->get('response')));
         $criteria = new CDbCriteria(
@@ -83,21 +74,30 @@ class SiteController extends Controller
                 'order'=> 'StarRating DESC',
             )
         );
-
-        if(isset($_GET['star'])){
-            Yii::app()->request->cookies['star'] = new CHttpCookie('star', json_encode($_GET['star']));
-            $criteria->addInCondition('StarRating',$_GET['star'], 'AND');
+        /**
+         * @todo поменять проверку, сделать foreach, массив парвметров-инпутов и т.д.
+         */
+        if(isset($_GET['adv_param'])){
+            foreach($_GET['adv_param'] as $key=>$value){
+                if($key != 'price')
+                $criteria->addInCondition($key,$value, 'AND');
+            }
+            Yii::app()->request->cookies['adv_param'] = new CHttpCookie('adv_param', json_encode($_GET['adv_param']));
         }
-        else{
-            unset(Yii::app()->request->cookies['star']);
-        }
-        if(isset($_GET['price'])){
-            Yii::app()->request->cookies['price'] = new CHttpCookie('price', json_encode($_GET['price']));
-            $hotelsCode = $this->client->sortByPrice($_GET['price'], unserialize(Yii::app()->cache->get('response')));
-        }
-        else{
-            unset(Yii::app()->request->cookies['price']);
-        }
+//        if(isset($_GET['star'])){
+//            Yii::app()->request->cookies['star'] = new CHttpCookie('star', json_encode($_GET['star']));
+//            $criteria->addInCondition('StarRating',$_GET['star'], 'AND');
+//        }
+//        else{
+//            unset(Yii::app()->request->cookies['star']);
+//        }
+//        if(isset($_GET['price'])){
+//            Yii::app()->request->cookies['price'] = new CHttpCookie('price', json_encode($_GET['price']));
+//            $hotelsCode = $this->client->sortByPrice($_GET['price'], unserialize(Yii::app()->cache->get('response')));
+//        }
+//        else{
+//            unset(Yii::app()->request->cookies['price']);
+//        }
         $criteria->addInCondition('HotelCode', $hotelsCode['hotelsCode'], 'AND');
         $dataProvider = new CActiveDataProvider('HotelsList', array(
             'pagination' => array(
@@ -143,21 +143,11 @@ class SiteController extends Controller
             $note = "";
             if(isset($_POST['note']))
                 $note = $_POST['note'];
-            $travel_info = array(
-                'lead_traveller' => $lead_traveller,
-                'other_traveller' => $other_traveller,
-                'preferences' => $preferences,
-                'note' => $note,
-                'process' => $_POST['processId']
-            );
             $bookingResponse = $this->client->makeHotelBooking($lead_traveller, $other_traveller, $_POST['processId'], $preferences, $note);
-            if(!is_soap_fault($bookingResponse)){
-                $this->render('booking_status', array(
-                        'getHotelBookingStatus' => $bookingResponse,
-                    )
-                );
-            }
-            else throw new CHttpException($bookingResponse->getCode(), $bookingResponse->getMessage());
+            $this->render('booking_status', array(
+                    'getHotelBookingStatus' => $bookingResponse,
+                )
+            );
         }
     }
 
@@ -165,18 +155,12 @@ class SiteController extends Controller
         if(isset($_POST['getBookingStatus'])){
             $trackingId = str_replace(' ', '',$_POST['status_trackingId']);
             $getHotelBookingStatus = $this->client->getHotelBookingStatus($trackingId);
-            if(!is_soap_fault($getHotelBookingStatus)){
-                $this->render('booking_status', array('getHotelBookingStatus'=> $getHotelBookingStatus));
-            }
-            else throw new CHttpException($getHotelBookingStatus->getCode(), $getHotelBookingStatus->getMessage());
+            $this->render('booking_status', array('getHotelBookingStatus'=> $getHotelBookingStatus));
         }
         elseif(isset($_POST['cancel'])){
             $trackingId =  str_replace(' ', '',$_POST['cancel_trackingId']);
             $cancelHotelBooking = $this->client->cancelHotelBooking($trackingId);
-            if(!is_soap_fault($cancelHotelBooking)){
-                $this->render('cancel_booking', array('cancelHotelBooking'=> $cancelHotelBooking));
-            }
-            else throw new CHttpException($cancelHotelBooking->getCode(), $cancelHotelBooking->getMessage());
+            $this->render('cancel_booking', array('cancelHotelBooking'=> $cancelHotelBooking));
         }
         else $this->render('get_booking_status');
 

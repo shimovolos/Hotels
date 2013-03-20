@@ -1,15 +1,19 @@
 <?php
-Yii::app()->getClientScript()->registerScriptFile(Yii::app()->assetManager->baseUrl."/js/search_form.js");?>
+Yii::app()->getClientScript()->registerCssFile(Yii::app()->assetManager->baseUrl."/css/jquery.arcticmodal-0.2.css");
+Yii::app()->getClientScript()->registerScriptFile(Yii::app()->assetManager->baseUrl."/js/search_form.js");
+Yii::app()->getClientScript()->registerScriptFile(Yii::app()->assetManager->baseUrl."/js/jquery.arcticmodal-0.2.min.js");
+?>
 <div id="info">
 </div>
-<form name=search_form  onsubmit="load()" action='<?php echo Yii::app()->request->baseUrl?>/site/hotels' method='post' >
+<form name=search_form  onsubmit="" action='<?php echo Yii::app()->request->baseUrl?>/site/hotels' method='post' >
     <table id="search_form">
         <tr>
+
             <td>
-                <input type="hidden" name="city_id" id="city_id" />
+                <input type="hidden" name="param[city_id]" id="city_id" />
                 <?
                 $this->widget('zii.widgets.jui.CJuiAutoComplete', array(
-                    'name' => 'search_city',
+                    'name' => 'param[search_city]',
                     'source'=> Yii::app()->createUrl('site/autocomplete'),
                     'options' => array(
                         'minLength'=>'2',
@@ -21,7 +25,7 @@ Yii::app()->getClientScript()->registerScriptFile(Yii::app()->assetManager->base
                     'htmlOptions'=>array(
                         'style' => 'width:260px;',
                         'size' => '5',
-                        'autocomplete' => 'off'
+                        'autocomplete' => 'off',
                     ),
                 ));
                 ?>
@@ -31,22 +35,22 @@ Yii::app()->getClientScript()->registerScriptFile(Yii::app()->assetManager->base
         </tr>
         <tr>
             <td>
-                <input type="text" class="date_picker" name="coming_date" id="coming_date" autocomplete="off" /> -
-                <input type="text" class="date_picker" name="leaving_date" id="leaving_date" autocomplete="off"/>
+                <input type="text" class="date_picker" name="param[coming_date]" id="coming_date" autocomplete="off" /> -
+                <input type="text" class="date_picker" name="param[leaving_date]" id="leaving_date" autocomplete="off"/>
                 <label for="coming_date">Дата прибытия</label><label for="leaving_date"> Дата отъезда</label>
             </td>
         </tr>
         <tr>
             <td>
-                <input type="text" name="adult_paxes" onkeyup="check_number(this, 6)" autocomplete="off" />
+                <input type="text" name="param[adult_paxes]" onkeyup="check_number(this, 6)" autocomplete="off" />
 
-                <input type="checkbox" name="is_child" id="is_child" onchange="hide_block()"/><label>&nbsp c детьми</label><br/>
+                <input type="checkbox" name="param[is_child]" id="is_child" onchange="hide_block()"/><label>&nbsp c детьми</label><br/>
                 <label>Количество взрослых</label>
             </td>
         </tr>
         <tr id="add_child">
             <td>
-                <input type="text" name="children_paxes" id="children_paxes" onkeyup="check_number(this, 5)" autocomplete="off" /><br/>
+                <input type="text" name="param[children_paxes]" id="children_paxes" onkeyup="check_number(this, 5)" autocomplete="off" /><br/>
                 <label>Количество детей</label>
             </td>
         </tr>
@@ -59,10 +63,24 @@ Yii::app()->getClientScript()->registerScriptFile(Yii::app()->assetManager->base
                 <div id="button_wrap">
                     <input type=submit name=search value="Поехали!"/>
                 </div>
+                <a href="#" onclick="openRoomsForm()"><label>распределить по номерам</label></a>
             </td>
         </tr>
     </table>
+    <div hidden="true">
+        <div class="b-modal" id="overlay">
+            <div id="draggable" class="pax">
+            </div>
+            <div id="draggable" class="pax">
+            </div>
+            <div id="droppable" class="room"><label>Номер</label>
+            </div>
+            <div class="pax"></div> <label>взрослый</label>
+        </div>
+    </div>
 </form>
-<div id='load'>
-    <img class="loader"  src='<?=Yii::app()->assetManager->baseUrl.'/images/loader.gif';?>'/>
+<div hidden="true">
+    <div class="b-modal" id="error">
+        <label style="font-size: 13pt">Для использования данной функции Вы должны указать количество посетителей!</label>
+    </div>
 </div>
