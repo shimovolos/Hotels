@@ -4,9 +4,9 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="language" content="en" />
     <?php
-        Yii::app()->getClientScript()->registerCssFile(Yii::app()->assetManager->baseUrl."/css/style.css");
-        Yii::app()->getClientScript()->registerCssFile(Yii::app()->assetManager->baseUrl."/css/menu.css");
-        Yii::app()->getClientScript()->registerScriptFile(Yii::app()->assetManager->baseUrl."/js/upButton.js");
+        registerCss("/css/style.css");
+        registerCss("/css/menu.css");
+        registerScript("/js/upButton.js");
         Yii::app()->getClientScript()->registerCoreScript('jquery');
     ?>
     <title><?php echo CHtml::encode($this->pageTitle); ?></title>
@@ -17,7 +17,7 @@
         <div id="header">
             <div id="logo">
                 <a href="index">
-                    <img src="<?=Yii::app()->request->baseUrl.'/assets/images/my_Logo.png';?>" alt="logo"/>
+                    <img src="<? echo baseUrl().'/assets/images/my_Logo.png';?>" alt="logo"/>
                 </a>
 
             </div>

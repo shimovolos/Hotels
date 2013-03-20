@@ -1,13 +1,28 @@
 <?php
-Yii::app()->getClientScript()->registerScriptFile(Yii::app()->assetManager->baseUrl."/js/slides.min.jquery.js",CClientScript::POS_END);
-Yii::app()->getClientScript()->registerScriptFile(Yii::app()->assetManager->baseUrl."/js/maps.js",CClientScript::POS_END);
-Yii::app()->getClientScript()->registerScriptFile(Yii::app()->assetManager->baseUrl."/js/details.js",CClientScript::POS_END);
-Yii::app()->getClientScript()->registerCssFile(Yii::app()->assetManager->baseUrl."/css/global.css");
+registerScript("/js/slides.min.jquery.js");
+registerScript("/js/maps.js");
+registerScript("/js/details.js");
+registerCss("/css/global.css");
 $images = explode(';',$hotel->HotelImages);
 ?>
-<script type="text/javascript"
-        src="http://maps.googleapis.com/maps/api/js?key=<?php echo GOOGLE_MAPS_API_KEY; ?>&sensor=true&language=ru">
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+<script>
+    $(function() {
+        $( "#tabs" ).tabs();
+    });
 </script>
+<script type="text/javascript"
+        src="http://maps.googleapis.com/maps/api/js?key=<?php echo Yii::app()->params['GOOGLE_MAPS_API_KEY']; ?>&sensor=true&language=ru">
+</script>
+    <div id="tabs" style="min-height: 600px">
+        <ul>
+            <li><a href="#tabs-1">Фото</a></li>
+            <li><a href="#tabs-2">Подробная информация</a></li>
+            <li><a href="#tabs-3">Карта</a></li>
+            <li><a href="#tabs-4">Забронировать</a></li>
+        </ul>
+<div id="tabs-1">
 <div id="container">
     <div id="example">
         <div id="slides">
@@ -21,14 +36,12 @@ $images = explode(';',$hotel->HotelImages);
                 }
                 ?>
             </div>
-            <a href="#" class="prev"><img src=<?php echo Yii::app()->request->baseUrl."/assets/img/arrow-prev.png"?> width="24" height="43" alt="Arrow Prev"></a>
-            <a href="#" class="next"><img src=<?php echo Yii::app()->request->baseUrl."/assets/img/arrow-next.png"?> width="24" height="43" alt="Arrow Next"></a>
+            <a href="#" class="prev"><img src=<?php echo baseUrl()."/assets/img/arrow-prev.png"?> width="24" height="43" alt="Arrow Prev"></a>
+            <a href="#" class="next"><img src=<?php echo baseUrl()."/assets/img/arrow-next.png"?> width="24" height="43" alt="Arrow Next"></a>
         </div>
-        <img src=<?php echo Yii::app()->request->baseUrl."/assets/img/example-frame.png"?> width="739" height="341" alt="Example Frame" id="frame">
+        <img src=<?php echo baseUrl()."/assets/img/example-frame.png"?> width="739" height="341" alt="Example Frame" id="frame">
     </div>
-
 </div>
-<div class="content">
     <p align="justify"><br>
     <table style="padding-left: 2%">
         <tr>
@@ -62,7 +75,7 @@ $images = explode(';',$hotel->HotelImages);
             <td class="one">
                 <b><?php for($i=0;$i<$hotel->StarRating;$i++)
                 {
-                    echo '<img src="'.Yii::app()->request->baseUrl.'/assets/images/star_icon.png" alt="star"/>';
+                    echo '<img src="'.baseUrl().'/assets/images/star_icon.png" alt="star"/>';
                 } ?></b>
             </td>
         </tr>
@@ -117,11 +130,9 @@ $images = explode(';',$hotel->HotelImages);
     </table>
     </p>
     <br>
-    <br>
-    <br>
-    <br>
-    <a href="javascript:ShowOrHide('first')" style="padding-left: 30px">Побдробная информация о отеле  [кликнуть для раскрытия]</a>
-    <div id="first" style="display:none;">
+    </div>
+
+    <div id="tabs-2">
     <p align="left" style="padding-left: 30px">
         <i>Информация о отеле: </i><br>
             <b><?php echo $hotel->description[0]->HotelInfo ?></b><br>
@@ -143,12 +154,18 @@ $images = explode(';',$hotel->HotelImages);
             <b><?php echo $hotel->amenities[0]->RoomsNumber ?></b><br>
         </p>
     </div>
+
+
+        <body onload="initialize(<?php echo $hotel->Latitude;?>,<?php echo $hotel->Longitude;?>)">
+        <div id="tabs-3">
+
     <br>
-    <br>
-    <body onload="initialize(<?php echo $hotel->Latitude;?>,<?php echo $hotel->Longitude;?>)">
         <div id="map_canvas" style="width:100%; height:500px">
         </div>
-    </body>
+
+        </div>
+        </body>
+        <div id="tabs-4">
     <?
     if (is_object($allocateResponse->availableHotels)) {
         $hotels[] = $allocateResponse->availableHotels;
@@ -194,8 +211,7 @@ $images = explode(';',$hotel->HotelImages);
                 ?>
             </div>
             <?endforeach?>
-        <a href="<?=Yii::app()->baseUrl.'/site/booking?processId='.$hotel->processId?>">Забронировать</a><br/>
+        <a href="<? echo baseUrl().'/site/booking?processId='.$hotel->processId?>">Забронировать</a><br/>
         <?endforeach?>
-
 </div>
-
+    </div>

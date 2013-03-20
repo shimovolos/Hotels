@@ -1,5 +1,5 @@
 <?php
-    Yii::app()->getClientScript()->registerScriptFile(Yii::app()->assetManager->baseUrl."/js/search_form.js");
+    registerScript("/js/search_form.js");
     if(isset(Yii::app()->request->cookies['price'])){
         $price = json_decode(Yii::app()->request->cookies['price']);
         $price = explode('-', $price);
@@ -87,7 +87,7 @@
                         echo "<input type='checkbox' id='star' name='star[]' value='$i'  onchange='submitAdvancedForm()'/>";
                     }
                     for($n = $i; $n > 0; $n--){
-                        echo '<img src="'.Yii::app()->request->baseUrl.'/assets/images/star_icon.png" alt="star"/>';
+                        echo '<img src="'.baseUrl().'/assets/images/star_icon.png" alt="star"/>';
                     }
                     echo '<br/>';
                 }

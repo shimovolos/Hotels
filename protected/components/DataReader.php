@@ -12,6 +12,7 @@ class DataReader
     {
         $result = array();
         $object = HotelDestinations::model()->findAll(array('condition'=>"City LIKE '%$getTerm%'"));
+
         foreach($object as $obj)
         {
             $result[] = array(
@@ -19,6 +20,7 @@ class DataReader
                 'label' => $obj->City."; ".$obj->Country
             );
         }
-            return $result;
+
+        return $result;
     }
 }

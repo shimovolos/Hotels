@@ -3,13 +3,13 @@
         <?
         $images = explode(';',$data->HotelImages);
         ?>
-        <a href="<?=Yii::app()->request->baseUrl.'/site/details?HotelCode='.$data->HotelCode?>" target="_blank">
-            <img src="<?=$images[0]?>" alt="logo" width="250" height="200"/>
+        <a href="<? echo baseUrl().'/site/details?HotelCode='.$data->HotelCode?>" target="_blank">
+            <img src="<? echo $images[0]?>" alt="logo" width="250" height="200"/>
         </a>
     </td>
     <td>
-        <a href="<?=Yii::app()->request->baseUrl.'/site/details?HotelCode='.$data->HotelCode?>">
-        <input type="hidden" name="HotelCode" value="<?=$data->HotelCode?>"/><?=$data->HotelName?></a><br/>
+        <a href="<? echo baseUrl().'/site/details?HotelCode='.$data->HotelCode?>">
+        <input type="hidden" name="HotelCode" value="<?=$data->HotelCode?>"/><? echo $data->HotelName?></a><br/>
         <?
         foreach((array)$hotels as $key=>$hotel ){
             if($hotel->hotelCode == $data->HotelCode){
@@ -21,7 +21,7 @@
         ?>
         <?for($i=0;$i<$data->StarRating;$i++):?>
 
-            <img src="<?=Yii::app()->request->baseUrl.'/assets/images/star_icon.png'?>" alt="star"/>
+            <img src="<? echo baseUrl().'/assets/images/star_icon.png'?>" alt="star"/>
 
         <?endfor?>
         <br/>

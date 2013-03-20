@@ -1,8 +1,8 @@
 <?php
-Yii::app()->getClientScript()->registerScriptFile(Yii::app()->assetManager->baseUrl."/js/search_form.js");?>
+registerScript("/js/search_form.js");?>
 <div id="info">
 </div>
-<form name=search_form  onsubmit="load()" action='<?php echo Yii::app()->request->baseUrl?>/site/hotels' method='post' >
+<form name=search_form  onsubmit="load()" action='<?php echo baseUrl()?>/site/hotels' method='post' >
     <table id="search_form">
         <tr>
             <td>
