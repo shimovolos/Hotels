@@ -1,10 +1,10 @@
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css"/>
 <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js">
 
 </script>
 <script>
-    $(function() {
-        $( "#tabs" ).tabs();
+    $(function () {
+        $("#tabs").tabs();
     });
 </script>
 <script type="text/javascript"
@@ -16,35 +16,38 @@ registerScript("/public/js/slides.min.jquery.js");
 registerScript("/public/js/maps.js");
 registerScript("/public/js/details.js");
 registerCss("/public/css/global.css");
+registerCss("/public/css/table.css");
 $images = explode(';',$hotel->HotelImages);
 ?>
-    <div id="tabs" style="min-height: 400px">
-        <ul>
-            <li><a href="#tabs-1">Фото</a></li>
-            <li><a href="#tabs-2">Подробная информация</a></li>
-            <li><a href="#tabs-3">Карта</a></li>
-            <li><a href="#tabs-4">Забронировать</a></li>
-        </ul>
+<div id="tabs" style="min-height: 400px">
+<ul>
+    <li><a href="#tabs-1">Фото</a></li>
+    <li><a href="#tabs-2">Подробная информация</a></li>
+    <li><a href="#tabs-3">Карта</a></li>
+    <li><a href="#tabs-4">Забронировать</a></li>
+</ul>
 <div id="tabs-1">
-<div id="container">
-    <div id="example">
-        <div id="slides">
-            <div class="slides_container">
-                <?php
-                for($i=0;$i<count($images)-1;$i++)
-                {
-                    echo '<div>
-                    <img src='.$images[$i].' width="370" height="260" alt="Slide">
+    <div id="container">
+        <div id="example">
+            <div id="slides">
+                <div class="slides_container">
+                    <?php
+                    for ($i = 0; $i < count($images) - 1; $i++) {
+                        echo '<div>
+                    <img src=' . $images[$i] . ' width="370" height="260" alt="Slide">
                     </div>';
-                }
-                ?>
+                    }
+                    ?>
+                </div>
+                <a href="#" class="prev"><img src=<?php echo baseUrl() . "/public/img/arrow-prev.png" ?> width="24"
+                    height="43" alt="Arrow Prev"></a>
+                <a href="#" class="next"><img src=<?php echo baseUrl() . "/public/img/arrow-next.png" ?> width="24"
+                    height="43" alt="Arrow Next"></a>
             </div>
-            <a href="#" class="prev"><img src=<?php echo baseUrl()."/public/img/arrow-prev.png"?> width="24" height="43" alt="Arrow Prev"></a>
-            <a href="#" class="next"><img src=<?php echo baseUrl()."/public/img/arrow-next.png"?> width="24" height="43" alt="Arrow Next"></a>
+            <img src=<?php echo baseUrl() . "/public/img/example-frame.png" ?> width="739" height="341" alt="Example
+            Frame" id="frame">
         </div>
-        <img src=<?php echo baseUrl()."/public/img/example-frame.png"?> width="739" height="341" alt="Example Frame" id="frame">
     </div>
-</div>
     <p align="justify"><br>
     <table class="specialty">
         <tr>
@@ -76,10 +79,9 @@ $images = explode(';',$hotel->HotelImages);
                 <i>Количество звезд: </i>
             </td>
             <td>
-                <b><?php for($i=0;$i<$hotel->StarRating;$i++)
-                {
-                    echo '<img src="'.baseUrl().'/public/images/star_icon.png" alt="star"/>';
-                } ?></b>
+                <b><?php for ($i = 0; $i < $hotel->StarRating; $i++) {
+                        echo '<img src="' . baseUrl() . '/public/images/star_icon.png" alt="star"/>';
+                    } ?></b>
             </td>
         </tr>
         <tr>
@@ -133,108 +135,155 @@ $images = explode(';',$hotel->HotelImages);
     </table>
     </p>
     <br>
+</div>
+
+<div id="tabs-2">
+    <div class="info_table">
+    <?if (isset($hotel->rusAmenities[0])): ?>
+        <ul>
+            <li>
+                <table>
+                    <?
+                    $desc = preg_split("/(?<=[.])\s+(?=[А-Я])/", $hotel->rusAmenities[0]->HotelDescription);
+                    foreach ($desc as $key => $value) :
+                        $split = explode(':', $value);?>
+                        <tr>
+                            <td>
+                                <?=$split[0]?>:
+                            </td>
+                            <td>
+                                <?=$split[1]?>
+                            </td>
+                        </tr>
+                    <?endforeach?>
+                </table>
+
+            </li>
+            <li><hr/></li>
+            <li>
+                <table>
+                    <tr>
+                        <td><b>Особенности отеля</b></td>
+                        <td><b>Особенности номеров</b></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <ul>
+                                <?
+                                $hamen = explode(',', $hotel->rusAmenities[0]->HotelAmenities);
+                                if(count($hamen)== 0){
+                                    echo "<li>Нет данных</li>";
+                                }
+                                else{
+                                    foreach ($hamen as $amenities) {
+                                        echo "<li>$amenities</li>";
+                                    }
+                                }
+                                ?>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul>
+                                <?
+                                $ramen = explode(',', $hotel->rusAmenities[0]->RoomAmenities);
+                                if(count($ramen)== 0){
+                                    echo "<li>Нет данных</li>";
+                                }
+                                else{
+                                    foreach ($ramen as $amenities) {
+                                        echo "<li>$amenities</li>";
+                                    }
+                                }
+                                ?>
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </li>
+        </ul>
+    <?else:?>
+            <ul>
+
+                <li>
+                    <table>
+                        <tr><td colspan="2"><b>Информация о данном отеле  присутствует только на английском языке. Приносим свои извинения за предоставленные неудобства!</b></b></td> </tr>
+                        <tr>
+                            <td>Полное описание отеля</td>
+                            <td><?=$hotel->description[0]->HotelInfo?></td>
+                        </tr>
+                    </table>
+
+                </li>
+                <li><hr/></li>
+                <li>
+                    <table>
+                        <tr>
+                            <td><b>Особенности отеля</b></td>
+                            <td><b>Особенности номеров</b></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <ul>
+                                    <?
+                                    $hamen = explode(';', $hotel->amenities[0]->PAmenities);
+                                    if(count($hamen)== 0){
+                                        echo "<li>Нет данных</li>";
+                                    }
+                                    else{
+                                        foreach ($hamen as $amenities) {
+                                            echo "<li>$amenities</li>";
+                                        }
+                                    }
+                                    ?>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul>
+                                    <?
+                                    $ramen = explode(';', $hotel->amenities[0]->RAmenities);
+
+                                    if(count($ramen)== 0){
+                                        echo "<li>Нет данных</li>";
+                                    }
+                                    else{
+                                        foreach ($ramen as $amenities) {
+                                            echo "<li>$amenities</li>";
+                                        }
+                                    }
+                                    ?>
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>
+                </li>
+            </ul>
+    <?endif?>
+
+</div>
+</div>
+
+<div id="tabs-3">
+    <br>
+
+    <body onload="initialize(<?php echo $hotel->Latitude; ?>,<?php echo $hotel->Longitude; ?>)">
+    <div id="map_canvas" style="width:100%; height:500px">
+        <script>
+            google.maps.event.trigger(map, 'resize');
+            map.setZoom(map.getZoom());
+        </script>
     </div>
-
-    <div id="tabs-2">
-        <table class="specialty">
-            <tr>
-                <td>
-                    <i>Информация об отеле: </i>
-                </td>
-                <td>
-                    <b><?php echo $hotel->description[0]->HotelInfo ?></b>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <i>Территория отеля: </i>
-                </td>
-                <td>
-                    <b><?php echo $hotel->HotelArea ?></b>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <i>Тип отеля: </i>
-                </td>
-                <td>
-                    <b><?php echo $hotel->description[0]->HotelType ?></b>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <i>Связи: </i>
-                </td>
-                <td>
-                    <b><?php echo $hotel->Chain ?></b>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <i>Тематика отеля: </i>
-                </td>
-                <td>
-                    <b><?php echo $hotel->description[0]->HotelTheme ?></b>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <i>Категория: </i>
-                </td>
-                <td>
-                    <b><?php echo $hotel->description[0]->HotelCategory ?></b>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <i>PAmenities: </i>
-                </td>
-                <td>
-                    <b><?php echo $hotel->amenities[0]->PAmenities ?></b>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <i>RAmenities: </i>
-                </td>
-                <td>
-                    <b><?php echo $hotel->amenities[0]->RAmenities ?></b>
-                </td>
-            </tr>
-            </tr>
-            <tr>
-                <td>
-                    <i>Количество комнат: </i>
-                </td>
-                <td>
-                    <b><?php echo $hotel->amenities[0]->RoomsNumber ?></b>
-                </td>
-            </tr>
-        </table>
-    </div>
+    </body>
+</div>
 
 
-        <div id="tabs-3">
-        <br>
-            <body onload="initialize(<?php echo $hotel->Latitude;?>,<?php echo $hotel->Longitude;?>)">
-            <div id="map_canvas" style="width:100%; height:500px">
-                <script>
-                    google.maps.event.trigger(map, 'resize');
-                    map.setZoom( map.getZoom() );
-                </script>
-            </div>
-            </body>
-        </div>
-
-
-        <div id="tabs-4">
+<div id="tabs-4">
     <?
     if (is_object($allocateResponse->availableHotels)) {
         $hotels[] = $allocateResponse->availableHotels;
     } else {
         $hotels = $allocateResponse->availableHotels;
     }
-    foreach((array)$hotels as $num=>$hotel):
+    foreach ((array)$hotels as $num => $hotel):
         if (is_object($hotel->rooms)) {
             $rooms[] = $hotel->rooms;
         } else {
@@ -242,8 +291,8 @@ $images = explode(';',$hotel->HotelImages);
         }
         foreach ((array)$rooms as $rnum => $room) :
             ?>
-            <a href="<? echo baseUrl().'/site/booking?processId='.$hotel->processId?>">Забронировать: </a><br/>
-            <div style="border: #8d889e 1px solid; border-radius: 2px; margin: 10px; padding: 10px;">
+            <a href="<? echo baseUrl() . '/site/booking?processId=' . $hotel->processId ?>">Забронировать: </a><br/>
+            <div class="info_table" style="border: #8d889e 1px solid; border-radius: 2px; margin: 10px; padding: 10px;">
                 <table class="specialty">
                     <tr>
                         <td>
@@ -279,8 +328,8 @@ $images = explode(';',$hotel->HotelImages);
                             }
                             foreach ((array)$roomsInfo as $pnum => $pax) {
                                 ?>
-                                <?php echo $pax->paxType;?> (<?php echo $pax->age;?>)<br/>
-                                <?php
+                                <?php echo $pax->paxType; ?> (<?php echo $pax->age; ?>)<br/>
+                            <?php
                             }
                             ?>
                         </td>
@@ -293,16 +342,16 @@ $images = explode(';',$hotel->HotelImages);
                             <?php
                             foreach ((array)$ratesPerNight as $rpnum => $price) {
                                 ?>
-                                <?php echo $price->date;?> (<?php echo $price->amount;?>)<br/>
-                                <?php
+                                <?php echo $price->date; ?> (<?php echo $price->amount; ?>)<br/>
+                            <?php
                             }
                             ?>
                         </td>
                     </tr>
-            </table>
+                </table>
             </div>
-            <?endforeach?>
+        <? endforeach ?>
 
-        <?endforeach?>
+    <? endforeach?>
 </div>
-    </div>
+</div>
