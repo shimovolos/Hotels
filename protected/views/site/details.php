@@ -20,7 +20,7 @@ $images = explode(';',$hotel->HotelImages);
 ?>
     <div id="tabs" style="min-height: 400px">
         <ul>
-            <li><a href="#tabs-1">Фото</a></li>
+            <li><a href="#tabs-1">Общая информация</a></li>
             <li><a href="#tabs-2">Подробная информация</a></li>
             <li><a href="#tabs-3">Карта</a></li>
             <li><a href="#tabs-4">Забронировать</a></li>

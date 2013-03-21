@@ -26,9 +26,5 @@
         <?endfor?>
         <br/>
     <hr>
-        <form action="<?php echo baseUrl().'/site/details?HotelCode='.$data->HotelCode?>" method="post">
-            <input type="submit" name="HotelCode" value="Просмотреть">
-            <input type="hidden" name="HotelCode" value="<? echo $data->HotelCode?>"/>
-        </form>
     </td>
 </tr>
