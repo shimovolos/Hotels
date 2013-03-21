@@ -4,14 +4,14 @@ class DataReader
 {
     public function getHotelDescription($hotelCode)
     {
-        $hotels = Hotelslist::model()->find('HotelCode=:HotelCode',array(':HotelCode'=>$hotelCode));
+        $hotels = HotelsList::model()->find('HotelCode=:HotelCode',array(':HotelCode'=>$hotelCode));
         return $hotels;
     }
 
     public function getAutocomplete($getTerm)
     {
         $result = array();
-        $object = Hoteldestinations::model()->findAll(array('condition'=>"City LIKE '%$getTerm%' OR Country LIKE '%$getTerm%'"));
+        $object = HotelDestinations::model()->findAll(array('condition'=>"City LIKE '%$getTerm%'"));
 
         foreach($object as $obj)
         {

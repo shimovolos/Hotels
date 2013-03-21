@@ -20,7 +20,7 @@ $images = explode(';',$hotel->HotelImages);
 ?>
     <div id="tabs" style="min-height: 400px">
         <ul>
-            <li><a href="#tabs-1">Общая информация</a></li>
+            <li><a href="#tabs-1">Фото</a></li>
             <li><a href="#tabs-2">Подробная информация</a></li>
             <li><a href="#tabs-3">Карта</a></li>
             <li><a href="#tabs-4">Забронировать</a></li>
@@ -95,7 +95,7 @@ $images = explode(';',$hotel->HotelImages);
                 <i>Местонахождение: </i>
             </td>
             <td>
-                <b><?php echo $hotel->hotelsdescriptions[0]->HotelLocation ?></b>
+                <b><?php echo $hotel->description[0]->HotelLocation ?></b>
             </td>
         </tr>
         <tr>
@@ -142,7 +142,7 @@ $images = explode(';',$hotel->HotelImages);
                     <i>Информация об отеле: </i>
                 </td>
                 <td>
-                    <b><?php echo $hotel->hotelsdescriptions[0]->HotelInfo ?></b>
+                    <b><?php echo $hotel->description[0]->HotelInfo ?></b>
                 </td>
             </tr>
             <tr>
@@ -158,7 +158,7 @@ $images = explode(';',$hotel->HotelImages);
                     <i>Тип отеля: </i>
                 </td>
                 <td>
-                    <b><?php echo $hotel->hotelsdescriptions[0]->HotelType ?></b>
+                    <b><?php echo $hotel->description[0]->HotelType ?></b>
                 </td>
             </tr>
             <tr>
@@ -174,7 +174,7 @@ $images = explode(';',$hotel->HotelImages);
                     <i>Тематика отеля: </i>
                 </td>
                 <td>
-                    <b><?php echo $hotel->hotelsdescriptions[0]->HotelTheme ?></b>
+                    <b><?php echo $hotel->description[0]->HotelTheme ?></b>
                 </td>
             </tr>
             <tr>
@@ -182,7 +182,7 @@ $images = explode(';',$hotel->HotelImages);
                     <i>Категория: </i>
                 </td>
                 <td>
-                    <b><?php echo $hotel->hotelsdescriptions[0]->HotelCategory ?></b>
+                    <b><?php echo $hotel->description[0]->HotelCategory ?></b>
                 </td>
             </tr>
             <tr>
@@ -190,7 +190,7 @@ $images = explode(';',$hotel->HotelImages);
                     <i>PAmenities: </i>
                 </td>
                 <td>
-                    <b><?php echo $hotel->hotelsamenities[0]->PAmenities ?></b>
+                    <b><?php echo $hotel->amenities[0]->PAmenities ?></b>
                 </td>
             </tr>
             <tr>
@@ -198,7 +198,7 @@ $images = explode(';',$hotel->HotelImages);
                     <i>RAmenities: </i>
                 </td>
                 <td>
-                    <b><?php echo $hotel->hotelsamenities[0]->RAmenities ?></b>
+                    <b><?php echo $hotel->amenities[0]->RAmenities ?></b>
                 </td>
             </tr>
             </tr>
@@ -207,7 +207,7 @@ $images = explode(';',$hotel->HotelImages);
                     <i>Количество комнат: </i>
                 </td>
                 <td>
-                    <b><?php echo $hotel->hotelsamenities[0]->RoomsNumber ?></b>
+                    <b><?php echo $hotel->amenities[0]->RoomsNumber ?></b>
                 </td>
             </tr>
         </table>
