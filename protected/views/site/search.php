@@ -1,12 +1,16 @@
 <?php
+registerCss('/public/css/jquery.qtip.min.css');
 registerScript("/public/js/search_form.js");
+registerScript('/public/js/jquery.qtip.min.js');
+registerScript('/public/js/jquery.validate.min.js');
+registerScript('/public/js/messages_ru.js');
 unset(Yii::app()->session['adv_param']);
 unset(Yii::app()->session['responseData']);
 ?>
 <div id="info">
 </div>
-<form name=search_form  onsubmit="load()" action='<?php echo baseUrl()?>/site/hotels' method='post' >
-    <table id="search_form">
+<form name=search_form id=search_form  onsubmit="load()" action='<?php echo baseUrl()?>/site/hotels' method='post' >
+    <table>
         <tr>
             <td>
                 <input type="hidden" name="param[city_id]" id="city_id" />
@@ -25,31 +29,28 @@ unset(Yii::app()->session['responseData']);
                         'style' => 'width:260px;',
                         'size' => '5',
                         'autocomplete' => 'off',
+                        'value placeholder' => 'Город или страна'
                     ),
                 ));
                 ?>
                 <br/>
-                <label>Куда Вы хотите отправиться?</label>
             </td>
         </tr>
         <tr>
             <td>
-                <input type="text" class="date_picker" name="param[coming_date]" id="coming_date" autocomplete="off" /> -
-                <input type="text" class="date_picker" name="param[leaving_date]" id="leaving_date" autocomplete="off"/>
-                <label for="coming_date">Дата прибытия</label><label for="leaving_date"> Дата отъезда</label>
+                <input type="text" class="date_picker" name="param[coming_date]" id="coming_date" autocomplete="off" value placeholder="прибытие"/> -
+                <input type="text" class="date_picker" name="param[leaving_date]" id="leaving_date" autocomplete="off" value placeholder="отъезд"/>
             </td>
         </tr>
         <tr>
             <td>
-                <input type="text" name="param[adult_paxes]" onkeyup="check_number(this, 6)" autocomplete="off" />
+                <input type="text" name="param[adult_paxes]" autocomplete="off" value placeholder="взрослых"/>
                 <input type="checkbox" name="param[is_child]" id="is_child" onchange="hide_block()"/><label>&nbsp c детьми</label><br/>
-                <label>Количество взрослых</label>
             </td>
         </tr>
         <tr id="add_child">
             <td>
-                <input type="text" name="param[children_paxes]" id="children_paxes" onkeyup="check_number(this, 5)" autocomplete="off" /><br/>
-                <label>Количество детей</label>
+                <input type="text" name="param[children_paxes]" id="children_paxes" autocomplete="off" value placeholder="детей"/><br/>
             </td>
         </tr>
         <tr id="children_age">

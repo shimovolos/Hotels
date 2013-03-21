@@ -1,5 +1,4 @@
 <?php
-print_r(Yii::app()->session['adult_paxes']);
     registerScript("/public/js/search_form.js");
     $params = null;
     if(isset(Yii::app()->session['adv_param'])){
