@@ -1,7 +1,7 @@
 <?php
     registerScript("/public/js/search_form.js");
     registerScript('/public/js/jquery.validate.min.js');
-
+    registerCss('/public/css/table.css');
     $params = null;
     if(isset(Yii::app()->session['adv_param'])){
         $params = json_decode(Yii::app()->session['adv_param'],true);
@@ -153,7 +153,7 @@
                 'dataProvider'=>$dataProvider,
                 'itemView'=>'_hotelview',
                 'viewData' => array('hotels' => $hotels ),
-                'template'=>"<table style='width: 100%'>{items}</table>{pager}",
+                'template'=>"<div class='info_table'><table style='width: 100%'>{items}</table>{pager}</div>",
                 'pager' => array(
                     'header' => '',
                 )

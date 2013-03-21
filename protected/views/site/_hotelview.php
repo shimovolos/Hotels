@@ -1,13 +1,13 @@
-<tr class="hotel">
-    <td>
+<tr>
+    <td style="padding: 1px; width: 150px">
         <?
         $images = explode(';',$data->HotelImages);
         ?>
         <a href="<? echo baseUrl().'/site/details?HotelCode='.$data->HotelCode?>" target="_blank">
-            <img src="<? echo $images[0]?>" alt="logo" width="250" height="200"/>
+            <img src="<? echo $images[0]?>" alt="logo" width="150"/>
         </a>
     </td>
-    <td>
+    <td style="vertical-align: top">
         <a href="<? echo baseUrl().'/site/details?HotelCode='.$data->HotelCode?>">
         <input type="hidden" name="HotelCode" value="<? echo $data->HotelCode?>"/><? echo $data->HotelName?></a><br/>
         <?
@@ -25,6 +25,5 @@
 
         <?endfor?>
         <br/>
-    <hr>
     </td>
 </tr>
