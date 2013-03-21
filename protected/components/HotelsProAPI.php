@@ -12,36 +12,43 @@ class HotelsProAPI
      * @param $search_parameters array that contains next data: CityCode, CheckIn date, CheckOut date, number of adult paxes, number of child paxes if they are defined
      * @return mixed - response from service, object that contains info about founded hotels
      */
-    public function getAvailableHotel($param){
-        $room = array();
-        for($i = 0; $i< $param['adult_paxes']; $i++){
-            $room[] = array('paxType' => 'Adult');
+    public function getAvailableHotel($search_parameters)
+    {
+        for($i = 0; $i< $search_parameters['adult_paxes']; $i++){
+            $adult[] = array('paxType' => 'Adult');
         }
-        if(isset($param['is_child'])){
-            foreach($param['child_age'] as $key=>$age){
-                $room[] = array('paxType' => 'Child', 'age' => $age );
+
+        if(isset($search_parameters['is_child'])){
+
+            for($i = 0; $i< $search_parameters['child']; $i++){
+                $child[] = array('paxType' => 'Child', 'age' => $search_parameters['child_age_'.$i] );
             }
         }
-        $hotelRoom[] = $room;
         /**
          * @todo Продумать вопрос с размещением клиентов по комнатам .
          */
+        if(isset($search_parameters['is_child'])){
+            $room = array($adult, $child);
+        }
+        else{
+            $room = array($adult);
+        }
         try{
             $response = $this->client->getAvailableHotel(
                 Yii::app()->params['HP_API_KEY'],
-                $param['city_id'],
-                $this->convertDate($param['coming_date']),
-                $this->convertDate($param['leaving_date']),
+                $search_parameters['city_id'],
+                $this->convertDate($search_parameters['coming_date']),
+                $this->convertDate($search_parameters['leaving_date']),
                 "USD",
                 "GB",
                 "false",
-                $hotelRoom,
+                $room,
                 null
             );
             return $response;
         }
-        catch(SoapFault $exception){
-            throw new CHttpException($exception->getCode(), $exception->getMessage());
+        catch(SoapFault $fault){
+            return $fault;
         }
     }
 
