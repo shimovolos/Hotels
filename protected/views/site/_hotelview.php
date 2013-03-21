@@ -9,7 +9,7 @@
     </td>
     <td>
         <a href="<? echo baseUrl().'/site/details?HotelCode='.$data->HotelCode?>">
-        <input type="hidden" name="HotelCode" value="<?=$data->HotelCode?>"/><? echo $data->HotelName?></a><br/>
+        <input type="hidden" name="HotelCode" value="<? echo $data->HotelCode?>"/><? echo $data->HotelName?></a><br/>
         <?
         foreach((array)$hotels as $key=>$hotel ){
             if($hotel->hotelCode == $data->HotelCode){
@@ -21,9 +21,14 @@
         ?>
         <?for($i=0;$i<$data->StarRating;$i++):?>
 
-            <img src="<? echo baseUrl().'/assets/images/star_icon.png'?>" alt="star"/>
+            <img src="<? echo baseUrl().'/public/images/star_icon.png'?>" alt="star"/>
 
         <?endfor?>
         <br/>
+    <hr>
+        <form action="<?php echo baseUrl().'/site/details?HotelCode='.$data->HotelCode?>" method="post">
+            <input type="submit" name="HotelCode" value="Просмотреть">
+            <input type="hidden" name="HotelCode" value="<? echo $data->HotelCode?>"/>
+        </form>
     </td>
 </tr>

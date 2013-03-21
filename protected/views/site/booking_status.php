@@ -1,5 +1,5 @@
 <table>
-    <tr><td><label>Код операции бронирования:</label></td><td><? echo $trackingId?></td></tr>
+    <tr><td><label>Код операции бронирования:</label></td><td><? echo $trackingID?></td></tr>
     <tr><td><label>Статус бронирования:</label></td>
         <td>
             <?

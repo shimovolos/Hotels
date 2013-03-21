@@ -1,12 +1,7 @@
-<?php
-registerScript("/js/slides.min.jquery.js");
-registerScript("/js/maps.js");
-registerScript("/js/details.js");
-registerCss("/css/global.css");
-$images = explode(';',$hotel->HotelImages);
-?>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
-<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js">
+
+</script>
 <script>
     $(function() {
         $( "#tabs" ).tabs();
@@ -15,7 +10,15 @@ $images = explode(';',$hotel->HotelImages);
 <script type="text/javascript"
         src="http://maps.googleapis.com/maps/api/js?key=<?php echo Yii::app()->params['GOOGLE_MAPS_API_KEY']; ?>&sensor=true&language=ru">
 </script>
-    <div id="tabs" style="min-height: 600px">
+
+<?php
+registerScript("/public/js/slides.min.jquery.js");
+registerScript("/public/js/maps.js");
+registerScript("/public/js/details.js");
+registerCss("/public/css/global.css");
+$images = explode(';',$hotel->HotelImages);
+?>
+    <div id="tabs" style="min-height: 400px">
         <ul>
             <li><a href="#tabs-1">Фото</a></li>
             <li><a href="#tabs-2">Подробная информация</a></li>
@@ -36,94 +39,94 @@ $images = explode(';',$hotel->HotelImages);
                 }
                 ?>
             </div>
-            <a href="#" class="prev"><img src=<?php echo baseUrl()."/assets/img/arrow-prev.png"?> width="24" height="43" alt="Arrow Prev"></a>
-            <a href="#" class="next"><img src=<?php echo baseUrl()."/assets/img/arrow-next.png"?> width="24" height="43" alt="Arrow Next"></a>
+            <a href="#" class="prev"><img src=<?php echo baseUrl()."/public/img/arrow-prev.png"?> width="24" height="43" alt="Arrow Prev"></a>
+            <a href="#" class="next"><img src=<?php echo baseUrl()."/public/img/arrow-next.png"?> width="24" height="43" alt="Arrow Next"></a>
         </div>
-        <img src=<?php echo baseUrl()."/assets/img/example-frame.png"?> width="739" height="341" alt="Example Frame" id="frame">
+        <img src=<?php echo baseUrl()."/public/img/example-frame.png"?> width="739" height="341" alt="Example Frame" id="frame">
     </div>
 </div>
     <p align="justify"><br>
-    <table style="padding-left: 2%">
+    <table class="specialty">
         <tr>
-            <td class="one">
+            <td>
                 <i>Страна: </i>
             </td>
-            <td class="one">
+            <td>
                 <b><?php echo $hotel->Country ?></b>
             </td>
         </tr>
         <tr>
-            <td class="one">
+            <td>
                 <i>Город: </i>
             </td>
-            <td class="one">
+            <td>
                 <b><?php echo $hotel->Destination ?></b>
             </td>
         </tr>
         <tr>
-            <td class="one">
+            <td>
                 <i>Название отеля: </i>
             </td>
-            <td class="one">
+            <td>
                 <b><?php echo $hotel->HotelName ?></b>
             </td>
         </tr>
         <tr>
-            <td class="one">
+            <td>
                 <i>Количество звезд: </i>
             </td>
-            <td class="one">
+            <td>
                 <b><?php for($i=0;$i<$hotel->StarRating;$i++)
                 {
-                    echo '<img src="'.baseUrl().'/assets/images/star_icon.png" alt="star"/>';
+                    echo '<img src="'.baseUrl().'/public/images/star_icon.png" alt="star"/>';
                 } ?></b>
             </td>
         </tr>
         <tr>
-            <td class="one">
+            <td>
                 <i>Адрес: </i>
             </td>
-            <td class="one">
+            <td>
                 <b><?php echo $hotel->HotelAddress ?></b>
             </td>
         </tr>
         <tr>
-            <td class="one">
+            <td>
                 <i>Местонахождение: </i>
             </td>
-            <td class="one">
+            <td>
                 <b><?php echo $hotel->description[0]->HotelLocation ?></b>
             </td>
         </tr>
         <tr>
-            <td class="one">
+            <td>
                 <i>Почтовый код: </i>
             </td>
-            <td class="one">
+            <td>
                 <b><?php echo $hotel->HotelPostalCode ?></b>
             </td>
         </tr>
         <tr>
-            <td class="one">
+            <td>
                 <i>Номер телефона: </i>
             </td>
-            <td class="one">
+            <td>
                 <b><?php echo $hotel->HotelPhoneNumber ?></b>
             </td>
         </tr>
         <tr>
-            <td class="one">
+            <td>
                 <i>Широта: </i>
             </td>
-            <td class="one">
+            <td>
                 <b><?php echo $hotel->Latitude ?></b>
             </td>
         </tr>
         <tr>
-            <td class="one">
+            <td>
                 <i>Долгота: </i>
             </td>
-            <td class="one">
+            <td>
                 <b><?php echo $hotel->Longitude ?></b>
             </td>
         </tr>
@@ -133,38 +136,97 @@ $images = explode(';',$hotel->HotelImages);
     </div>
 
     <div id="tabs-2">
-    <p align="left" style="padding-left: 30px">
-        <i>Информация о отеле: </i><br>
-            <b><?php echo $hotel->description[0]->HotelInfo ?></b><br>
-        <i>Территория отеля: </i><br>
-            <b><?php echo $hotel->HotelArea ?></b><br>
-        <i>Тип отеля: </i><br>
-            <b><?php echo $hotel->description[0]->HotelType ?></b><br>
-        <i>Связи: </i><br>
-            <b><?php echo $hotel->Chain ?></b><br>
-        <i>Тематика отеля: </i><br>
-            <b><?php echo $hotel->description[0]->HotelTheme ?></b><br>
-        <i>Категория: </i><br>
-            <b><?php echo $hotel->description[0]->HotelCategory ?></b><br>
-        <i>PAmenities: </i><br>
-            <b><?php echo $hotel->amenities[0]->PAmenities ?></b><br>
-        <i>RAmenities: </i><br>
-            <b><?php echo $hotel->amenities[0]->RAmenities ?></b><br>
-        <i>Количество комнат: </i><br>
-            <b><?php echo $hotel->amenities[0]->RoomsNumber ?></b><br>
-        </p>
+        <table class="specialty">
+            <tr>
+                <td>
+                    <i>Информация об отеле: </i>
+                </td>
+                <td>
+                    <b><?php echo $hotel->description[0]->HotelInfo ?></b>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <i>Территория отеля: </i>
+                </td>
+                <td>
+                    <b><?php echo $hotel->HotelArea ?></b>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <i>Тип отеля: </i>
+                </td>
+                <td>
+                    <b><?php echo $hotel->description[0]->HotelType ?></b>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <i>Связи: </i>
+                </td>
+                <td>
+                    <b><?php echo $hotel->Chain ?></b>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <i>Тематика отеля: </i>
+                </td>
+                <td>
+                    <b><?php echo $hotel->description[0]->HotelTheme ?></b>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <i>Категория: </i>
+                </td>
+                <td>
+                    <b><?php echo $hotel->description[0]->HotelCategory ?></b>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <i>PAmenities: </i>
+                </td>
+                <td>
+                    <b><?php echo $hotel->amenities[0]->PAmenities ?></b>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <i>RAmenities: </i>
+                </td>
+                <td>
+                    <b><?php echo $hotel->amenities[0]->RAmenities ?></b>
+                </td>
+            </tr>
+            </tr>
+            <tr>
+                <td>
+                    <i>Количество комнат: </i>
+                </td>
+                <td>
+                    <b><?php echo $hotel->amenities[0]->RoomsNumber ?></b>
+                </td>
+            </tr>
+        </table>
     </div>
 
 
-        <body onload="initialize(<?php echo $hotel->Latitude;?>,<?php echo $hotel->Longitude;?>)">
         <div id="tabs-3">
-
-    <br>
-        <div id="map_canvas" style="width:100%; height:500px">
+        <br>
+            <body onload="initialize(<?php echo $hotel->Latitude;?>,<?php echo $hotel->Longitude;?>)">
+            <div id="map_canvas" style="width:100%; height:500px">
+                <script>
+                    google.maps.event.trigger(map, 'resize');
+                    map.setZoom( map.getZoom() );
+                </script>
+            </div>
+            </body>
         </div>
 
-        </div>
-        </body>
+
         <div id="tabs-4">
     <?
     if (is_object($allocateResponse->availableHotels)) {
@@ -180,38 +242,67 @@ $images = explode(';',$hotel->HotelImages);
         }
         foreach ((array)$rooms as $rnum => $room) :
             ?>
+            <a href="<? echo baseUrl().'/site/booking?processId='.$hotel->processId?>">Забронировать: </a><br/>
             <div style="border: #8d889e 1px solid; border-radius: 2px; margin: 10px; padding: 10px;">
-                <b>Room <?php echo($rnum + 1);?> Category</b><?php echo $room->roomCategory;?><br/>
-                <b>Total Room Rate</b><?php echo $room->totalRoomRate;?><br/>
-                <b>Paxes</b><br/>
-                <?php
-                if (is_object($room->paxes)) {
-                    $roomsInfo[] = $room->paxes;
-                } else {
-                    $roomsInfo = $room->paxes;
-                }
-                if (is_object($room->ratesPerNight)) {
-                    $ratesPerNight[] = $room->ratesPerNight;
-                } else {
-                    $ratesPerNight = $room->ratesPerNight;
-                }
-                foreach ((array)$roomsInfo as $pnum => $pax) {
-                    ?>
-                    <?php echo $pax->paxType;?> (<?php echo $pax->age;?>)<br/>
-                    <?php
-                }
-                ?>
-                <b>ratesPerNight</b><br/>
-                <?php
-                foreach ((array)$ratesPerNight as $rpnum => $price) {
-                    ?>
-                    <?php echo $price->date;?> (<?php echo $price->amount;?>)<br/>
-                    <?php
-                }
-                ?>
+                <table class="specialty">
+                    <tr>
+                        <td>
+                            <b>Комната <?php echo($rnum + 1);?> Категории: </b>
+                        </td>
+                        <td>
+                            <?php echo $room->roomCategory;?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Обшая стоимость за проживание: </b>
+                        </td>
+                        <td>
+                            <?php echo $room->totalRoomRate;?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Размещение:</b>
+                        </td>
+                        <td>
+                            <?php
+                            if (is_object($room->paxes)) {
+                                $roomsInfo[] = $room->paxes;
+                            } else {
+                                $roomsInfo = $room->paxes;
+                            }
+                            if (is_object($room->ratesPerNight)) {
+                                $ratesPerNight[] = $room->ratesPerNight;
+                            } else {
+                                $ratesPerNight = $room->ratesPerNight;
+                            }
+                            foreach ((array)$roomsInfo as $pnum => $pax) {
+                                ?>
+                                <?php echo $pax->paxType;?> (<?php echo $pax->age;?>)<br/>
+                                <?php
+                            }
+                            ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Даты размешения + стоимость за ночь:</b>
+                        </td>
+                        <td>
+                            <?php
+                            foreach ((array)$ratesPerNight as $rpnum => $price) {
+                                ?>
+                                <?php echo $price->date;?> (<?php echo $price->amount;?>)<br/>
+                                <?php
+                            }
+                            ?>
+                        </td>
+                    </tr>
+            </table>
             </div>
             <?endforeach?>
-        <a href="<? echo baseUrl().'/site/booking?processId='.$hotel->processId?>">Забронировать</a><br/>
+
         <?endforeach?>
 </div>
     </div>

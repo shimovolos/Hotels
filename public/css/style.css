@@ -282,7 +282,8 @@ a:hover{
     text-decoration: underline;
     color: #4C5A64;
 }
-td.one{
-    padding-left: 10px;
-    padding-bottom: 5px;
+.specialty td{
+    font:normal 92.5%/1.3 Helvetica, Arial, sans-serif;
+    padding: 0px 20px 10px 10px;
+    padding-left: 2%
 }

@@ -1,15 +1,18 @@
 <?php
-registerScript("/js/search_form.js");?>
+registerScript("/public/js/search_form.js");
+unset(Yii::app()->session['adv_param']);
+unset(Yii::app()->session['responseData']);
+?>
 <div id="info">
 </div>
 <form name=search_form  onsubmit="load()" action='<?php echo baseUrl()?>/site/hotels' method='post' >
     <table id="search_form">
         <tr>
             <td>
-                <input type="hidden" name="city_id" id="city_id" />
+                <input type="hidden" name="param[city_id]" id="city_id" />
                 <?
                 $this->widget('zii.widgets.jui.CJuiAutoComplete', array(
-                    'name' => 'search_city',
+                    'name' => 'param[search_city]',
                     'source'=> Yii::app()->createUrl('site/autocomplete'),
                     'options' => array(
                         'minLength'=>'2',
@@ -21,7 +24,7 @@ registerScript("/js/search_form.js");?>
                     'htmlOptions'=>array(
                         'style' => 'width:260px;',
                         'size' => '5',
-                        'autocomplete' => 'off'
+                        'autocomplete' => 'off',
                     ),
                 ));
                 ?>
@@ -31,22 +34,21 @@ registerScript("/js/search_form.js");?>
         </tr>
         <tr>
             <td>
-                <input type="text" class="date_picker" name="coming_date" id="coming_date" autocomplete="off" /> -
-                <input type="text" class="date_picker" name="leaving_date" id="leaving_date" autocomplete="off"/>
+                <input type="text" class="date_picker" name="param[coming_date]" id="coming_date" autocomplete="off" /> -
+                <input type="text" class="date_picker" name="param[leaving_date]" id="leaving_date" autocomplete="off"/>
                 <label for="coming_date">Дата прибытия</label><label for="leaving_date"> Дата отъезда</label>
             </td>
         </tr>
         <tr>
             <td>
-                <input type="text" name="adult_paxes" onkeyup="check_number(this, 6)" autocomplete="off" />
-
-                <input type="checkbox" name="is_child" id="is_child" onchange="hide_block()"/><label>&nbsp c детьми</label><br/>
+                <input type="text" name="param[adult_paxes]" onkeyup="check_number(this, 6)" autocomplete="off" />
+                <input type="checkbox" name="param[is_child]" id="is_child" onchange="hide_block()"/><label>&nbsp c детьми</label><br/>
                 <label>Количество взрослых</label>
             </td>
         </tr>
         <tr id="add_child">
             <td>
-                <input type="text" name="children_paxes" id="children_paxes" onkeyup="check_number(this, 5)" autocomplete="off" /><br/>
+                <input type="text" name="param[children_paxes]" id="children_paxes" onkeyup="check_number(this, 5)" autocomplete="off" /><br/>
                 <label>Количество детей</label>
             </td>
         </tr>
@@ -64,5 +66,5 @@ registerScript("/js/search_form.js");?>
     </table>
 </form>
 <div id='load'>
-    <img class="loader"  src='<?=Yii::app()->assetManager->baseUrl.'/images/loader.gif';?>'/>
+    <img class="loader"  src='<? echo baseUrl().'/public/images/loader.gif';?>'/>
 </div>

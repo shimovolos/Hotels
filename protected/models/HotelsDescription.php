@@ -10,7 +10,7 @@ class HotelsDescription extends CActiveRecord
     public function relations()
     {
         return array(
-            'lists'=>array(self::BELONGS_TO,'hotelslist','HotelCode'),
+            'list'=>array(self::BELONGS_TO,'hotelslist','HotelCode'),
         );
     }
 }
