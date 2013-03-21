@@ -1,5 +1,7 @@
 <?php
     registerScript("/public/js/search_form.js");
+    registerScript('/public/js/jquery.validate.min.js');
+
     $params = null;
     if(isset(Yii::app()->session['adv_param'])){
         $params = json_decode(Yii::app()->session['adv_param'],true);
@@ -37,7 +39,7 @@
     <form method="post" action="">
         <ul id="advanced_search_options" style="font-size: 8pt;margin: auto">
             <li>
-                <input type="hidden" name="city_id" id="city_id" value="<? echo $parameters['city_id']?>" />
+                <input type="hidden" name="param[city_id]" id="city_id" />
                 <label >Город</label><br />
                 <?
                 $this->widget('zii.widgets.jui.CJuiAutoComplete', array(
@@ -53,17 +55,33 @@
                     'htmlOptions'=>array(
                         'style' => 'width:160px; height: 15px',
                         'autocomplete' => 'off',
-                        'value' => $parameters['search_city']
+                        'value' => ''
                     ),
                 ));
                 ?>
             </li>
             <li>
                 <label>Дата</label><br/>
-                <input type="text" class="date_picker advanced" name="coming_date" id="coming_date" autocomplete="off" style="width: 70px;" value="<? echo $parameters['coming_date']?>" /> -
-                <input type="text" class="date_picker advanced" name="leaving_date" id="leaving_date" autocomplete="off" style="width: 70px;" value="<? echo $parameters['leaving_date']?>"/>
+                <input type="text" class="date_picker advanced" name="param[coming_date]" id="coming_date" autocomplete="off" style="width: 70px;"/> -
+                <input type="text" class="date_picker advanced" name="param[leaving_date]" id="leaving_date" autocomplete="off" style="width: 70px;" />
             </li>
-            <li><div id="button_wrap"><input type="submit" name="search" value="Повторить"/></div></li>
+            <li>
+                <input type="hidden" name="param[adult_paxes]" value="<? echo $parameters['adult_paxes']?>"
+            </li>
+            <? if(isset($parameters['child_age'])): ?>
+            <li>
+                <input type="hidden" name="param[children_paxes]" value="<? echo $parameters['children_paxes']?>">
+            </li>
+            <? foreach($parameters['child_age'] as $key=>$value):?>
+            <li>
+                <input type="hidden" name="param[child_age][]" value="'.$value.'">
+            </li>';
+            <? endforeach; ?>
+            <? endif; ?>
+            <li><div id="button_wrap"><input type="submit" name="search_hotel" value="Повторить" onclick="
+            <?
+
+            ?>"/></div></li>
         </ul>
     </form>
     <form method="get" id='adv_search' name="adv_search">
@@ -96,7 +114,18 @@
             <li>
                 <label >Дополниетельно:</label>
             </li>
-            <input type="checkbox" name="adv_param[OldHotelId][]" value="1/DAHTWUPPP" onchange='submitAdvancedForm()'/><label>для не курящих</label><br />
+            <? if(isset($params['PAmenities'])){
+                    echo '<input type="checkbox" name="adv_param[PAmenities]" value="Bar" checked="true" onchange="submitAdvancedForm()"/>
+                            <label>PAmenities</label>
+                            <br />';
+                }
+            else
+            {
+                echo '<input type="checkbox" name="adv_param[PAmenities]" value="Bar" onchange="submitAdvancedForm()"/>
+                            <label>для не курящих</label>
+                            <br />';
+            }
+            ?>
             <input type="checkbox" name="adv_param[internet]"/><label>Интернет</label><br />
             <input type="checkbox" name="adv_param[breakfast]"/><label>завтрак</label><br />
             </li>

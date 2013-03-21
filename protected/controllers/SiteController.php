@@ -62,10 +62,10 @@ class SiteController extends Controller
         }
     }
 
-
     public function actionHotels()
     {
-        if(isset($_POST['search']) && Yii::app()->cache->get('response')===false){
+        if(isset($_POST['search_hotel'])){
+            Yii::app()->cache->delete('response');
             $response =  $this->client->getAvailableHotel($_POST['param']);
             Yii::app()->cache->set('response', serialize($response));
             Yii::app()->cache->set('parameters', serialize($_POST['param']));
@@ -73,27 +73,42 @@ class SiteController extends Controller
                 'responseID' => $response->responseId,
                 'searchID' => $response->searchId
             ));
+        }else{
+            if(isset($_POST['search']) && Yii::app()->cache->get('response')===false){
+                $response =  $this->client->getAvailableHotel($_POST['param']);
+                Yii::app()->cache->set('response', serialize($response));
+                Yii::app()->cache->set('parameters', serialize($_POST['param']));
+                Yii::app()->session['responseData'] = json_encode(array(
+                    'responseID' => $response->responseId,
+                    'searchID' => $response->searchId
+                ));
+            }
         }
         $hotelsCode = $this->client->removeDuplicateHotels(unserialize(Yii::app()->cache->get('response')));
         $criteria = new CDbCriteria;
         $criteria->order = 't.StarRating DESC';
-//        $criteria->with = 'amenities';
-//        $criteria->compare('amenities.HotelCode',$_GET['adv_param']['OldHotelId'],false,'AND');
+        $criteria->together = true;
+//        $criteria->with = array('hotelsamenities');
+
         /**
          * @todo поменять проверку, сделать foreach, массив парвметров-инпутов и т.д.
          */
-        Yii::app()->session['adult_paxes'] = $_POST['param'];
         if(isset($_GET['adv_param'])){
             foreach($_GET['adv_param'] as $key=>$value){
-                if($key != 'price')
+                if($key == 'StarRating')
                 {
                     $criteria->addInCondition($key,$value, 'AND');
+                }
+                if($key == 'PAmenities')
+                {
+
+                    $criteria->compare($key,$value,'AND');
                 }
             }
             Yii::app()->session['adv_param'] = json_encode($_GET['adv_param']);
         }
         $criteria->addInCondition('HotelCode', $hotelsCode['hotelsCode'], 'AND');
-        $dataProvider = new CActiveDataProvider(HotelsList::model(), array(
+        $dataProvider = new CActiveDataProvider(Hotelslist::model(), array(
             'pagination' => array(
                 'pageSize' => 10
             ),
