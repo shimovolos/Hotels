@@ -73,17 +73,16 @@ class SiteController extends Controller
                 'responseID' => $response->responseId,
                 'searchID' => $response->searchId
             ));
-        }else{
-            if(isset($_POST['search']) && Yii::app()->cache->get('response')===false){
-                $response =  $this->client->getAvailableHotel($_POST['param']);
-                Yii::app()->cache->set('response', serialize($response));
-                Yii::app()->cache->set('parameters', serialize($_POST['param']));
-                Yii::app()->session['responseData'] = json_encode(array(
-                    'responseID' => $response->responseId,
-                    'searchID' => $response->searchId
-                ));
-            }
+        }elseif(isset($_POST['search']) && Yii::app()->cache->get('response')===false){
+            $response =  $this->client->getAvailableHotel($_POST['param']);
+            Yii::app()->cache->set('response', serialize($response));
+            Yii::app()->cache->set('parameters', serialize($_POST['param']));
+            Yii::app()->session['responseData'] = json_encode(array(
+                'responseID' => $response->responseId,
+                'searchID' => $response->searchId
+            ));
         }
+
         $hotelsCode = $this->client->removeDuplicateHotels(unserialize(Yii::app()->cache->get('response')));
         $criteria = new CDbCriteria;
         $criteria->order = 't.StarRating DESC';

@@ -111,6 +111,7 @@ $(document).ready(function(){
         },
         success: $.noop,
         onSelect: true
+//        onsubmit: load()
     });
 });
 
