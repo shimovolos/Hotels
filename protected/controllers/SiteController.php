@@ -92,14 +92,11 @@ class SiteController extends Controller
          */
         if(isset($_GET['adv_param'])){
             foreach($_GET['adv_param'] as $key=>$value){
-                if($key == 'price')
-                {
-//                    Yii::app()->session['price'] = json_encode($value);
+                if($key == 'price'){
                     $hotelsCode = $this->client->sortByPrice($value, unserialize(Yii::app()->cache->get('response')));
 
                 }
-                else
-                {
+                else{
                     $criteria->addInCondition($key,$value, 'AND');
                 }
             }
