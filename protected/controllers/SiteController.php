@@ -62,42 +62,56 @@ class SiteController extends Controller
         }
     }
 
+    public function setDataToCache()
+    {
+        $response = $this->client->getAvailableHotel($_POST['param']);
+        Yii::app()->cache->set('response', serialize($response));
+        Yii::app()->cache->set('parameters', serialize($_POST['param']));
+        Yii::app()->session['responseData'] = json_encode(array(
+            'responseID' => $response->responseId,
+            'searchID' => $response->searchId
+        ));
+    }
+
     public function actionHotels()
     {
         if(isset($_POST['search_hotel'])){
             Yii::app()->cache->delete('response');
-            $response =  $this->client->getAvailableHotel($_POST['param']);
-            Yii::app()->cache->set('response', serialize($response));
-            Yii::app()->cache->set('parameters', serialize($_POST['param']));
-            Yii::app()->session['responseData'] = json_encode(array(
-                'responseID' => $response->responseId,
-                'searchID' => $response->searchId
-            ));
+            $this->setDataToCache();
         }elseif(isset($_POST['search']) && Yii::app()->cache->get('response')===false){
-            $response =  $this->client->getAvailableHotel($_POST['param']);
-            Yii::app()->cache->set('response', serialize($response));
-            Yii::app()->cache->set('parameters', serialize($_POST['param']));
-            Yii::app()->session['responseData'] = json_encode(array(
-                'responseID' => $response->responseId,
-                'searchID' => $response->searchId
-            ));
+            $this->setDataToCache();
         }
 
         $hotelsCode = $this->client->removeDuplicateHotels(unserialize(Yii::app()->cache->get('response')));
+
         $criteria = new CDbCriteria;
         $criteria->order = 't.StarRating DESC';
 
-        /**
-         * @todo поменять проверку, сделать foreach, массив парвметров-инпутов и т.д.
-         */
+        $result = array();
+        $internet = $_GET['adv_param']['Internet'];
+        $restaurant = $_GET['adv_param']['Restaurant'];
+        $parking = $_GET['adv_param']['Parking'];
+        $bar = $_GET['adv_param']['Bar'];
+        $swimming = $_GET['adv_param']['Swimming'];
+
         if(isset($_GET['adv_param'])){
+
             foreach($_GET['adv_param'] as $key=>$value){
                 if($key == 'price'){
                     $hotelsCode = $this->client->sortByPrice($value, unserialize(Yii::app()->cache->get('response')));
-
-                }
-                else{
+                }elseif($key == 'StarRating'){
                     $criteria->addInCondition($key,$value, 'AND');
+                }else{
+                    $hotelCode = join("','",$hotelsCode['hotelsCode']);
+                    $data = Hotelsamenities::model()->findAll(array('condition'=>"HotelCode IN ('".$hotelCode."')
+                    AND PAmenities LIKE '%$internet%' AND PAmenities LIKE '%$restaurant%' AND PAmenities LIKE '%$parking%' AND
+                    PAmenities LIKE '%$bar%' AND PAmenities LIKE '%$swimming%'"));
+
+                    foreach($data as $key=>$val){
+                        $result[] = $val->HotelCode;
+                    }
+                    $hotels = join("','",$result);
+                    $criteria->addCondition("HotelCode IN ('".$hotels."')",'AND');
                 }
             }
             Yii::app()->session['adv_param'] = json_encode($_GET['adv_param']);
@@ -112,7 +126,7 @@ class SiteController extends Controller
 
         $this->render('hotels', array(
             'dataProvider' =>$dataProvider,
-            'hotelsCode' => $hotelsCode
+            'hotelsCode' => $hotelsCode,
         ));
 
     }

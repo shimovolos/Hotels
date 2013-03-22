@@ -7,6 +7,7 @@
         $("#tabs").tabs();
     });
 </script>
+
 <script type="text/javascript"
         src="http://maps.googleapis.com/maps/api/js?key=<?php echo Yii::app()->params['GOOGLE_MAPS_API_KEY']; ?>&sensor=true&language=ru">
 </script>
@@ -21,9 +22,8 @@ $images = explode(';',$hotel->HotelImages);
 ?>
 <div id="tabs" style="min-height: 400px">
 <ul>
-    <li><a href="#tabs-1">Фото</a></li>
+    <li><a href="#tabs-1">Общая нформация</a></li>
     <li><a href="#tabs-2">Подробная информация</a></li>
-    <li><a href="#tabs-3">Карта</a></li>
     <li><a href="#tabs-4">Забронировать</a></li>
 </ul>
 <div id="tabs-1">
@@ -135,6 +135,12 @@ $images = explode(';',$hotel->HotelImages);
     </table>
     </p>
     <br>
+    <body onload="initialize(<?php echo $hotel->Latitude; ?>,<?php echo $hotel->Longitude; ?>)">
+
+    <div id="map_canvas" style="width:100%; height:500px">
+
+    </div>
+    </body>
 </div>
 
 <div id="tabs-2">
@@ -262,20 +268,6 @@ $images = explode(';',$hotel->HotelImages);
     </div>
 </div>
 
-<div id="tabs-3">
-    <br>
-
-    <body onload="initialize(<?php echo $hotel->Latitude; ?>,<?php echo $hotel->Longitude; ?>)">
-    <div id="map_canvas" style="width:100%; height:500px">
-        <script>
-            google.maps.event.trigger(map, 'resize');
-            map.setZoom(map.getZoom());
-        </script>
-    </div>
-    </body>
-</div>
-
-
 <div id="tabs-4">
     <?
     if (is_object($allocateResponse->availableHotels)) {
@@ -292,7 +284,7 @@ $images = explode(';',$hotel->HotelImages);
         foreach ((array)$rooms as $rnum => $room) :
             ?>
             <a href="<? echo baseUrl() . '/site/booking?processId=' . $hotel->processId ?>">Забронировать: </a><br/>
-            <div class="info_table" style="border: #8d889e 1px solid; border-radius: 2px; margin: 10px; padding: 10px;">
+            <div class="info_table" style="border: #8d889e 1px solid; border-radius: 2px;padding: 10px;">
                 <table class="specialty">
                     <tr>
                         <td>

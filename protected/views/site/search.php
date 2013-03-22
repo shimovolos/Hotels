@@ -9,7 +9,7 @@ unset(Yii::app()->session['responseData']);
 ?>
 <div id="info">
 </div>
-<form name=search_form id=search_form   action='<?php echo baseUrl()?>/site/hotels' method='post' >
+<form name=search_form id=search_form  onsubmit="load()" action='<?php echo baseUrl()?>/site/hotels' method='post' >
     <table>
         <tr>
             <td>
