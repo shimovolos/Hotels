@@ -1,4 +1,8 @@
 <?php
+Yii::app()->getClientScript()->registerCoreScript('jquery.ui');
+registerCss('/public/css/jquery.ui.min.css');
+registerScript('/public/js/chosen.jquery.js');
+registerCss('/public/css/chosen.css');
     registerScript("/public/js/search_form.js");
     registerScript('/public/js/jquery.validate.min.js');
     registerCss('/public/css/table.css');
@@ -34,36 +38,33 @@
 
     Yii::app()->getClientScript()->registerScript('priceRange', $sliderScript);
     $parameters = unserialize(Yii::app()->cache->get('parameters'));
+function setCheckbox($name, $label, $params)
+{
+    if (isset($params)) {
+        echo '<input type="checkbox" name="adv_param[' . $name . ']" value="' . $name . '" checked="true" onchange="submitAdvancedForm()"/>
+                                <label>' . $label . '</label>
+                                <br />';
+    } else {
+        echo '<input type="checkbox" name="adv_param[' . $name . ']" value="' . $name . '" onchange="submitAdvancedForm()"/>
+                                <label>' . $label . '</label>
+                                <br />';
+    }
+}
 ?>
 <div id="advanced_search">
     <form method="post" action="">
         <ul id="advanced_search_options" style="font-size: 8pt;margin: auto">
             <li>
-                <input type="hidden" name="param[city_id]" id="city_id" />
-                <label >Город</label><br />
-                <?
-                $this->widget('zii.widgets.jui.CJuiAutoComplete', array(
-                    'name' => 'search_city',
-                    'source'=> Yii::app()->createUrl('site/autocomplete'),
-                    'options' => array(
-                        'minLength'=>'2',
-                        'select' =>'js: function(event, ui) {
-                                                    this.value = ui.item.label;
-                                                    $("#city_id").val(ui.item.id);
-                                                    return false; }',
-                    ),
-                    'htmlOptions'=>array(
-                        'style' => 'width:160px; height: 15px',
-                        'autocomplete' => 'off',
-                        'value' => ''
-                    ),
-                ));
-                ?>
+                <input type="hidden" name="param[city_id]" id="city_id"/>
+                <input type="hidden" name="param[search_city]" id="search_city"/>
+                <table id='search'>
+                </table>
+                <div id="preloader" style="width: 160px"></div>
+
             </li>
             <li>
-                <label>Дата</label><br/>
-                <input type="text" class="date_picker advanced" name="param[coming_date]" id="coming_date" autocomplete="off" style="width: 70px;"/> -
-                <input type="text" class="date_picker advanced" name="param[leaving_date]" id="leaving_date" autocomplete="off" style="width: 70px;" />
+                <input type="text" class="date_picker advanced" name="param[coming_date]" id="coming_date" autocomplete="off" style="width: 70px;" value placeholder="прибытие"/> -
+                <input type="text" class="date_picker advanced" name="param[leaving_date]" id="leaving_date" autocomplete="off" style="width: 70px;" value placeholder="отъезд" />
             </li>
             <li>
                 <input type="hidden" name="param[adult_paxes]" value="<? echo $parameters['adult_paxes']?>"
@@ -113,21 +114,13 @@
             </li>
             <li>
                 <label >Дополниетельно:</label>
-            </li>
-            <? if(isset($params['PAmenities'])){
-                    echo '<input type="checkbox" name="adv_param[PAmenities]" value="Bar" checked="true" onchange="submitAdvancedForm()"/>
-                            <label>PAmenities</label>
-                            <br />';
-                }
-            else
-            {
-                echo '<input type="checkbox" name="adv_param[PAmenities]" value="Bar" onchange="submitAdvancedForm()"/>
-                            <label>для не курящих</label>
-                            <br />';
-            }
+            </li><?
+            setCheckbox('Internet', 'Интерент', $params['Internet']);
+            setCheckbox('Bar', 'Бар', $params['Bar']);
+            setCheckbox('Parking', 'Парковка', $params['Parking']);
+            setCheckbox('Restaurant', 'Ресторан', $params['Restaurant']);
+            setCheckbox('Swimming', 'Бассейн', $params['Swimming']);
             ?>
-            <input type="checkbox" name="adv_param[internet]"/><label>Интернет</label><br />
-            <input type="checkbox" name="adv_param[breakfast]"/><label>завтрак</label><br />
             </li>
 
         </ul>
@@ -160,3 +153,68 @@
             ));
     ?>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var form = $('#search');
+
+        function refreshSelects() {
+            var selects = form.find('select');
+            selects.chosen();
+            selects.unbind('change').bind('change', function () {
+                var selected = $(this).find('option').eq(this.selectedIndex);
+                $('#city_id').attr('value', selected.attr('value'));
+                $('#search_city').attr('value', selected.text());
+                var connection = selected.data('connection');
+                selected.closest('#search tr').nextAll().remove();
+                if (connection) {
+                    fetchSelect(connection);
+                }
+            });
+        }
+
+        var working = false;
+
+        function fetchSelect(val) {
+            if (working) {
+                return false;
+            }
+            working = true;
+            $.getJSON('<?=Yii::app()->createUrl('site/autocomplete')?>', {key: val}, function (r) {
+                var connection, options = '';
+                $.each(r.items, function (k, v) {
+                    connection = '';
+                    if (v) {
+                        connection = 'data-connection="' + v + '"';
+                    }
+                    if (k.search(';') != -1) {
+                        var data = k.split(';');
+                        options += '<option value="' + data[1] + '" ' + connection + '>' + data[0] + '</option>';
+                    }
+                    else {
+                        options += '<option value="' + k + '" ' + connection + '>' + k + '</option>';
+                    }
+                });
+                if (r.defaultText) {
+                    options = '<option></option>' + options;
+                }
+                $('<tr><td>\
+				<p>' + r.title + '</p>\
+				<select style="width: 165px" data-placeholder="' + r.defaultText + '">\
+					' + options + '\
+				</select>\
+				<span class="divider"></span>\
+			</td></tr>').appendTo(form);
+                refreshSelects();
+                working = false;
+            });
+        }
+
+        $('#preloader').ajaxStart(function () {
+            $(this).show();
+        }).ajaxStop(function () {
+                $(this).hide();
+            });
+        fetchSelect('countrySelect');
+    });
+
+</script>
