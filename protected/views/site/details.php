@@ -287,7 +287,7 @@ $images = explode(';',$hotel->HotelImages);
             <div class="info_table" style="border: #8d889e 1px solid; border-radius: 2px;padding: 10px;">
                 <table class="specialty">
                     <tr>
-                        <td>
+                        <td style="width: 300px">
                             <b>Комната <?php echo($rnum + 1);?> Категории: </b>
                         </td>
                         <td>

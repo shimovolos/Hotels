@@ -57,8 +57,38 @@ class SiteController extends Controller
 
     public function actionAutocomplete()
     {
-        if (Yii::app()->request->isAjaxRequest && isset($_GET['term'])) {
-            echo CJSON::encode($this->dataDB->getAutocomplete($_GET['term']));
+        $countrySelect = new SelectBox('','Выберите страну...');
+        $countries = Hoteldestinations::model()->findAll(array(
+            'select' => 'Country',
+            'distinct' => true,
+            'order' => 'Country'));
+
+        foreach($countries as $country){
+            $countrySelect->addItem($country->Country, $country->Country.'_city');
+        }
+
+        $selects = array(
+            'countrySelect'=> $countrySelect,
+        );
+
+        $citySelect = new SelectBox('', 'Выберите город...');
+
+        if(isset($_GET['key']) && strstr($_GET['key'],'_city')){
+
+            $key = str_replace('_city','',$_GET['key']);
+            $cities = Hoteldestinations::model()->findAll('Country=:Country ORDER BY City', array(':Country'=>$key));
+
+            foreach($cities as $city){
+                $citySelect->addItem($city->City.';'.$city->DestinationId);
+            }
+            $selects[$_GET['key']] = $citySelect;
+        }
+        if(array_key_exists($_GET['key'],$selects)){
+            header('Content-type: application/json');
+            echo $selects[$_GET['key']]->toJSON();
+        }
+        else{
+            header('Content-type: application/json');
         }
     }
 
@@ -212,3 +242,4 @@ class SiteController extends Controller
 
     }
 }
+

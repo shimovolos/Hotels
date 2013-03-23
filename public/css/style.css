@@ -45,18 +45,19 @@ div#menu{
     position: relative;
     padding: 20px;
     margin: auto;
-    min-height:100%;
+    min-height:500px;
     overflow: hidden;
 }
 #info{
+    width: 70%;
     float: left;
 }
 #search_form{
     float: right;
-    width: 315px;
+    width: 260px;
     margin: auto;
     font-family: Arial,sans-serif;
-    font-weight: bold;
+    font-weight: normal;
     color: #1a3d51;
     font-size: 16px;
     text-shadow: rgba(255, 255, 255, 0.7) 1px 1px 1px;
@@ -146,32 +147,20 @@ input[type="text"].booking, select.booking, textarea.booking{
     text-shadow: rgba(255, 255, 255, 0.7) 1px 1px 1px;
     box-shadow: inset rgba(0,0,0,.4) 0 1px 1px;
 }
-input[type="text"], select{
-    font-family: Arial,serif;
-    font-weight: bold;
+input[type=text] {
+    background-color: #fefefe;
+    color: #4d4d4d;
+    font-family: Arial,sans-serif;
+    font-weight: normal;
     color: #1a3d51;
-    background: #d8e6ef;
-    border-radius: 2px;
-    padding: 5px;
-    width: 115px;
-    border: 0;
-    font-size: 16px;
-    text-shadow: rgba(255, 255, 255, 0.7) 1px 1px 1px;
-    box-shadow: inset rgba(0,0,0,.4) 0 1px 1px;
+    font-size: 13px;
+    border: 1px solid #c4c4c4;
+    padding: 2px 2px 2px 2px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
-input[type="text"].advanced{
-    font-family: Arial,serif;
-    font-weight: bold;
-    color: #1a3d51;
-    background: #d8e6ef;
-    border-radius: 2px;
-    padding: 5px;
-    width: 165px;
-    border: 0;
-    font-size: 12px;
-    text-shadow: rgba(255, 255, 255, 0.7) 1px 1px 1px;
-    box-shadow: inset rgba(0,0,0,.4) 0 1px 1px;
-}
+
 
 
 label{
@@ -199,7 +188,7 @@ div#advanced_search{
 div#search_result{
 
     float: left;
-    width: 60%;
+    width: 80%;
     border-radius: 2px;
     height: 100%;
     min-height: 600px;
@@ -318,10 +307,19 @@ a:hover{
     background: rgb(63, 192, 255);
 }
 
-::-webkit-input-placeholder { color: #000; font-size: 12pt; font-style: italic; opacity: 0.3; }
-::-moz-placeholder { color: #000; font-size: 12pt; font-style: italic; opacity: 0.3 }
-:-ms-input-placeholder { color: #000; font-size: 12pt; font-style: italic; opacity: 0.3 }
-input:-moz-placeholder { color: #000; font-size: 12pt; font-style: italic; opacity: 0.3 }
+::-webkit-input-placeholder {font-family: Arial,serif;
+    font-weight: normal;font-style: italic;
+    color: #1a3d51; opacity: 0.5; }
+::-moz-placeholder { font-family: Arial,serif;
+    font-weight: normal;font-style: italic;
+    color: #1a3d51; opacity: 0.5 }
+:-ms-input-placeholder { font-family: Arial,serif;
+    font-weight: normal;font-style: italic;
+    color: #1a3d51; opacity: 0.5 }
+input:-moz-placeholder { font-family: Arial,serif;
+    font-weight: normal;
+    font-style: italic;
+    color: #1a3d51; opacity: 0.5 }
 
 div.error {
     color: rgba(255, 0, 0, 0.47);
@@ -332,4 +330,12 @@ div.error {
 
 input.error {
     border: 1px solid rgba(255, 0, 0, 0.54);
+}
+#preloader{
+    text-align: center;
+    height:20px;
+    background:url('../images/ajax-loader.gif') no-repeat center center;
+    width:260px;
+    display:none;
+    margin: auto;
 }

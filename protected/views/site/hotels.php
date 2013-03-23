@@ -1,6 +1,4 @@
 <?php
-
-
     registerScript("/public/js/search_form.js");
     registerScript('/public/js/jquery.validate.min.js');
     registerCss('/public/css/table.css');
@@ -36,19 +34,6 @@
 
     Yii::app()->getClientScript()->registerScript('priceRange', $sliderScript);
     $parameters = unserialize(Yii::app()->cache->get('parameters'));
-
-    function setCheckbox($name,$label,$params)
-    {
-        if(isset($params)){
-            echo '<input type="checkbox" name="adv_param['.$name.']" value="'.$name.'" checked="true" onchange="submitAdvancedForm()"/>
-                                <label>'.$label.'</label>
-                                <br />';
-        }else{
-            echo '<input type="checkbox" name="adv_param['.$name.']" value="'.$name.'" onchange="submitAdvancedForm()"/>
-                                <label>'.$label.'</label>
-                                <br />';
-        }
-    }
 ?>
 <div id="advanced_search">
     <form method="post" action="">
@@ -93,7 +78,6 @@
             </li>';
             <? endforeach; ?>
             <? endif; ?>
-            <br>
             <li><div id="button_wrap"><input type="submit" name="search_hotel" value="Повторить" onclick="
             <?
 
@@ -130,13 +114,20 @@
             <li>
                 <label >Дополниетельно:</label>
             </li>
-            <?
-                setCheckbox('Internet','Интерент',$params['Internet']);
-                setCheckbox('Bar','Бар',$params['Bar']);
-                setCheckbox('Parking','Парковка',$params['Parking']);
-                setCheckbox('Restaurant','Ресторан',$params['Restaurant']);
-                setCheckbox('Swimming','Бассейн',$params['Swimming']);
+            <? if(isset($params['PAmenities'])){
+                    echo '<input type="checkbox" name="adv_param[PAmenities]" value="Bar" checked="true" onchange="submitAdvancedForm()"/>
+                            <label>PAmenities</label>
+                            <br />';
+                }
+            else
+            {
+                echo '<input type="checkbox" name="adv_param[PAmenities]" value="Bar" onchange="submitAdvancedForm()"/>
+                            <label>для не курящих</label>
+                            <br />';
+            }
             ?>
+            <input type="checkbox" name="adv_param[internet]"/><label>Интернет</label><br />
+            <input type="checkbox" name="adv_param[breakfast]"/><label>завтрак</label><br />
             </li>
 
         </ul>

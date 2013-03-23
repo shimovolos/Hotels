@@ -58,11 +58,8 @@ $(document).ready(function(){
     });
     $("#search_form").validate({
         rules: {
-            'param[search_city]':{
+            select:{
                 required: true
-            },
-            'param[city_id]':{
-                required:true
             },
             'param[coming_date]':{
                 required:true
@@ -111,8 +108,8 @@ $(document).ready(function(){
         },
         success: $.noop,
         onSelect: true
-//        onsubmit: load()
     });
+
 });
 
 function openRoomsForm(){
@@ -171,3 +168,4 @@ function load(){
         top: ($(window).height() - $('.loader').outerHeight())/2
     });
 }
+
