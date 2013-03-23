@@ -177,9 +177,13 @@ class SiteController extends Controller
             );
             $lead_traveller['nationality'] = 'GB';
             $other_traveller = null;
-            if($searchData['adult_paxes'] > 1){
+            $paxCount = $searchData['adult_paxes'];
+            if(isset($searchData['children_paxes'])){
+                $paxCount += $searchData['children_paxes'];
+            }
+            if($paxCount > 1){
 
-                for($i = 0; $i < $searchData['adult_paxes']-1; $i++){
+                for($i = 0; $i < $paxCount-1; $i++){
                     $other_traveller[] = array(
                         'title' => $_POST['other_title_'.$i],
                         'firstName' => $_POST['other_1st_name_'.$i],
@@ -198,24 +202,11 @@ class SiteController extends Controller
             {
                 $note = $_POST['note'];
             }
-            $travel_info = array(
-                'lead_traveller' => $lead_traveller,
-                'other_traveller' => $other_traveller,
-                'preferences' => $preferences,
-                'note' => $note,
-                'process' => $_POST['processId']
-            );
-
             $bookingResponse = $this->client->makeHotelBooking($lead_traveller, $other_traveller, $_POST['processId'], $preferences, $note);
-
-            if(!is_soap_fault($bookingResponse)){
-                $this->render('booking_status', array(
-                        'getHotelBookingStatus' => $bookingResponse->hotelBookingInfo,
-                        'trackingID' => $bookingResponse->trackingId
-                    )
-                );
-            }
-            else throw new CHttpException($bookingResponse->getCode(), $bookingResponse->getMessage());
+            $this->render('booking_status', array(
+                'getHotelBookingStatus' => $bookingResponse->hotelBookingInfo,
+                'trackingID' => $bookingResponse->trackingId
+            ));
         }
     }
 
@@ -225,18 +216,16 @@ class SiteController extends Controller
 
             $trackingId = str_replace(' ', '',$_POST['status_trackingId']);
             $getHotelBookingStatus = $this->client->getHotelBookingStatus($trackingId);
-            if(!is_soap_fault($getHotelBookingStatus)){
-                $this->render('booking_status', array('getHotelBookingStatus'=> $getHotelBookingStatus));
-            }
-            else throw new CHttpException($getHotelBookingStatus->getCode(), $getHotelBookingStatus->getMessage());
+            $this->render('booking_status', array(
+                    'getHotelBookingStatus' => $getHotelBookingStatus->hotelBookingInfo,
+                    'trackingID' => $getHotelBookingStatus->trackingId
+                )
+            );
         }
         elseif(isset($_POST['cancel'])){
             $trackingId =  str_replace(' ', '',$_POST['cancel_trackingId']);
             $cancelHotelBooking = $this->client->cancelHotelBooking($trackingId);
-            if(!is_soap_fault($cancelHotelBooking)){
                 $this->render('cancel_booking', array('cancelHotelBooking'=> $cancelHotelBooking));
-            }
-            else throw new CHttpException($cancelHotelBooking->getCode(), $cancelHotelBooking->getMessage());
         }
         else $this->render('get_booking_status');
 

@@ -39,14 +39,21 @@ registerCss('/public/css/table.css');
         </tr>
     <tr>
     <td colspan="2">
-        <?if($data['adult_paxes'] > 1):?>
+        <?
+            if(isset($data['children_paxes'])){
+                $paxCount = $data['children_paxes'] + $data['adult_paxes'];
+            }else{
+                $paxCount = $data['adult_paxes'];
+            }
+            if($paxCount  > 1):
+        ?>
         <label>Другие посетители:</label>
    </td>
     </tr>
         <?php
 
         {
-            for($i = 0; $i < $data['adult_paxes'] - 1; $i++){
+            for($i = 0; $i < $paxCount - 1; $i++){
                 echo '
                     <tr>
                         <td>

@@ -57,7 +57,7 @@ class HotelsProAPI
             return $response;
         }
         catch(SoapFault $fault){
-            return $fault;
+            throw new CHttpException($fault->getCode(), $fault->getMessage());
         }
     }
 
@@ -138,8 +138,8 @@ class HotelsProAPI
             );
             return $response;
         }
-        catch(SoapFault $e){
-            return $e;
+        catch(SoapFault $exception){
+            throw new CHttpException($exception->getCode(), $exception->getMessage());
         }
     }
 
@@ -150,7 +150,7 @@ class HotelsProAPI
             return $getHotelBookingStatus;
         }
         catch (SoapFault $exception) {
-            return $exception;
+            throw new CHttpException($exception->getCode(), $exception->getMessage());
         }
     }
 
@@ -160,8 +160,8 @@ class HotelsProAPI
             $response = $this->client->cancelHotelBooking(Yii::app()->params['HP_API_KEY'], $trackingId);
             return $response;
         }
-        catch(SoapFault $e){
-            return $e;
+        catch(SoapFault $exception){
+            throw new CHttpException($exception->getCode(), $exception->getMessage());
         }
     }
 }

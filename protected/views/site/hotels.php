@@ -76,13 +76,10 @@ function setCheckbox($name, $label, $params)
             <? foreach($parameters['child_age'] as $key=>$value):?>
             <li>
                 <input type="hidden" name="param[child_age][]" value="'.$value.'">
-            </li>';
+            </li>
             <? endforeach; ?>
             <? endif; ?>
-            <li><div id="button_wrap"><input type="submit" name="search_hotel" value="Повторить" onclick="
-            <?
-
-            ?>"/></div></li>
+            <li><div id="button_wrap"><input type="submit" name="search_hotel" value="Повторить" /></div></li>
         </ul>
     </form>
     <form method="get" id='adv_search' name="adv_search">
