@@ -35,7 +35,19 @@ return array(
         'cache'=>array(
             'class'=>'system.caching.CFileCache',
         ),
+
     ),
 
-
+    'params' => array(
+        'HP_WSDL_PATH' => 'http://api.hotelspro.com/4.1_test/hotel/b2bHotelSOAP.wsdl',
+        'HP_API_KEY' => 'RzlmOXN0MDZJR0tVOCs1L2YzOVp4TzRHSWpwM0dDMkNuNXBqVkx0UEIxZmxEekZZUnhHTGZjdEl2UmRWZmdDeg==',
+        'GOOGLE_MAPS_API_KEY' => 'AIzaSyB2kYXYnVhuXl1adm6xD8J_FbgIMn4A6M0',
+        'hotelsuser' => 'VmZDvkh7'
+    ),
+    'modules'=>array(
+    'gii'=>array(
+        'class'=>'system.gii.GiiModule',
+        'password'=>'03543155',
+    ),
+),
 );

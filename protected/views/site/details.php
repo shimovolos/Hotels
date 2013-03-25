@@ -150,15 +150,16 @@ $images = explode(';',$hotel->HotelImages);
             <li>
                 <table>
                     <?
-                    $desc = preg_split("/(?<=[.])\s+(?=[А-Я])/", $hotel->rusAmenities[0]->HotelDescription);
+                    $desc = preg_split("/(?<=[.])\s+(?=[А-Я])/", $hotel->rusAmenities[0]->Hoteldescription);
                     foreach ($desc as $key => $value) :
-                        $split = explode(':', $value);?>
+                        $split = explode(':', $value);
+                        ?>
                         <tr>
                             <td>
-                                <?=$split[0]?>:
+                                <?php echo isset($split[0]) ? $split[0] : '' ?>:
                             </td>
                             <td>
-                                <?=$split[1]?>
+                                <?php echo isset($split[1]) ? $split[1] : '' ?>
                             </td>
                         </tr>
                         <?endforeach?>
