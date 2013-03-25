@@ -57,38 +57,14 @@ class SiteController extends Controller
 
     public function actionAutocomplete()
     {
-        $countrySelect = new SelectBox('','Выберите страну...');
-        $countries = Hoteldestinations::model()->findAll(array(
-            'select' => 'Country',
-            'distinct' => true,
-            'order' => 'Country'));
-
-        foreach($countries as $country){
-            $countrySelect->addItem($country->Country, $country->Country.'_city');
-        }
-
-        $selects = array(
-            'countrySelect'=> $countrySelect,
-        );
-
-        $citySelect = new SelectBox('', 'Выберите город...');
-
-        if(isset($_GET['key']) && strstr($_GET['key'],'_city')){
-
-            $key = str_replace('_city','',$_GET['key']);
-            $cities = Hoteldestinations::model()->findAll('Country=:Country ORDER BY City', array(':Country'=>$key));
-
-            foreach($cities as $city){
-                $citySelect->addItem($city->City.';'.$city->DestinationId);
+        if(isset($_GET['key'])){
+            $destinations = Hoteldestinations::model()->findAll('Country=:Country ORDER BY City', array(':Country'=>$_GET['key']));
+            $cities = array();
+            foreach($destinations as $city){
+                $cities[] = array('id' => $city->DestinationId, 'city' => $city->City);
             }
-            $selects[$_GET['key']] = $citySelect;
-        }
-        if(array_key_exists($_GET['key'],$selects)){
             header('Content-type: application/json');
-            echo $selects[$_GET['key']]->toJSON();
-        }
-        else{
-            header('Content-type: application/json');
+            echo json_encode($cities);
         }
     }
 
@@ -111,11 +87,9 @@ class SiteController extends Controller
         }elseif(isset($_POST['search']) && Yii::app()->cache->get('response')===false){
             $this->setDataToCache();
         }
-
         $hotelsCode = $this->client->removeDuplicateHotels(unserialize(Yii::app()->cache->get('response')));
 
         $criteria = new CDbCriteria;
-        $criteria->order = 't.StarRating DESC';
 
         $result = array();
         $internet = $_GET['adv_param']['Internet'];
@@ -130,7 +104,7 @@ class SiteController extends Controller
                 if($key == 'price'){
                     $hotelsCode = $this->client->sortByPrice($value, unserialize(Yii::app()->cache->get('response')));
                 }elseif($key == 'StarRating'){
-                    $criteria->addInCondition($key,$value, 'AND');
+                    $criteria->addInCondition($key,$this->pullStarRange($value), 'AND');
                 }else{
                     $hotelCode = join("','",$hotelsCode['hotelsCode']);
                     $data = Hotelsamenities::model()->findAll(array('condition'=>"HotelCode IN ('".$hotelCode."')
@@ -147,13 +121,33 @@ class SiteController extends Controller
             Yii::app()->session['adv_param'] = json_encode($_GET['adv_param']);
         }
         $criteria->addInCondition('HotelCode', $hotelsCode['hotelsCode'], 'AND');
+
+        $sort = new CSort();
+        $sort->sortVar = 'sort';
+        $sort->defaultOrder = 'HotelName ASC';
+        $sort->multiSort = true;
+        $sort->attributes = array(
+            'hotelName'=>array(
+                'label'=>'названию',
+                'asc'=>'HotelName ASC',
+                'desc'=>'HotelName DESC',
+                'default'=>'desc',
+            ),
+            'starRating'=>array(
+                'asc'=>'StarRating ASC',
+                'desc'=>'StarRating DESC',
+                'default'=>'desc',
+                'label'=>'звёздам',
+            ),
+        );
+
         $dataProvider = new CActiveDataProvider(Hotelslist::model(), array(
             'pagination' => array(
                 'pageSize' => 10
             ),
-            'criteria' => $criteria
+            'criteria' => $criteria,
+            'sort' => $sort,
         ));
-
         $this->render('hotels', array(
             'dataProvider' =>$dataProvider,
             'hotelsCode' => $hotelsCode,
@@ -228,7 +222,18 @@ class SiteController extends Controller
                 $this->render('cancel_booking', array('cancelHotelBooking'=> $cancelHotelBooking));
         }
         else $this->render('get_booking_status');
+    }
 
+    private function pullStarRange($inputRange){
+        $range = explode('-',$inputRange);
+        return range($range[0], $range[1]);
     }
 }
 
+/**
+  * @todo 1) список результатов должен быть linkable, т.е. по сути нужно термы поиска завернуть в URL
+    @todo 2) нужно переключение списка (list view, card view и map view)
+    @todo 3) нужна возможность листать найденные отели на странице просмотра отеля, типа следующий, предыдущий
+    @todo 4) нужен возврат со страницы просмотра отеля на список результатов. Сейчас тыкаю back и он отваливается
+    @todo 6) в фильтре слева на списке результатов пусть он заполнит страну и город которые я уже выбрал на главной
+ */

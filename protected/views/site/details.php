@@ -163,7 +163,6 @@ $images = explode(';',$hotel->HotelImages);
                         </tr>
                         <?endforeach?>
                 </table>
-
             </li>
             <li><hr/></li>
             <li>
