@@ -92,14 +92,14 @@ class SiteController extends Controller
         $criteria = new CDbCriteria;
 
         $result = array();
-        $internet = $_GET['adv_param']['Internet'];
-        $restaurant = $_GET['adv_param']['Restaurant'];
-        $parking = $_GET['adv_param']['Parking'];
-        $bar = $_GET['adv_param']['Bar'];
-        $swimming = $_GET['adv_param']['Swimming'];
+
 
         if(isset($_GET['adv_param'])){
-
+            $internet = $_GET['adv_param']['Internet'];
+            $restaurant = $_GET['adv_param']['Restaurant'];
+            $parking = $_GET['adv_param']['Parking'];
+            $bar = $_GET['adv_param']['Bar'];
+            $swimming = $_GET['adv_param']['Swimming'];
             foreach($_GET['adv_param'] as $key=>$value){
                 if($key == 'price'){
                     $hotelsCode = $this->client->sortByPrice($value, unserialize(Yii::app()->cache->get('response')));
