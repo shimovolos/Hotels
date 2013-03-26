@@ -6,37 +6,8 @@ registerCss('/public/css/chosen.css');
     registerScript("/public/js/search_form.js");
     registerScript('/public/js/jquery.validate.min.js');
     registerCss('/public/css/table.css');
-    $params = null;
-    if(isset(Yii::app()->session['adv_param'])){
-        $params = json_decode(Yii::app()->session['adv_param'],true);
-        $price = explode('-', $params['price']);
-        $from = intval(str_replace('$', '', $price[0]));
-        $to = intval(str_replace('$', '', $price[1]));
-    }
-    else{
-        $from = 5;
-        $to = 2000;
-    }
-    $sliderScript = '
-        $(function() {
-        $( "#price_range" ).slider({
-            range: true,
-            min: 5,
-            max: 2000,
-            values: ['.$from.','.$to.'],
-            step: 25,
-            slide: function( event, ui ) {
-                $( "#price" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
-            },
-            change: function(event, ui){
-                submitAdvancedForm();
-            }
-        });
-        $( "#price" ).val( "$" + $( "#price_range" ).slider( "values", 0 ) +
-            " - $" + $( "#price_range" ).slider( "values", 1 ) );
-    });';
-
     Yii::app()->getClientScript()->registerScript('priceRange', $sliderScript);
+    Yii::app()->getClientScript()->registerScript('starRange', $starScript);
     $parameters = unserialize(Yii::app()->cache->get('parameters'));
 function setCheckbox($name, $label, $params)
 {
@@ -53,74 +24,107 @@ function setCheckbox($name, $label, $params)
 ?>
 <div id="advanced_search">
     <form method="post" action="">
-        <ul id="advanced_search_options" style="font-size: 8pt;margin: auto">
-            <li>
-                <input type="hidden" name="param[city_id]" id="city_id"/>
-                <input type="hidden" name="param[search_city]" id="search_city"/>
-                <table id='search'>
-                </table>
-                <div id="preloader" style="width: 160px"></div>
+        <table>
+            <tr>
+                <td>
+                <? if(isset($parameters['child_age'])): ?>
+                    <input type="hidden" name="param[children_paxes]" value="<? echo $parameters['children_paxes']?>">
+                    <? foreach($parameters['child_age'] as $key=>$value):?>
+                        <input type="hidden" name="param[child_age][]" value="'.$value.'">
+                    <? endforeach; ?>
+                <? endif; ?>
+                <input type="hidden" name="param[adult_paxes]" value="<? echo $parameters['adult_paxes']?>"/>
+                <input type="hidden" name="param[city_id]" id="city_id" value="<?=$parameters['city_id']?>"/>
+                <input type="hidden" name="param[search_city]" id="search_city" value="<?=$parameters['search_city']?>"/>
+                <?
+                $destinations = Hoteldestinations::model()->findAll(array(
+                    'select' => 'Country',
+                    'distinct' => true,
+                    'order' => 'Country'));
+                $result = array();
+                foreach($destinations as $destination){
+                    $result[$destination->Country] = $destination->Country;
+                }
+                echo CHtml::dropDownList('param[country]', '', $result, array(
+                    'prompt'=> 'Выберите страну...',
+                    'style' =>'width:180px',
+                    'options' =>array(
+                        $parameters['country'] => array(
+                            'selected'=>'selected'
+                        )
+                    )
+                ));
 
-            </li>
-            <li>
+                ?>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                <?
+                    $cities = Hoteldestinations::model()->findAll('Country=:Country ORDER BY City', array(':Country'=>$parameters['country']));
+                    $result = array();
+                    foreach($cities as $destination){
+                        $result[$destination->DestinationId] = $destination->City;
+                    }
+                    echo CHtml::dropDownList('param[city]', '', $result, array(
+                        'empty'=> 'Выберите город...',
+                        'style' =>'width:180px',
+                        'options' =>array(
+                            $parameters['city_id'] => array(
+                                'selected'=>'selected'
+                            )
+                        )
+                    ));
+                    unset($result);
+                ?>
+                </td>
+            </tr>
+            <tr>
+                <td>
                 <input type="text" class="date_picker advanced" name="param[coming_date]" id="coming_date" autocomplete="off" style="width: 70px;" value placeholder="прибытие"/> -
                 <input type="text" class="date_picker advanced" name="param[leaving_date]" id="leaving_date" autocomplete="off" style="width: 70px;" value placeholder="отъезд" />
-            </li>
-            <li>
-                <input type="hidden" name="param[adult_paxes]" value="<? echo $parameters['adult_paxes']?>"
-            </li>
-            <? if(isset($parameters['child_age'])): ?>
-            <li>
-                <input type="hidden" name="param[children_paxes]" value="<? echo $parameters['children_paxes']?>">
-            </li>
-            <? foreach($parameters['child_age'] as $key=>$value):?>
-            <li>
-                <input type="hidden" name="param[child_age][]" value="'.$value.'">
-            </li>
-            <? endforeach; ?>
-            <? endif; ?>
-            <li><div id="button_wrap"><input type="submit" name="search_hotel" value="Повторить" /></div></li>
-        </ul>
+                </td>
+            <tr>
+                <td>
+                    <div id="button_wrap"><input type="submit" name="search_hotel" value="Повторить" /></div>
+                </td>
+            </tr>
+        </table>
     </form>
-    <form method="get" id='adv_search' name="adv_search">
-        <ul style="font-size: 8pt;margin: auto">
-            <li>
-                <p>
-                    <label for="price">Стоимость за ночь:</label>
-                    <input type="text" class="advanced" name="adv_param[price]" id="price"  autocomplete="off" readonly="true" />
-                </p>
-
-                <div id="price_range" style="width: 165px"></div>
-            </li>
-            <li>
-                <label>Количество звёзд:</label><br/>
-                <?
-                for($i = 1; $i<=5;$i++){
-                    if(isset($params['StarRating']) && in_array($i, $params['StarRating'])){
-                        echo "<input type='checkbox' id='star' name='adv_param[StarRating][]' value='$i' checked='true' onchange='submitAdvancedForm()'/>";
-                    }
-                    else{
-                        echo "<input type='checkbox' id='star' name='adv_param[StarRating][]' value='$i'  onchange='submitAdvancedForm()'/>";
-                    }
-                    for($n = $i; $n > 0; $n--){
-                        echo '<img src="'.baseUrl().'/public/images/star_icon.png" alt="star"/>';
-                    }
-                    echo '<br/>';
-                }
-                ?>
-            </li>
-            <li>
+    <form method="get" id='adv_search' name="adv_search"  style="font-size: 4pt;">
+        <table>
+            <tr>
+                <td>
+                <label for="price">Стоимость за ночь:</label>
+                <input type="text" class="advanced" name="adv_param[price]" id="price"  autocomplete="off" readonly="true" />
+                <div id="price_range" style="width: 155px"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                <label for="satr">Количество звёзд:</label><br/>
+                <input type="text" class="advanced" name="adv_param[StarRating]" id="star"  autocomplete="off" readonly="true" />
+                <div id="star_range" style="width: 155px"></div>
+                </td>
+            </tr>
+            <tr>
+               <td>
                 <label >Дополниетельно:</label>
-            </li><?
-            setCheckbox('Internet', 'Интерент', $params['Internet']);
-            setCheckbox('Bar', 'Бар', $params['Bar']);
-            setCheckbox('Parking', 'Парковка', $params['Parking']);
-            setCheckbox('Restaurant', 'Ресторан', $params['Restaurant']);
-            setCheckbox('Swimming', 'Бассейн', $params['Swimming']);
-            ?>
-            </li>
+               </td>
+            </tr>
+            <tr>
+                <td>
+                    <?
+                    setCheckbox('Internet', 'Интерент', $params['Internet']);
+                    setCheckbox('Bar', 'Бар', $params['Bar']);
+                    setCheckbox('Parking', 'Парковка', $params['Parking']);
+                    setCheckbox('Restaurant', 'Ресторан', $params['Restaurant']);
+                    setCheckbox('Swimming', 'Бассейн', $params['Swimming']);
+                    ?>
+               </td>
+            </tr>
 
-        </ul>
+        </table>
     </form>
 </div>
 <div id="search_result">
@@ -142,76 +146,91 @@ function setCheckbox($name, $label, $params)
         $this->widget('zii.widgets.CListView', array(
                 'dataProvider'=>$dataProvider,
                 'itemView'=>'_hotelview',
+                'sortableAttributes'=>array('starRating', 'hotelName'),
+                'sorterHeader'=>'Сортировать по:',
                 'viewData' => array('hotels' => $hotels ),
-                'template'=>"<div class='info_table'><table style='width: 100%'>{items}</table>{pager}</div>",
+                'template'=>"<div class='info_table'><table style='width: 100%'>{summary}{sorter}{items}</table>{pager}</div>",
                 'pager' => array(
                     'header' => '',
-                )
-            ));
+                ),
+                'summaryText'=>'<div>Найдено {count} отелей</div>',
+        ));
     ?>
 </div>
+<?
+$params = null;
+if (isset(Yii::app()->session['adv_param'])) {
+    $params = json_decode(Yii::app()->session['adv_param'], true);
+    $price = explode('-', $params['price']);
+    $star = explode('-', $params['StarRating']);
+    $priceFrom = intval(str_replace('$', '', $price[0]));
+    $priceTo = intval(str_replace('$', '', $price[1]));
+    $starFrom = $star[0];
+    $starTo = $star[1];
+} else {
+    $priceFrom = 5;
+    $priceTo = 2000;
+    $starFrom = 0;
+    $starTo = 5;
+}
+?>
 <script type="text/javascript">
-    $(document).ready(function () {
-        var form = $('#search');
-
-        function refreshSelects() {
-            var selects = form.find('select');
-            selects.chosen();
-            selects.unbind('change').bind('change', function () {
-                var selected = $(this).find('option').eq(this.selectedIndex);
-                $('#city_id').attr('value', selected.attr('value'));
-                $('#search_city').attr('value', selected.text());
-                var connection = selected.data('connection');
-                selected.closest('#search tr').nextAll().remove();
-                if (connection) {
-                    fetchSelect(connection);
-                }
-            });
-        }
-
-        var working = false;
-
-        function fetchSelect(val) {
-            if (working) {
-                return false;
+    $(function() {
+        $("#price_range" ).slider({
+            range: true,
+            min: 5,
+            max: 2000,
+            values: ['<?=$priceFrom?>','<?=$priceTo?>'],
+            step: 25,
+            slide: function( event, ui ) {
+                $( "#price" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+            },
+            change: function(event, ui){
+                submitAdvancedForm();
             }
-            working = true;
-            $.getJSON('<?=Yii::app()->createUrl('site/autocomplete')?>', {key: val}, function (r) {
-                var connection, options = '';
-                $.each(r.items, function (k, v) {
-                    connection = '';
-                    if (v) {
-                        connection = 'data-connection="' + v + '"';
-                    }
-                    if (k.search(';') != -1) {
-                        var data = k.split(';');
-                        options += '<option value="' + data[1] + '" ' + connection + '>' + data[0] + '</option>';
-                    }
-                    else {
-                        options += '<option value="' + k + '" ' + connection + '>' + k + '</option>';
-                    }
-                });
-                if (r.defaultText) {
-                    options = '<option></option>' + options;
-                }
-                $('<tr><td>\
-				<p>' + r.title + '</p>\
-				<select style="width: 165px" data-placeholder="' + r.defaultText + '">\
-					' + options + '\
-				</select>\
-				<span class="divider"></span>\
-			</td></tr>').appendTo(form);
-                refreshSelects();
-                working = false;
-            });
-        }
-
-        $('#preloader').ajaxStart(function () {
-            $(this).show();
-        }).ajaxStop(function () {
-                $(this).hide();
-            });
-        fetchSelect('countrySelect');
+        });
+        $( "#price" ).val( "$" + $( "#price_range" ).slider( "values", 0 ) +
+            " - $" + $( "#price_range" ).slider( "values", 1 ) );
     });
 
+    $(function(){
+        $("#star_range").slider({
+            range: true,
+            min: 0,
+            max: 5,
+            values:['<?=$starFrom?> ','<?=$starTo?>'],
+            slide: function(event, ui){
+                $("#star").val(ui.values[0] + " - " + ui.values[1]);
+            },
+            change: function(event, ui){
+                submitAdvancedForm();
+            }
+        });
+        $("#star").val($( "#star_range" ).slider( "values", 0 ) +
+            " - " + $( "#star_range" ).slider( "values", 1 ));
+    })
+
+    $(function(){
+        $('#param_city').chosen().change(function(){
+            var selected = $(this).find('option').eq(this.selectedIndex);
+            $('#city_id').attr('value', selected.attr('value'));
+            $('#search_city').attr('value', selected.text());
+        });
+        $("#param_country").chosen().change(function(){
+            $("#param_city option").remove();
+            $("#param_city").append("<option>Выберите город...</option>");
+            $.ajax({
+                url: '<?=Yii::app()->createUrl('site/autocomplete')?>',
+                type: 'get',
+                dataType: 'json',
+                data: 'key='+$(this).val(),
+                success: function(cities){
+                    $.each(cities, function(){
+                        $("#param_city").append($('<option value="'+ this.id +'">' + this.city +'</option>'));
+                    });
+                    $('#param_city').trigger("liszt:updated");
+                }
+            });
+        });
+    })
 </script>
