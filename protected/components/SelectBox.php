@@ -1,4 +1,5 @@
 <?php
+
 class SelectBox{
     public $items = array();
     public $defaultText = '';
