@@ -124,21 +124,13 @@ function setCheckbox($name, $label, $params)
     </form>
 </div>
 <div id="search_result">
-    <span id="title">
-        Всего найдено
-        <? echo $dataProvider->totalItemCount?> отелей для поездки в
-        <? echo $parameters['search_city']?> на период с
-        <? echo $parameters['coming_date']?> по
-        <? echo $parameters['leaving_date']?>
-    </span>
-    <?php
-        $response = unserialize(Yii::app()->cache->get('response'));
-        if (is_object($response->availableHotels)) {
-            $hotels[] = $response->availableHotels;
-        } else {
-            $hotels = $response->availableHotels;
-        }
-
+<?php
+    $response = unserialize(Yii::app()->cache->get('response'));
+    if (is_object($response->availableHotels)) {
+        $hotels[] = $response->availableHotels;
+    } else {
+        $hotels = $response->availableHotels;
+    }
         $this->widget('zii.widgets.CListView', array(
                 'dataProvider'=>$dataProvider,
                 'itemView'=>'_hotelview',
@@ -149,6 +141,16 @@ function setCheckbox($name, $label, $params)
                 )
             ));
     ?>
+</div>
+<div id="result">
+    <span id="title">
+        <br>Всего найдено:
+        <? echo '<br><b>'.$dataProvider->totalItemCount.'</b>'?> отелей<br> В городе:
+        <? echo '<br><b>'.$parameters['search_city'].'</b>'?> <br>На период:<br> с
+        <? echo '<b>'.$parameters['coming_date'].'</b>'?> - <br>по
+        <? echo '<b>'.$parameters['leaving_date'].'</b>'?>
+    </span>
+
 </div>
 <script type="text/javascript">
     $(document).ready(function () {

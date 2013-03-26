@@ -188,10 +188,16 @@ div#advanced_search{
 div#search_result{
 
     float: left;
-    width: 80%;
+    width: 68%;
     border-radius: 2px;
     height: 100%;
     min-height: 600px;
+}
+div#result{
+    float: left;
+    text-align: center;
+    margin-left: 1%;
+    width: 10%;
 }
 
 div#result_list{
@@ -231,7 +237,6 @@ span#title{
     font-weight: normal;
     color: #1a3d51;
     font-size: 15px;
-    border-bottom: #1c94c4 1px solid;
 }
 #load {
     text-align: center;
