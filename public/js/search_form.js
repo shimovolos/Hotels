@@ -127,7 +127,20 @@ function openRoomsForm(){
 }
 
 function submitAdvancedForm(){
-    $("#adv_search").submit();
+    var url = $("#adv_search").attr("action");
+    var split = url.split('?');
+    newUrl = split[1]+'&'+$("#adv_search").serialize();
+    $.ajax({
+        url: 'update',
+        type: 'get',
+        data: newUrl,
+        success: function(response) {
+            $("#view").html(response);
+        },
+        error:function(){
+            alert('Ошибка загрузки формы');
+        }
+    })
 }
 
 function addRowToTable(){

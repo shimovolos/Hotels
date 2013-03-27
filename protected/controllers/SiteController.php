@@ -44,14 +44,24 @@ class SiteController extends Controller
 
     public function actionDetails()
     {
+        $result = array();
         $responseData = json_decode(Yii::app()->session['responseData']);
         $hotelCode = $_GET['HotelCode'];
+
+        $hotelsCode = $this->client->removeDuplicateHotels(unserialize(Yii::app()->cache->get('response')));
+
+        $hotel = join("','",$hotelsCode['hotelsCode']);
+        $data = Hotelslist::model()->findAll(array('condition'=>"HotelCode IN ('".$hotel."')"));
+        foreach($data as $key=>$val){
+            $result[] = $val->HotelCode;
+        }
 
         $allocateHotelCode = $this->client->allocateHotelCode($hotelCode, $responseData->searchID);
 
         $this->render('details',array(
             'hotel'=>$this->dataDB->getHotelDescription($hotelCode),
             'allocateResponse' => $allocateHotelCode,
+            'hotelsCode'=>$result,
         ));
     }
 
@@ -68,7 +78,7 @@ class SiteController extends Controller
         }
     }
 
-    public function setDataToCache()
+    private function setDataToCache()
     {
         $response = $this->client->getAvailableHotel($_GET['param']);
         Yii::app()->cache->set('response', serialize($response));
@@ -79,7 +89,41 @@ class SiteController extends Controller
         ));
     }
 
-    public function actionHotels()
+    private function Sort()
+    {
+        $sort = new CSort();
+        $sort->sortVar = 'sort';
+        $sort->defaultOrder = 'HotelName ASC';
+        $sort->multiSort = true;
+        $sort->attributes = array(
+            'hotelName'=>array(
+                'label'=>'названию',
+                'asc'=>'HotelName ASC',
+                'desc'=>'HotelName DESC',
+                'default'=>'desc',
+            ),
+            'starRating'=>array(
+                'asc'=>'StarRating ASC',
+                'desc'=>'StarRating DESC',
+                'default'=>'desc',
+                'label'=>'звёздам',
+            ),
+        );
+        return $sort;
+    }
+
+    private function hotelsResponse()
+    {
+        $response = unserialize(Yii::app()->cache->get('response'));
+        if (is_object($response->availableHotels)) {
+            $hotels[] = $response->availableHotels;
+        } else {
+            $hotels = $response->availableHotels;
+        }
+        return $hotels;
+    }
+
+    public function actionUpdate()
     {
         if(isset($_GET['search_hotel'])){
             Yii::app()->cache->delete('response');
@@ -122,37 +166,46 @@ class SiteController extends Controller
         }
         $criteria->addInCondition('HotelCode', $hotelsCode['hotelsCode'], 'AND');
 
-        $sort = new CSort();
-        $sort->sortVar = 'sort';
-        $sort->defaultOrder = 'HotelName ASC';
-        $sort->multiSort = true;
-        $sort->attributes = array(
-            'hotelName'=>array(
-                'label'=>'названию',
-                'asc'=>'HotelName ASC',
-                'desc'=>'HotelName DESC',
-                'default'=>'desc',
+        $dataProvider = new CActiveDataProvider(Hotelslist::model(), array(
+            'pagination' => array(
+                'pageSize' => 10
             ),
-            'starRating'=>array(
-                'asc'=>'StarRating ASC',
-                'desc'=>'StarRating DESC',
-                'default'=>'desc',
-                'label'=>'звёздам',
-            ),
-        );
+            'criteria' => $criteria,
+            'sort' => $this->Sort(),
+        ));
+        echo $dataProvider->totalItemCount;
+        $this->renderPartial('listview',array(
+            'dataProvider'=>$dataProvider,
+            'hotelsCode' => $hotelsCode,
+            'hotels'=>$this->hotelsResponse(),
+        ));
+    }
+
+    public function actionHotels()
+    {
+        if(isset($_GET['search_hotel'])){
+            Yii::app()->cache->delete('response');
+            $this->setDataToCache();
+        }elseif(isset($_GET['search']) && Yii::app()->cache->get('response')===false){
+            $this->setDataToCache();
+        }
+        $hotelsCode = $this->client->removeDuplicateHotels(unserialize(Yii::app()->cache->get('response')));
+
+        $criteria = new CDbCriteria;
+        $criteria->addInCondition('HotelCode', $hotelsCode['hotelsCode'], 'AND');
 
         $dataProvider = new CActiveDataProvider(Hotelslist::model(), array(
             'pagination' => array(
                 'pageSize' => 10
             ),
             'criteria' => $criteria,
-            'sort' => $sort,
+            'sort' => $this->Sort(),
         ));
         $this->render('hotels', array(
             'dataProvider' =>$dataProvider,
             'hotelsCode' => $hotelsCode,
+            'hotels'=>$this->hotelsResponse(),
         ));
-
     }
 
     public function actionBooking()
@@ -231,9 +284,6 @@ class SiteController extends Controller
 }
 
 /**
- * @todo 1) список результатов должен быть linkable, т.е. по сути нужно термы поиска завернуть в URL
-@todo 2) нужно переключение списка (list view, card view и map view)
+ * @todo 2) нужно переключение списка (list view, card view и map view)
 @todo 3) нужна возможность листать найденные отели на странице просмотра отеля, типа следующий, предыдущий
-@todo 4) нужен возврат со страницы просмотра отеля на список результатов. Сейчас тыкаю back и он отваливается
-@todo 6) в фильтре слева на списке результатов пусть он заполнит страну и город которые я уже выбрал на главной
  */

@@ -13,6 +13,8 @@
 </script>
 
 <?php
+$key = array_search($hotel->HotelCode,$hotelsCode);
+
 registerScript("/public/js/slides.min.jquery.js");
 registerScript("/public/js/maps.js");
 registerScript("/public/js/details.js");
@@ -20,6 +22,8 @@ registerCss("/public/css/global.css");
 registerCss("/public/css/table.css");
 $images = explode(';',$hotel->HotelImages);
 ?>
+<a href="<? echo baseUrl().'/site/details?HotelCode='.$hotelsCode[$key-1];?>">< Предыдуший отель</a>
+<a href="<? echo baseUrl().'/site/details?HotelCode='.$hotelsCode[$key+1];?>" style="float: right">Следующий отель ></a>
 <div id="tabs" style="min-height: 400px">
 <ul>
     <li><a href="#tabs-1">Общая нформация</a></li>
@@ -150,7 +154,7 @@ $images = explode(';',$hotel->HotelImages);
             <li>
                 <table>
                     <?
-                    $desc = preg_split("/(?<=[.])\s+(?=[А-Я])/", $hotel->rusAmenities[0]->Hoteldescription);
+                    $desc = preg_split("/(?<=[.])\s+(?=[А-Я])/", $hotel->rusAmenities[0]->HotelDescription);
                     foreach ($desc as $key => $value) :
                         $split = explode(':', $value);
                         ?>

@@ -40,7 +40,7 @@ function setCheckbox($name, $label, $params)
 }
 ?>
 <div id="advanced_search">
-    <form method="get" action="<?echo Yii::app()->request->getUrl();?>">
+    <form method="get" action="">
         <table>
             <tr>
                 <td>
@@ -108,7 +108,7 @@ function setCheckbox($name, $label, $params)
             </tr>
         </table>
     </form>
-    <form method="get" id='adv_search' name="adv_search"  style="font-size: 4pt;">
+    <form method="get" id='adv_search' action="<?=Yii::app()->request->getUrl()?>" name="adv_search"  style="font-size: 4pt;">
         <table>
             <tr>
                 <td>
@@ -152,27 +152,15 @@ function setCheckbox($name, $label, $params)
         <? echo '<b>'.$parameters['coming_date'].'</b>'?> по
         <? echo '<b>'.$parameters['leaving_date'].'</b>'?>
     </span>
-    <?php
-    $response = unserialize(Yii::app()->cache->get('response'));
-    if (is_object($response->availableHotels)) {
-        $hotels[] = $response->availableHotels;
-    } else {
-        $hotels = $response->availableHotels;
-    }
 
-    $this->widget('zii.widgets.CListView', array(
-        'dataProvider'=>$dataProvider,
-        'itemView'=>'_hotelview',
-        'sortableAttributes'=>array('starRating', 'hotelName'),
-        'sorterHeader'=>'Сортировать по:',
-        'viewData' => array('hotels' => $hotels ),
-        'template'=>"<div class='info_table'><table style='width: 100%'>{summary}{sorter}{items}</table>{pager}</div>",
-        'pager' => array(
-            'header' => '',
-        ),
-        'summaryText'=>'',
-    ));
+    <div id="view">
+    <?
+        $this->renderPartial('listview',array(
+            'dataProvider'=>$dataProvider,
+            'hotels'=>$hotels,
+        ));
     ?>
+    </div>
 </div>
 <script type="text/javascript">
     $(function() {
