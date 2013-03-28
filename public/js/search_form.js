@@ -31,15 +31,6 @@ function hide_block(){
     }
 }
 
-function check_number(element, check_value){
-    if(element.value > check_value){
-        element.value = check_value;
-    }
-    if(element.value < 0){
-        element.value = 1;
-    }
-    element.value = element.value.replace(/[^\d]/g, "");
-}
 
 $(document).ready(function(){
     $("#add_child").hide();
@@ -112,28 +103,13 @@ $(document).ready(function(){
 
 });
 
-function openRoomsForm(){
-    var pax_count = $("*[name=adult_paxes]").val();
-    var child_count = $("*[name=children_paxes]").val();
-//    if(pax_count == 0){
-//        $('#error').arcticmodal();
-//    }
-//    else{
-    $('#overlay').arcticmodal();
-//        $("#pax_count").attr('value',pax_count);
-//        if(child_count == '') child_count = 0;
-//        $("#child_count").attr('value',child_count);
-//    }
-}
 
 function submitAdvancedForm(){
     var url = $("#adv_search").attr("action");
-    var split = url.split('?');
-    newUrl = split[1]+'&'+$("#adv_search").serialize();
     $.ajax({
         url: 'update',
         type: 'get',
-        data: newUrl,
+        data: url+'?' + $("#adv_search").serialize(),
         success: function(response) {
             $("#view").html(response);
         },
@@ -141,37 +117,9 @@ function submitAdvancedForm(){
             alert('Ошибка загрузки формы');
         }
     })
+    return false;
 }
 
-function addRowToTable(){
-    var row =
-        '<tr><td>Номер:</td>'+
-            '<td><input  type="text" name="adult_in_room[]" onkeyup="check_number(this, $(\'#pax_count\').val());" style="width: 35px" /></td>'+
-            '<td><input  type="text" name="child_in_room[]" onkeyup="check_number(this, $(\'#child_count\').val());alert();" style="width: 35px"/></td>' +
-            '</tr>';
-    var a = $("input[name^=adult_in_room]:last").val();
-    $("#pax_count").attr("value", $("#pax_count").val() - a);
-    $("#rooms_table tr:last").after(row);
-}
-
-function removeRowFromTable(){
-    $("#rooms_table tr:last").remove();
-}
-
-$(function() {
-    $( "#draggable, #draggable-nonvalid" ).draggable();
-    $( "#droppable" ).droppable({
-        accept: "#draggable",
-        activeClass: "ui-state-hover",
-        hoverClass: "ui-state-active",
-        drop: function( event, ui ) {
-            $( this )
-                .addClass( "ui-state-highlight" )
-                .find( "p" )
-                .html( "Dropped!" );
-        }
-    });
-});
 
 function load(){
     $("#load").show();

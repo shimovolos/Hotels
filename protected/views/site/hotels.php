@@ -5,10 +5,13 @@ registerScript('/public/js/chosen.jquery.js');
 registerCss('/public/css/chosen.css');
 registerScript("/public/js/search_form.js");
 registerScript('/public/js/jquery.validate.min.js');
+registerScript('/public/js/arcticmodal.js');
 registerCss('/public/css/table.css');
+registerCss('/public/css/arcticmodal.css');
 Yii::app()->getClientScript()->registerScript('priceRange', $sliderScript);
 Yii::app()->getClientScript()->registerScript('starRange', $starScript);
 $parameters = unserialize(Yii::app()->cache->get('parameters'));
+
 
 $params = null;
 if (isset(Yii::app()->session['adv_param'])) {
@@ -65,13 +68,13 @@ function setCheckbox($name, $label, $params)
                     echo CHtml::dropDownList('param[country]', '', $result, array(
                         'prompt'=> 'Выберите страну...',
                         'style' =>'width:180px',
-                        'options' =>array(
-                            $parameters['country'] => array(
-                                'selected'=>'selected'
-                            )
-                        )
+//                        'options' =>array(
+//                            $parameters['country'] => array(
+//                                'selected'=>'selected'
+//                            )
+//                        )
                     ));
-
+                    unset($result);
                     ?>
                 </td>
             </tr>
@@ -86,11 +89,11 @@ function setCheckbox($name, $label, $params)
                     echo CHtml::dropDownList('param[city]', '', $result, array(
                         'empty'=> 'Выберите город...',
                         'style' =>'width:180px',
-                        'options' =>array(
-                            $parameters['city_id'] => array(
-                                'selected'=>'selected'
-                            )
-                        )
+//                        'options' =>array(
+//                            $parameters['city_id'] => array(
+//                                'selected'=>'selected'
+//                            )
+//                        )
                     ));
                     unset($result);
                     ?>
@@ -108,7 +111,7 @@ function setCheckbox($name, $label, $params)
             </tr>
         </table>
     </form>
-    <form method="get" id='adv_search' action="<?=Yii::app()->request->getUrl()?>" name="adv_search"  style="font-size: 4pt;">
+    <form method="get" id='adv_search' action="<?=baseUrl().'/site/update'?>" name="adv_search"  style="font-size: 4pt;">
         <table>
             <tr>
                 <td>
@@ -126,7 +129,7 @@ function setCheckbox($name, $label, $params)
             </tr>
             <tr>
                 <td>
-                    <label >Дополниетельно:</label>
+                    <label >Дополнительно:</label>
                 </td>
             </tr>
             <tr>
@@ -140,29 +143,51 @@ function setCheckbox($name, $label, $params)
                     ?>
                 </td>
             </tr>
+            <tr>
+                <td>
+                    <div id="radio" style="font-size: 8px">
+                        <input type="radio" id="radio1" name="adv_param[radio]" value="listview" onchange="submitAdvancedForm()" checked="checked"/><label for="radio1">Список</label>
+                        <input type="radio" id="radio2" name="adv_param[radio]" value="mapview" onchange="submitAdvancedForm()" /><label for="radio2">Карта</label>
+                        <input type="radio" id="radio3" name="adv_param[radio]" value="cardview" onchange="submitAdvancedForm()"/><label for="radio3">Таблица</label>
+                    </div>
+                </td>
+            </tr>
 
         </table>
     </form>
 </div>
-<div id="search_result">
-    <span id="title">
-        Всего найдено:
-        <? echo '<b>'.$dataProvider->totalItemCount.'</b>'?> отелей В городе:
-        <? echo '<b>'.$parameters['search_city'].'</b>'?> на период: с
-        <? echo '<b>'.$parameters['coming_date'].'</b>'?> по
-        <? echo '<b>'.$parameters['leaving_date'].'</b>'?>
-    </span>
+<div id="search_result" onload="loading()">
+    <div style="display: none;">
+        <div class="b-modal" id="exampleModal">
+            <div class="b-modal_close arcticmodal-close">X</div>
+            Пример модального окна
+        </div>
+    </div>
 
     <div id="view">
-    <?
-        $this->renderPartial('listview',array(
-            'dataProvider'=>$dataProvider,
-            'hotels'=>$hotels,
-        ));
-    ?>
     </div>
 </div>
 <script type="text/javascript">
+    $(function(){
+        var url = window.location.href;
+        var param = url.split("?");
+        $.ajax({
+            url: '<?=baseUrl()."/site/update"?>',
+            type: 'get',
+            data: param[1],
+            cache: false,
+            success: function(response) {
+                $("#view").html(response);
+            },
+            error:function(){
+                alert('Ошибка загрузки формы');
+            }
+        })
+    });
+    $(function(){
+        $("#radio").buttonset();
+
+    });
     $(function() {
         $("#price_range" ).slider({
             range: true,
@@ -196,9 +221,10 @@ function setCheckbox($name, $label, $params)
         });
         $("#star").val($( "#star_range" ).slider( "values", 0 ) +
                 " - " + $( "#star_range" ).slider( "values", 1 ));
-    })
+    });
 
     $(function(){
+        $("#param_country").chosen();
         $('#param_city').chosen().change(function(){
             var selected = $(this).find('option').eq(this.selectedIndex);
             $('#city_id').attr('value', selected.attr('value'));
@@ -208,7 +234,7 @@ function setCheckbox($name, $label, $params)
             $("#param_city option").remove();
             $("#param_city").append("<option>Выберите город...</option>");
             $.ajax({
-                url: '<?=Yii::app()->createUrl('site/autocomplete')?>',
+                url: '<?=baseUrl().'/site/autocomplete'?>',
                 type: 'get',
                 dataType: 'json',
                 data: 'key='+$(this).val(),
@@ -219,6 +245,7 @@ function setCheckbox($name, $label, $params)
                     $('#param_city').trigger("liszt:updated");
                 }
             });
+
         });
-    })
+    });
 </script>

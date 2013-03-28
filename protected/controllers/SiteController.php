@@ -136,6 +136,7 @@ class SiteController extends Controller
         $criteria = new CDbCriteria;
 
         $result = array();
+        $viewType = 'listview';
         if(isset($_GET['adv_param'])) {
 
             $internet = $_GET['adv_param']['Internet'];
@@ -143,7 +144,7 @@ class SiteController extends Controller
             $parking = $_GET['adv_param']['Parking'];
             $bar = $_GET['adv_param']['Bar'];
             $swimming = $_GET['adv_param']['Swimming'];
-
+            $viewType = $_GET['adv_param']['radio'];
             foreach($_GET['adv_param'] as $key=>$value){
                 if($key == 'price'){
                     $hotelsCode = $this->client->sortByPrice($value, unserialize(Yii::app()->cache->get('response')));
@@ -165,46 +166,51 @@ class SiteController extends Controller
             Yii::app()->session['adv_param'] = json_encode($_GET['adv_param']);
         }
         $criteria->addInCondition('HotelCode', $hotelsCode['hotelsCode'], 'AND');
-
+        $test = Hotelslist::model()->findAll($criteria);
         $dataProvider = new CActiveDataProvider(Hotelslist::model(), array(
             'pagination' => array(
-                'pageSize' => 10
+                'pageSize' => 12
             ),
             'criteria' => $criteria,
             'sort' => $this->Sort(),
         ));
-        echo $dataProvider->totalItemCount;
-        $this->renderPartial('listview',array(
+
+        $this->renderPartial($viewType,array(
             'dataProvider'=>$dataProvider,
             'hotelsCode' => $hotelsCode,
             'hotels'=>$this->hotelsResponse(),
-        ));
+            'viewType' => $viewType,
+            'test' => $test
+        ), false, true);
+        Yii::app()->end();
     }
 
     public function actionHotels()
     {
-        if(isset($_GET['search_hotel'])){
-            Yii::app()->cache->delete('response');
-            $this->setDataToCache();
-        }elseif(isset($_GET['search']) && Yii::app()->cache->get('response')===false){
-            $this->setDataToCache();
-        }
-        $hotelsCode = $this->client->removeDuplicateHotels(unserialize(Yii::app()->cache->get('response')));
-
-        $criteria = new CDbCriteria;
-        $criteria->addInCondition('HotelCode', $hotelsCode['hotelsCode'], 'AND');
-
-        $dataProvider = new CActiveDataProvider(Hotelslist::model(), array(
-            'pagination' => array(
-                'pageSize' => 10
-            ),
-            'criteria' => $criteria,
-            'sort' => $this->Sort(),
-        ));
+//        if(isset($_GET['search_hotel'])){
+//            Yii::app()->cache->delete('response');
+//            $this->setDataToCache();
+//        }elseif(isset($_GET['search']) && Yii::app()->cache->get('response')===false){
+//            $this->setDataToCache();
+//        }
+//        $hotelsCode = $this->client->removeDuplicateHotels(unserialize(Yii::app()->cache->get('response')));
+//
+//        $criteria = new CDbCriteria;
+//        $criteria->addInCondition('HotelCode', $hotelsCode['hotelsCode'], 'AND');
+//
+//        $dataProvider = new CActiveDataProvider(Hotelslist::model(), array(
+//            'pagination' => array(
+//                'pageSize' => 10
+//            ),
+//            'criteria' => $criteria,
+//            'sort' => $this->Sort(),
+//        ));
+//        $test = Hotelslist::model()->findAll($criteria);
         $this->render('hotels', array(
-            'dataProvider' =>$dataProvider,
-            'hotelsCode' => $hotelsCode,
+//            'dataProvider' =>$dataProvider,
+//            'hotelsCode' => $hotelsCode,
             'hotels'=>$this->hotelsResponse(),
+//            'test' => $test
         ));
     }
 
@@ -239,14 +245,12 @@ class SiteController extends Controller
                 }
             }
             $preferences = "";
-            if(isset($_POST['preference']))
-            {
+            if(isset($_POST['preference'])){
                 $preferences = $_POST['preference'];
             }
             $note = "";
 
-            if(isset($_POST['note']))
-            {
+            if(isset($_POST['note'])){
                 $note = $_POST['note'];
             }
             $bookingResponse = $this->client->makeHotelBooking($lead_traveller, $other_traveller, $_POST['processId'], $preferences, $note);

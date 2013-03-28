@@ -346,3 +346,12 @@ input.error {
 .ui-slider-handle{
     z-index: 1;
 }
+.grid{width: 100%}
+.grid li { float: left; width: 30%; height: 280px; }
+.grid li:hover {  background-color: rgba(170, 212, 255, 0.20);
+}
+.grid div#pager_li{
+    float: right;
+    height: 20px;
+    width: 600px;
+}
