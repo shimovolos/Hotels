@@ -67,8 +67,8 @@ class SiteController extends Controller
 
     public function actionAutocomplete()
     {
-        if(isset($_GET['key'])){
-            $destinations = Hoteldestinations::model()->findAll('Country=:Country ORDER BY City', array(':Country'=>$_GET['key']));
+        if(isset($_POST['key'])){
+            $destinations = Hoteldestinations::model()->findAll('Country=:Country ORDER BY City', array(':Country'=>$_POST['key']));
             $cities = array();
             foreach($destinations as $city){
                 $cities[] = array('id' => $city->DestinationId, 'city' => $city->City);
@@ -136,7 +136,7 @@ class SiteController extends Controller
         $criteria = new CDbCriteria;
 
         $result = array();
-        $viewType = 'listview';
+        $viewType = '_hotelview';
         if(isset($_GET['adv_param'])) {
 
             $internet = $_GET['adv_param']['Internet'];
@@ -166,7 +166,6 @@ class SiteController extends Controller
             Yii::app()->session['adv_param'] = json_encode($_GET['adv_param']);
         }
         $criteria->addInCondition('HotelCode', $hotelsCode['hotelsCode'], 'AND');
-        $test = Hotelslist::model()->findAll($criteria);
         $dataProvider = new CActiveDataProvider(Hotelslist::model(), array(
             'pagination' => array(
                 'pageSize' => 12
@@ -174,44 +173,21 @@ class SiteController extends Controller
             'criteria' => $criteria,
             'sort' => $this->Sort(),
         ));
-
-        $this->renderPartial($viewType,array(
+        $this->renderPartial('views/listview',array(
             'dataProvider'=>$dataProvider,
             'hotelsCode' => $hotelsCode,
             'hotels'=>$this->hotelsResponse(),
             'viewType' => $viewType,
-            'test' => $test
+            'template' => Yii::app()->params[$viewType]
         ), false, true);
-        Yii::app()->end();
     }
 
     public function actionHotels()
     {
-//        if(isset($_GET['search_hotel'])){
-//            Yii::app()->cache->delete('response');
-//            $this->setDataToCache();
-//        }elseif(isset($_GET['search']) && Yii::app()->cache->get('response')===false){
-//            $this->setDataToCache();
-//        }
-//        $hotelsCode = $this->client->removeDuplicateHotels(unserialize(Yii::app()->cache->get('response')));
-//
-//        $criteria = new CDbCriteria;
-//        $criteria->addInCondition('HotelCode', $hotelsCode['hotelsCode'], 'AND');
-//
-//        $dataProvider = new CActiveDataProvider(Hotelslist::model(), array(
-//            'pagination' => array(
-//                'pageSize' => 10
-//            ),
-//            'criteria' => $criteria,
-//            'sort' => $this->Sort(),
-//        ));
-//        $test = Hotelslist::model()->findAll($criteria);
+        Yii::app()->cache->set('parameters', serialize($_GET['param']));
         $this->render('hotels', array(
-//            'dataProvider' =>$dataProvider,
-//            'hotelsCode' => $hotelsCode,
             'hotels'=>$this->hotelsResponse(),
-//            'test' => $test
-        ));
+        ), false);
     }
 
     public function actionBooking()

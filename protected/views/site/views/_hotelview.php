@@ -8,12 +8,13 @@
         </a>
     </td>
     <td style="vertical-align: top">
-        <a href="<? echo baseUrl().'/site/details?HotelCode='.$data->HotelCode?>"><? echo $data->HotelName?></a><br/>
+        <a href="<? echo baseUrl().'/site/details?HotelCode='.$data->HotelCode?>">
+            <input type="hidden" name="HotelCode" value="<? echo $data->HotelCode?>"/><? echo $data->HotelName?></a><br/>
         <?
         foreach((array)$hotels as $key=>$hotel ){
             if($hotel->hotelCode == $data->HotelCode){
                 echo '<label>Тип номера: '.$hotel->boardType.'</label><br/>';
-                echo '<label>Полная стоимость: $'.$hotel->totalPrice.'</label><br/>';
+                echo '<label>Полная стоимость: <b>$'.$hotel->totalPrice.'</b></label><br/>';
                 break;
             }
         }

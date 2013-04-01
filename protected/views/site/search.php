@@ -23,7 +23,7 @@ unset(Yii::app()->session['responseData']);
             $("#param_city").append("<option>Выберите город...</option>");
             $.ajax({
                 url: '<?=Yii::app()->createUrl('site/autocomplete')?>',
-                type: 'get',
+                type: 'post',
                 dataType: 'json',
                 data: 'key='+$(this).val(),
                 success: function(cities){
@@ -33,7 +33,6 @@ unset(Yii::app()->session['responseData']);
                     $('#param_city').trigger("liszt:updated");
                 }
             });
-
         });
         $('#preloader').ajaxStart(function(){
             $(this).show();
@@ -80,13 +79,13 @@ unset(Yii::app()->session['responseData']);
         </tr>
         <tr>
             <td>
-                <input type="text" name="param[adult_paxes]" autocomplete="off" value placeholder="взрослых" style="width: 114px"/>
+                <input type="text" name="param[adult_paxes]" id="adult" autocomplete="off" value placeholder="взрослых" style="width: 85px"/>
                 <input type="checkbox" name="param[is_child]" id="is_child" onchange="hide_block()"/><label>&nbsp c детьми</label><br/>
             </td>
         </tr>
         <tr id="add_child">
             <td>
-                <input type="text" name="param[children_paxes]" id="children_paxes" autocomplete="off" style="width: 114px" value
+                <input type="text" name="param[children_paxes]" id="children_paxes" autocomplete="off" style="width: 85px" value
                        placeholder="детей"/><br/>
             </td>
         </tr>

@@ -5,7 +5,7 @@ $images = explode(';',$data->HotelImages);
     <table style="width: 100%">
         <tr>
             <td>
-                <div style="overflow: hidden; height: 150px">
+                <div style="overflow: hidden; height: 150px; text-align: center">
             <a href="<? echo baseUrl().'/site/details?HotelCode='.$data->HotelCode?>" target="_blank">
                 <img src="<? echo $images[0]?>" alt="logo" width="230"/>
             </a>
@@ -23,7 +23,7 @@ $images = explode(';',$data->HotelImages);
             foreach((array)$hotels as $key=>$hotel ){
                 if($hotel->hotelCode == $data->HotelCode){
                     echo '<label>Тип номера: '.$hotel->boardType.'</label><br/>';
-                    echo '<label>Полная стоимость: $'.$hotel->totalPrice.'</label><br/>';
+                    echo '<label>Полная стоимость: <b>$'.$hotel->totalPrice.'</b></label><br/>';
                     break;
                 }
             }

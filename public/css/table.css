@@ -23,11 +23,15 @@
 .info_table td {
     vertical-align: text-top;
     border: 1px solid #ffffff;
-    border-width: 0px 1px 1px 0px;
+    border-width: 1px 1px 1px 1px;
     text-align: left;
     padding: 7px;
     font-size: 12px;
     font-family: Arial;
     font-weight: normal;
     color: #000000;
+}
+.info_table td:hover {
+    border: 1px solid rgba(255, 203, 72, 0.61);
+    border-width: 1px 1px 1px 1px;
 }

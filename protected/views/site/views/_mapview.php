@@ -33,7 +33,7 @@ foreach ($test as $hotels) {
     var bounds = new google.maps.LatLngBounds();
     function addMarker(lat, lng, info) {
         var point = new google.maps.LatLng(lat, lng);
-        bounds.extend(point);
+        //bounds.extend(point);
         var marker = new google.maps.Marker({
             position: point,
             icon: icon,
@@ -75,11 +75,11 @@ foreach ($test as $hotels) {
         map.fitBounds(bounds);
     }
 </script>
-<body onbeforeprint="loadAPI()">
+
 
 <div id="map_canvas" style="width:100%; height:500px">
-      <button onclick="loadAPI()"/></button>
+
 </div>
-</body>
+
 
 

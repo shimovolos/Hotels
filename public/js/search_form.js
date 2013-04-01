@@ -38,10 +38,12 @@ $(document).ready(function(){
     $("#load").hide();
     $("#children_paxes").keyup(function(){
         $("input.child_age").remove();
+        $("#age_label").remove()
+        $('<label>возраст детей</label><br/>').remove();
         $("#children_age").show(200);
         var children = $("#children_paxes").val();
         if(children > 0 && children <=5){
-            $('<label>возраст детей</label><br/>').fadeIn('slow').appendTo('#container');
+            $('<label id="age_label">возраст детей<br/></label>').fadeIn('slow').appendTo('#container');
             for(var i = 0; i < children; i++ ){
                 $('<input type="text" class="child_age" autocomplete="off" name="param[child_age][]"  style="width:35px; margin-right:3px" />').fadeIn('slow').appendTo('#container');
             }
@@ -111,7 +113,7 @@ function submitAdvancedForm(){
         type: 'get',
         data: url+'?' + $("#adv_search").serialize(),
         success: function(response) {
-            $("#view").html(response);
+            $("#search_result").html(response);
         },
         error:function(){
             alert('Ошибка загрузки формы');
@@ -130,3 +132,49 @@ function load(){
     });
 }
 
+$(function(){
+    $("#radio").buttonset();
+});
+
+$(function() {
+    $("#price_range" ).slider({
+        range: true,
+        min: 0,
+        max: 2000,
+        values: [0,2000],
+        step: 50,
+        slide: function( event, ui ) {
+            $( "#price" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+        },
+        change: function(event, ui){
+            param = $('#adv_search').serialize();
+            $.fn.yiiListView.update(
+                'ajaxListView',
+                { data: param }
+            );
+        }
+    });
+    $( "#price" ).val( "$" + $( "#price_range" ).slider( "values", 0 ) +
+        " - $" + $( "#price_range" ).slider( "values", 1 ) );
+});
+
+$(function(){
+    $("#star_range").slider({
+        range: true,
+        min: 0,
+        max: 5,
+        values:[0,5],
+        slide: function(event, ui){
+            $("#star").val(ui.values[0] + " - " + ui.values[1]);
+        },
+        change: function(event, ui){
+            param = $('#adv_search').serialize();
+            $.fn.yiiListView.update(
+                'ajaxListView',
+                { data: param }
+            );
+        }
+    });
+    $("#star").val($( "#star_range" ).slider( "values", 0 ) +
+        " - " + $( "#star_range" ).slider( "values", 1 ));
+});
