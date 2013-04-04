@@ -1,5 +1,5 @@
 <script type="text/javascript"
-        src="http://maps.google.com/maps/api/js?v=3.9&sensor=false&hl=ru&callback=initMap">
+        src="http://maps.google.com/maps/api/js?v=3.9&sensor=false&language=ru&libraries=weather&callback=initMap">
 </script>
 <script type="text/javascript">
     var geocoder;
@@ -7,10 +7,8 @@
     var center = null;
     var map = null;
     var currentPopup;
-    var bounds = new google.maps.LatLngBounds();
     function addMarker(lat, lng, info) {
         var point = new google.maps.LatLng(lat, lng);
-       // bounds.extend(point);
         var marker = new google.maps.Marker({
             position: point,
             icon: icon,
@@ -18,7 +16,7 @@
         });
         var popup = new google.maps.InfoWindow({
             content: info,
-            maxWidth: 300
+            maxWidth: 200
         });
         google.maps.event.addListener(marker, "click", function() {
             if (currentPopup != null) {
@@ -36,8 +34,8 @@
         geocoder = new google.maps.Geocoder();
         $('#map_canvas')
         map = new google.maps.Map(document.getElementById("map_canvas"), {
-            center: new google.maps.LatLng(destinations[0].Lat, destinations[0].Long),
-            zoom: 10,
+            center: new google.maps.LatLng(0,0),
+            zoom: 12,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             mapTypeControl: true,
             mapTypeControlOptions: {
@@ -51,17 +49,26 @@
         if(address != null){
             for(var i=0;i<address.length;i++){
                 var loc = address[i];
-                codeAddress(loc.HotelCode);
+                info = "<a href='<?=baseUrl().'/site/details?HotelCode='?>"+loc.HotelCode+"'"+"><b>"+loc.HotelName+"</b></a>"+
+                        "<br><img src='"+loc.Image+"'width=180 height=150 alt=image>"+
+                        "<br><b><img src='<? echo baseUrl() . '/public/images/star_icon.png?>'?><!--'/>"+loc.StarRating+"</b>"+
+                        "<br>Полная стоимость: <b>$"+loc.Price+"</b>";
+                codeAddress(loc.HotelAddress,info);
             }
         }
         for(var i = 0; i<destinations.length; i++){
             var city = destinations[i];
-            addMarker(city.Lat,city.Long,"<b>"+ city.HotelName+"</b><br/>"+city.HotelCode);
+            addMarker(city.Lat,city.Long,"<a href='<?=baseUrl().'/site/details?HotelCode='?>"+city.HotelCode+"'"+"><b>"+city.HotelName+"</b></a>"+
+                    "<br><img src='"+city.Image+"'width=180 height=150 alt=image>"+
+                    "<br><b><img src='<? echo baseUrl() . '/public/images/star_icon.png?>'?><!--'/>"+city.StarRating+"</b>"+"<br>Полная стоимость: <b>$"+city.Price+"</b>");
         }
+        var weatherLayer = new google.maps.weather.WeatherLayer({
+            temperatureUnits: google.maps.weather.TemperatureUnit.Celsius
+        });
+        weatherLayer.setMap(map);
 
-       // map.fitBounds(bounds);
     }
-    function codeAddress(address)
+    function codeAddress(address,info)
     {
         geocoder.geocode( { 'address': address}, function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
@@ -69,10 +76,22 @@
                 var marker = new google.maps.Marker({
                     position: results[0].geometry.location,
                     map: map,
-                    icon: icon
+                    icon: image
+                });
+                var popup = new google.maps.InfoWindow({
+                    content: info,
+                    maxWidth: 200
+                });
+                google.maps.event.addListener(marker, "click", function() {
+                    if (currentPopup != null) {
+                        currentPopup.close();
+                        currentPopup = null;
+                    }
+                    popup.open(map, marker);
+                    currentPopup = popup;
                 });
             } else {
-                alert("Geocode was not successful for the following reason: " + status);
+//                alert("Некоторые отели не были отображениы по следующим причинам: " + status);
             }
         });
     }
