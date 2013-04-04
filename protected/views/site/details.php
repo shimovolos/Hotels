@@ -20,6 +20,11 @@ registerScript("/public/js/details.js");
 registerCss("/public/css/global.css");
 registerCss("/public/css/table.css");
 $images = explode(';',$hotel->HotelImages);
+
+if($hotelsCode[$key-1] == null || $hotelsCode[$key+1] == null){
+    $hotelsCode[$key-1] = $hotelsCode[$key];
+    $hotelsCode[$key+1] = $hotelsCode[$key];
+}
 ?>
 <a href="<? echo baseUrl().'/site/details?HotelCode='.$hotelsCode[$key-1];?>">< Предыдуший отель</a>
 <a href="<? echo baseUrl().'/site/details?HotelCode='.$hotelsCode[$key+1];?>" style="float: right">Следующий отель ></a>
@@ -119,26 +124,11 @@ $images = explode(';',$hotel->HotelImages);
                 <b><?php echo $hotel->HotelPhoneNumber ?></b>
             </td>
         </tr>
-        <tr>
-            <td>
-                <i>Широта: </i>
-            </td>
-            <td>
-                <b><?php echo $hotel->Latitude ?></b>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <i>Долгота: </i>
-            </td>
-            <td>
-                <b><?php echo $hotel->Longitude ?></b>
-            </td>
-        </tr>
     </table>
     </p>
     <br>
-    <body onload="initialize(<?php echo $hotel->Latitude; ?>,<?php echo $hotel->Longitude; ?>)">
+
+    <body onload="initialize(<? echo "'".$hotel->HotelAddress."'";?>)">
 
     <div id="map_canvas" style="width:100%; height:500px">
 
@@ -286,15 +276,25 @@ $images = explode(';',$hotel->HotelImages);
         }
         foreach ((array)$rooms as $rnum => $room) :
             ?>
-            <a href="<? echo baseUrl() . '/site/booking?processId=' . $hotel->processId ?>">Забронировать: </a><br/>
+
             <div class="info_table" style="border: #8d889e 1px solid; border-radius: 2px;padding: 10px;">
+                <a href="<? echo baseUrl() . '/site/booking?processId=' . $hotel->processId ?>" style="float: right">Забронировать</a><br/>
                 <table class="specialty">
                     <tr>
                         <td style="width: 300px">
                             <b>Комната <?php echo($rnum + 1);?> Категории: </b>
                         </td>
                         <td>
-                            <?php echo $room->roomCategory;?>
+                            <?
+//                            $replace = str_replace(" ","",$room->roomCategory);
+//                            $infoRooms = array(
+//                                'TwinSuperior'=>'Парная,высшего качества',
+//                                'Double1Or2BedsStandard'=>'Двуспальная,с одной или двумя стандартными кроватями',
+//                                'Double 1 Or 2 Beds Business'=>'Двуспальная,с одной или двумя кроватями класса люкс',
+//                            );
+//                            echo $infoRooms[$replace];
+                            echo $room->roomCategory;
+                            ?>
                         </td>
                     </tr>
                     <tr>
@@ -302,12 +302,12 @@ $images = explode(';',$hotel->HotelImages);
                             <b>Обшая стоимость за проживание: </b>
                         </td>
                         <td>
-                            <?php echo $room->totalRoomRate;?>
+                            $<?php echo $room->totalRoomRate;?>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <b>Размещение:</b>
+                            <b>Размещение + возраст:</b>
                         </td>
                         <td>
                             <?php
@@ -323,7 +323,10 @@ $images = explode(';',$hotel->HotelImages);
                             }
                             foreach ((array)$roomsInfo as $pnum => $pax) {
                                 ?>
-                                <?php echo $pax->paxType; ?> (<?php echo $pax->age; ?>)<br/>
+                                <?php
+                                $paxType = array('Adult'=>'Взрослый','Child'=>'Ребенок');
+                                echo $paxType[$pax->paxType];
+                                ?> (<?php echo $pax->age; ?>) <br/>
                                 <?php
                             }
                             ?>
@@ -337,7 +340,7 @@ $images = explode(';',$hotel->HotelImages);
                             <?php
                             foreach ((array)$ratesPerNight as $rpnum => $price) {
                                 ?>
-                                <?php echo $price->date; ?> (<?php echo $price->amount; ?>)<br/>
+                                <?php echo $price->date; ?> ($<?php echo $price->amount; ?>)<br/>
                                 <?php
                             }
                             ?>
@@ -345,6 +348,7 @@ $images = explode(';',$hotel->HotelImages);
                     </tr>
                 </table>
             </div>
+            <br>
             <? endforeach ?>
 
         <? endforeach?>
