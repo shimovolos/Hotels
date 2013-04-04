@@ -1,6 +1,7 @@
 <script type="text/javascript"
-        src="http://maps.google.com/maps/api/js?v=3.9&sensor=false&language=ru&libraries=weather&callback=initMap">
+        src="http://maps.google.com/maps/api/js?v=3.9&sensor=false&language=ru&callback=initMap">
 </script>
+<!--&libraries=weather-->
 <script type="text/javascript">
     var geocoder;
     var icon = '/public/images/ih.png';
@@ -32,9 +33,7 @@
         var destinations = <?=json_encode($coord)?>;
         var address = <?=json_encode($result) ?>;
         geocoder = new google.maps.Geocoder();
-        $('#map_canvas')
         map = new google.maps.Map(document.getElementById("map_canvas"), {
-            center: new google.maps.LatLng(0,0),
             zoom: 12,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             mapTypeControl: true,
@@ -62,10 +61,10 @@
                     "<br><img src='"+city.Image+"'width=180 height=150 alt=image>"+
                     "<br><b><img src='<? echo baseUrl() . '/public/images/star_icon.png?>'?><!--'/>"+city.StarRating+"</b>"+"<br>Полная стоимость: <b>$"+city.Price+"</b>");
         }
-        var weatherLayer = new google.maps.weather.WeatherLayer({
-            temperatureUnits: google.maps.weather.TemperatureUnit.Celsius
-        });
-        weatherLayer.setMap(map);
+//        var weatherLayer = new google.maps.weather.WeatherLayer({
+//            temperatureUnits: google.maps.weather.TemperatureUnit.Celsius
+//        });
+//        weatherLayer.setMap(map);
 
     }
     function codeAddress(address,info)

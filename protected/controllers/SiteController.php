@@ -251,38 +251,6 @@ class SiteController extends Controller
         $criteria->addInCondition('HotelCode', $hotelsCode['hotelsCode'], 'AND');
 
         $test = Hotelslist::model()->findAll($criteria);
-
-        $coord = array();
-        $hotel = array();
-        foreach ($test as $hotels) {
-            $coord[] = array(
-                'HotelName' => $hotels->HotelName,
-                'HotelCode' => $hotels->HotelCode,
-                'Long' => $hotels->Longitude,
-                'Lat' => $hotels->Latitude,
-            );
-            $hotel[] = $hotels->HotelCode;
-        }
-
-        $hotelCode = join("','",$hotel);
-        $data = Hotelslist::model()->findAll(array('condition'=>"HotelCode IN ('".$hotelCode."') AND Latitude=0.000000 AND Longitude=0.000000 "));
-        foreach($data as $key=>$val){
-            $result[] = array(
-                'HotelCode' => $val->HotelAddress
-            );
-        }
-
-
-        $this->renderPartial('views/_mapview', array(
-            'coord' => $coord,
-            'result' => $result,
-        ), false, true);
-        $hotelsCode = $this->client->removeDuplicateHotels(unserialize(Yii::app()->cache->get('response')));
-        $filterResult = $this->dataDB->filterSearchData($_GET['adv_param'], $hotelsCode);
-        $criteria = $filterResult['criteria'];
-        $criteria->addInCondition('HotelCode', $hotelsCode['hotelsCode'], 'AND');
-
-        $test = Hotelslist::model()->findAll($criteria);
         $price = array();
         $coord = array();
         $hotel = array();
