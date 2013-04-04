@@ -37,16 +37,11 @@ class DataReader
                 $criteria->addCondition("HotelCode IN ('".$hotels."')",'AND');
             }
         }
-        Yii::app()->session['adv_param'] = json_encode($filter);
-        
-        return array('criteria' => $criteria, 'viewType' => $viewType);
+        return array('criteria' => $criteria, 'viewType' => $viewType, 'hotelsCode' => $hotelsCode);
     }
 
     private function pullStarRange($inputRange){
         $range = explode('-',$inputRange);
         return range($range[0], $range[1]);
     }
-
-
-
 }

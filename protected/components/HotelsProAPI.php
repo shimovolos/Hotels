@@ -114,14 +114,15 @@ class HotelsProAPI
                 $hotelsCode[] = $hotel->hotelCode;
             }
         }
-
+        $availableRooms =array_count_values($hotelsCode);
         $hc = array_unique($hotelsCode);
 
         return array(
             'responseId' => $response->responseId,
             'searchId' => $response->searchId,
             'totalFound' =>count($hotelsCode),
-            'hotelsCode' => $hc
+            'hotelsCode' => $hc,
+            'availableRooms' => $availableRooms
         );
     }
 

@@ -140,19 +140,21 @@ class SiteController extends Controller
             $filterResult = $this->dataDB->filterSearchData($_GET['adv_param'], $hotelsCode);
             $criteria = $filterResult['criteria'];
             $viewType = $filterResult['viewType'];
+            $hotelsCode = $filterResult['hotelsCode'];
         }
 
         $criteria->addInCondition('HotelCode', $hotelsCode['hotelsCode'], 'AND');
-        $dataProvider = new CActiveDataProvider(Hotelslist::model(), array(
-            'pagination' => array(
-                'pageSize' => 12
-            ),
-            'criteria' => $criteria,
-            'sort' => $this->Sort(),
-        ));
+
         if($viewType == '_mapview'){
-            $this->actionTest();
+            $this->actionMap();
         }else{
+            $dataProvider = new CActiveDataProvider(Hotelslist::model(), array(
+                'pagination' => array(
+                    'pageSize' => 12
+                ),
+                'criteria' => $criteria,
+                'sort' => $this->Sort(),
+            ));
             $this->renderPartial('views/listview',array(
                 'dataProvider'=>$dataProvider,
                 'availableRooms' => $hotelsCode['availableRooms'],
@@ -240,13 +242,12 @@ class SiteController extends Controller
     }
 
 
-    public function  actionTest()
+    public function  actionMap()
     {
-        //$criteria = new CDbCriteria();
-
         $hotelsCode = $this->client->removeDuplicateHotels(unserialize(Yii::app()->cache->get('response')));
         $filterResult = $this->dataDB->filterSearchData($_GET['adv_param'], $hotelsCode);
         $criteria = $filterResult['criteria'];
+        $hotelsCode = $filterResult['hotelsCode'];
         $criteria->addInCondition('HotelCode', $hotelsCode['hotelsCode'], 'AND');
 
         $test = Hotelslist::model()->findAll($criteria);
@@ -279,8 +280,3 @@ class SiteController extends Controller
 
     }
 }
-
-/**
- * @todo 2) нужно переключение списка (list view, card view и map view)
-@todo 3) нужна возможность листать найденные отели на странице просмотра отеля, типа следующий, предыдущий
- */

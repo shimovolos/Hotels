@@ -6,7 +6,6 @@ registerCss('/public/css/chosen.css');
 registerScript("/public/js/search_form.js");
 registerScript('/public/js/jquery.validate.min.js');
 registerCss('/public/css/table.css');
-registerScript('/public/js/FancyZoom.js');
 $parameters = unserialize(Yii::app()->cache->get('parameters'));
 
 Yii::app()->clientScript->registerScript('preload','
@@ -39,7 +38,7 @@ $(function (){
 <script>
     $("#radio2").click(function(){
         $.ajax({
-            url: "<?=baseUrl()."/site/test"?>",
+            url: "<?=baseUrl()."/site/map"?>",
             data: $("#adv_search").serialize(),
             success:function(response){
                 $("#search_result").html(response);

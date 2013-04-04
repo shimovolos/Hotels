@@ -24,15 +24,4 @@ $this->widget('zii.widgets.CListView', array(
             $parameters['leaving_date']."</b>
         </span>"
 ));
-//Yii::app()->clientScript->registerScript('search',
-//    "$('.filter').change(function(){
-//        param = $('#adv_search').serialize();
-//
-//        $.fn.yiiListView.update(
-//            'ajaxListView',
-//            {
-//                data: param
-//            }
-//        );
-//    })");
 ?>
