@@ -136,6 +136,29 @@ $(function(){
     $("#radio").buttonset();
 });
 
+function mapUpdate(){
+    if($('#ajaxListView').length){
+        param = $('#adv_search').serialize();
+        $.fn.yiiListView.update(
+            'ajaxListView',
+            { data: param }
+        );
+    }else{
+        $("#search_result").prepend('<img src="/public/images/ajax-loader.gif" alt=""/>');
+        param = $('#adv_search').serialize();
+        $.ajax({
+            url: "/site/update",
+            data: param,
+            success:function(response){
+                $("#search_result").html(response);
+            },
+            error:function(){
+                alert('ad');
+            }
+        })
+    }
+}
+
 $(function() {
     $("#price_range" ).slider({
         range: true,
@@ -147,11 +170,8 @@ $(function() {
             $( "#price" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
         },
         change: function(event, ui){
-            param = $('#adv_search').serialize();
-            $.fn.yiiListView.update(
-                'ajaxListView',
-                { data: param }
-            );
+
+                mapUpdate();
         }
     });
     $( "#price" ).val( "$" + $( "#price_range" ).slider( "values", 0 ) +
@@ -168,11 +188,9 @@ $(function(){
             $("#star").val(ui.values[0] + " - " + ui.values[1]);
         },
         change: function(event, ui){
-            param = $('#adv_search').serialize();
-            $.fn.yiiListView.update(
-                'ajaxListView',
-                { data: param }
-            );
+
+                mapUpdate();
+
         }
     });
     $("#star").val($( "#star_range" ).slider( "values", 0 ) +

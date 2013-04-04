@@ -6,6 +6,7 @@ registerCss('/public/css/chosen.css');
 registerScript("/public/js/search_form.js");
 registerScript('/public/js/jquery.validate.min.js');
 registerCss('/public/css/table.css');
+registerScript('/public/js/FancyZoom.js');
 $parameters = unserialize(Yii::app()->cache->get('parameters'));
 
 Yii::app()->clientScript->registerScript('preload','
@@ -28,9 +29,54 @@ $(function (){
 <div id="advanced_search">
     <?
         $this->renderPartial("columns/_filterform");
-        $this->renderPartial("columns/_searchform", array('parameters' => $parameters))
+        $this->renderPartial("columns/_searchform", array('parameters' => $parameters));
+
     ?>
 </div>
 <div id="search_result">
 
 </div>
+<script>
+    $("#radio2").click(function(){
+        $.ajax({
+            url: "<?=baseUrl()."/site/test"?>",
+            data: $("#adv_search").serialize(),
+            success:function(response){
+                $("#search_result").html(response);
+
+            },
+            error:function(){
+                alert('ad');
+            }
+        })
+    })
+
+    $('.filter').change(function(){
+
+        if($("#ajaxListView").length){
+            param = $('#adv_search').serialize();
+            $('head script').remove();
+            $.fn.yiiListView.update(
+                'ajaxListView',
+                {
+                    data: param
+                }
+            );
+        }
+        else{
+            $("#search_result").prepend('<img src="/public/images/ajax-loader.gif" alt=""/>');
+
+            param = $('#adv_search').serialize();
+            $.ajax({
+                url: "<?=baseUrl()."/site/update"?>",
+                data: param,
+                success:function(response){
+                   $("#search_result").html(response);
+                },
+                error:function(){
+                    alert('ad');
+                }
+            })
+        }
+    })
+</script>

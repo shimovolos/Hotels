@@ -131,40 +131,17 @@ class SiteController extends Controller
         }elseif(isset($_GET['search']) && Yii::app()->cache->get('response')===false){
             $this->setDataToCache();
         }
+
         $hotelsCode = $this->client->removeDuplicateHotels(unserialize(Yii::app()->cache->get('response')));
-
         $criteria = new CDbCriteria;
-
-        $result = array();
         $viewType = '_hotelview';
+
         if(isset($_GET['adv_param'])) {
-
-            $internet = $_GET['adv_param']['Internet'];
-            $restaurant = $_GET['adv_param']['Restaurant'];
-            $parking = $_GET['adv_param']['Parking'];
-            $bar = $_GET['adv_param']['Bar'];
-            $swimming = $_GET['adv_param']['Swimming'];
-            $viewType = $_GET['adv_param']['radio'];
-            foreach($_GET['adv_param'] as $key=>$value){
-                if($key == 'price'){
-                    $hotelsCode = $this->client->sortByPrice($value, unserialize(Yii::app()->cache->get('response')));
-                }elseif($key == 'StarRating'){
-                    $criteria->addInCondition($key,$this->pullStarRange($value), 'AND');
-                }else{
-                    $hotelCode = join("','",$hotelsCode['hotelsCode']);
-                    $data = Hotelsamenities::model()->findAll(array('condition'=>"HotelCode IN ('".$hotelCode."')
-                    AND PAmenities LIKE '%$internet%' AND PAmenities LIKE '%$restaurant%' AND PAmenities LIKE '%$parking%' AND
-                    PAmenities LIKE '%$bar%' AND PAmenities LIKE '%$swimming%'"));
-
-                    foreach($data as $key=>$val){
-                        $result[] = $val->HotelCode;
-                    }
-                    $hotels = join("','",$result);
-                    $criteria->addCondition("HotelCode IN ('".$hotels."')",'AND');
-                }
-            }
-            Yii::app()->session['adv_param'] = json_encode($_GET['adv_param']);
+            $filterResult = $this->dataDB->filterSearchData($_GET['adv_param'], $hotelsCode);
+            $criteria = $filterResult['criteria'];
+            $viewType = $filterResult['viewType'];
         }
+
         $criteria->addInCondition('HotelCode', $hotelsCode['hotelsCode'], 'AND');
         $dataProvider = new CActiveDataProvider(Hotelslist::model(), array(
             'pagination' => array(
@@ -173,13 +150,18 @@ class SiteController extends Controller
             'criteria' => $criteria,
             'sort' => $this->Sort(),
         ));
-        $this->renderPartial('views/listview',array(
-            'dataProvider'=>$dataProvider,
-            'hotelsCode' => $hotelsCode,
-            'hotels'=>$this->hotelsResponse(),
-            'viewType' => $viewType,
-            'template' => Yii::app()->params[$viewType]
-        ), false, true);
+        if($viewType == '_mapview'){
+            $this->actionTest();
+        }else{
+            $this->renderPartial('views/listview',array(
+                'dataProvider'=>$dataProvider,
+                'availableRooms' => $hotelsCode['availableRooms'],
+                'hotels'=>$this->hotelsResponse(),
+                'viewType' => $viewType,
+                'template' => Yii::app()->params[$viewType],
+            ), false, true);
+        }
+
     }
 
     public function actionHotels()
@@ -257,9 +239,44 @@ class SiteController extends Controller
         else $this->render('get_booking_status');
     }
 
-    private function pullStarRange($inputRange){
-        $range = explode('-',$inputRange);
-        return range($range[0], $range[1]);
+
+    public function  actionTest()
+    {
+        //$criteria = new CDbCriteria();
+
+        $hotelsCode = $this->client->removeDuplicateHotels(unserialize(Yii::app()->cache->get('response')));
+        $filterResult = $this->dataDB->filterSearchData($_GET['adv_param'], $hotelsCode);
+        $criteria = $filterResult['criteria'];
+        $criteria->addInCondition('HotelCode', $hotelsCode['hotelsCode'], 'AND');
+
+        $test = Hotelslist::model()->findAll($criteria);
+
+        $coord = array();
+        $hotel = array();
+        foreach ($test as $hotels) {
+            $coord[] = array(
+                'HotelName' => $hotels->HotelName,
+                'HotelCode' => $hotels->HotelCode,
+                'Long' => $hotels->Longitude,
+                'Lat' => $hotels->Latitude,
+            );
+            $hotel[] = $hotels->HotelCode;
+        }
+
+        $hotelCode = join("','",$hotel);
+        $data = Hotelslist::model()->findAll(array('condition'=>"HotelCode IN ('".$hotelCode."') AND Latitude=0.000000 AND Longitude=0.000000 "));
+        foreach($data as $key=>$val){
+            $result[] = array(
+                'HotelCode' => $val->HotelAddress
+            );
+        }
+
+
+        $this->renderPartial('views/_mapview', array(
+            'coord' => $coord,
+            'result' => $result,
+        ), false, true);
+
     }
 }
 

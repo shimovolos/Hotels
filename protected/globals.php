@@ -7,7 +7,7 @@ function baseUrl()
 
 function registerScript($dirName)
 {
-    return Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl.$dirName,CClientScript::POS_HEAD);
+    return Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl.$dirName,CClientScript::POS_END);
 }
 
 function registerCss($dirName)

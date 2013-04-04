@@ -4,7 +4,7 @@
             <td>
                 <div id="radio" style="font-size: 8px">
                     <input class="filter" type="radio" id="radio1" name="adv_param[radio]" value="_hotelview"  checked="checked"/><label for="radio1">Список</label>
-                    <input class="filter" type="radio" id="radio2" name="adv_param[radio]" value="_mapview"  /><label for="radio2">Карта</label>
+                    <input  type="radio" id="radio2" name="adv_param[radio]" value="_mapview"  /><label for="radio2">Карта</label>
                     <input class="filter" type="radio" id="radio3" name="adv_param[radio]" value="_hotelgrid" /><label for="radio3">Таблица</label>
                 </div>
             </td>

@@ -6,9 +6,9 @@ $images = explode(';',$data->HotelImages);
         <tr>
             <td>
                 <div style="overflow: hidden; height: 150px; text-align: center">
-            <a href="<? echo baseUrl().'/site/details?HotelCode='.$data->HotelCode?>" target="_blank">
-                <img src="<? echo $images[0]?>" alt="logo" width="230"/>
-            </a>
+                    <a href="<? echo baseUrl().'/site/details?HotelCode='.$data->HotelCode?>" target="_blank">
+                        <img src="<? echo $images[0]?>" alt="logo" width="230"/>
+                    </a>
                 </div>
             </td>
         </tr>
@@ -27,7 +27,13 @@ $images = explode(';',$data->HotelImages);
                     break;
                 }
             }
+                foreach($availableRooms as $key=>$value){
+                    if($key == $data->HotelCode){
+                        echo '<label>Доступных номеров:<b>'.$value.'</b></label><br/>';break;
+                    }
+                }
             ?>
+
             </td>
         </tr>
         <tr>
@@ -37,6 +43,7 @@ $images = explode(';',$data->HotelImages);
                 <img src="<? echo baseUrl().'/public/images/star_icon.png'?>" alt="star"/>
 
             <?endfor?>
+                <a class="button" style="margin: 0;float: right" href="<?=baseUrl().'/site/details?HotelCode='.$data->HotelCode?>">подробнее</a>
             </td>
         </tr>
     </table>

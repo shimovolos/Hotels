@@ -67,7 +67,7 @@ class HotelsProAPI
         return $result;
     }
 
-    private function responseToArray($response)
+    private static function responseToArray($response)
     {
         if(is_object($response->availableHotels)){
             $hotels[] = $response->availableHotels;
@@ -86,25 +86,26 @@ class HotelsProAPI
         foreach((array)$hotels as $hotel){
             $hotelsCode[] = $hotel->hotelCode;
         }
-
+        $availableRooms =array_count_values($hotelsCode);
         $hotelsCode = array_unique($hotelsCode);
 
         return array(
             'responseId' => $response->responseId,
             'searchId' => $response->searchId,
             'totalFound' =>count($hotelsCode),
-            'hotelsCode' => $hotelsCode
+            'hotelsCode' => $hotelsCode,
+            'availableRooms' => $availableRooms
         );
     }
 
 
-    public function sortByPrice($priceRange, $response)
+    public static  function sortByPrice($priceRange, $response)
     {
         $price = explode('-', $priceRange);
         $price['from'] = intval(str_replace('$', '', $price[0]));
         $price['to'] = intval(str_replace('$', '', $price[1]));
 
-        $hotels = $this->responseToArray($response);
+        $hotels = HotelsProAPI::responseToArray($response);
         $hotelsCode = array();
 
         foreach((array)$hotels as $hotel){
