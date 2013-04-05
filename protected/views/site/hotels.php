@@ -25,7 +25,7 @@ $(function (){
                 $("#search_result").css("background","#fff").html(response);
 
                 },
-                error:function(){alert()}
+                error:function(){alert("controller failed.LOL")}
                 })
             });');
         $this->renderPartial("columns/_filterform");

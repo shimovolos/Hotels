@@ -30,6 +30,7 @@ $(function(){
 
 $("#radio2").click(function(){
     $.ajax({
+        type: 'post',
         url: "/site/map",
         data: $("#adv_search").serialize(),
         success:function(response){
