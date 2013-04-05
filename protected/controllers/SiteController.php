@@ -168,6 +168,7 @@ class SiteController extends Controller
 
     public function actionHotels()
     {
+        Yii::app()->session['url'] = Yii::app()->request->getUrl();
         Yii::app()->cache->set('parameters', serialize($_GET['param']));
         $this->render('hotels', array(
             'hotels'=>$this->hotelsResponse(),

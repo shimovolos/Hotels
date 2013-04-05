@@ -26,13 +26,21 @@ if($hotelsCode[$key-1] == null || $hotelsCode[$key+1] == null){
     $hotelsCode[$key+1] = $hotelsCode[$key];
 }
 ?>
-<a href="<? echo baseUrl().'/site/details?HotelCode='.$hotelsCode[$key-1];?>">< Предыдуший отель</a>
-<a href="<? echo baseUrl().'/site/details?HotelCode='.$hotelsCode[$key+1];?>" style="float: right">Следующий отель ></a>
+<a href="<? echo baseUrl().'/site/details?HotelCode='.$hotelsCode[$key-1];?>">
+    <img src="<?echo baseUrl().'/public/images/back.png'?>" style="padding-right: 4px">
+    Предыдуший отель
+</a>
+<a href="<? echo baseUrl().'/site/details?HotelCode='.$hotelsCode[$key+1];?>" style="float: right">
+    Следующий отель
+    <img src="<?echo baseUrl().'/public/images/forward.png'?>"style="padding-left: 4px">
+</a>
+
 <div id="tabs" style="min-height: 400px">
 <ul>
     <li><a href="#tabs-1">Общая нформация</a></li>
     <li><a href="#tabs-2">Подробная информация</a></li>
     <li><a href="#tabs-4">Забронировать</a></li>
+    <a href="<? echo baseUrl().Yii::app()->session['url'];?>" style="float: right;padding-top: 7px;padding-right: 5px">Возврат к списку отелей</a>
 </ul>
 <div id="tabs-1">
     <div id="container">
@@ -52,8 +60,7 @@ if($hotelsCode[$key-1] == null || $hotelsCode[$key+1] == null){
                 <a href="#" class="next"><img src=<?php echo baseUrl() . "/public/img/arrow-next.png" ?> width="24"
                     height="43" alt="Arrow Next"></a>
             </div>
-            <img src=<?php echo baseUrl() . "/public/img/example-frame.png" ?> width="739" height="341" alt="Example
-            Frame" id="frame">
+            <img src=<?php echo baseUrl() . "/public/img/example-frame.png" ?> width="739" height="341" alt="Frame" id="frame">
         </div>
     </div>
     <p align="justify"><br>
@@ -124,22 +131,6 @@ if($hotelsCode[$key-1] == null || $hotelsCode[$key+1] == null){
                 <b><?php echo $hotel->HotelPhoneNumber ?></b>
             </td>
         </tr>
-    <tr>
-        <td>
-            <i>Почтовый код: </i>
-        </td>
-        <td>
-            <b><?php echo $hotel->Longitude ?></b>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <i>Номер телефона: </i>
-        </td>
-        <td>
-            <b><?php echo $hotel->Latitude ?></b>
-        </td>
-    </tr>
     </table>
     </p>
     <br>
@@ -302,14 +293,7 @@ if($hotelsCode[$key-1] == null || $hotelsCode[$key+1] == null){
                         </td>
                         <td>
                             <?
-//                            $replace = str_replace(" ","",$room->roomCategory);
-//                            $infoRooms = array(
-//                                'TwinSuperior'=>'Парная,высшего качества',
-//                                'Double1Or2BedsStandard'=>'Двуспальная,с одной или двумя стандартными кроватями',
-//                                'Double 1 Or 2 Beds Business'=>'Двуспальная,с одной или двумя кроватями класса люкс',
-//                            );
-//                            echo $infoRooms[$replace];
-                            echo $room->roomCategory;
+                                echo $room->roomCategory;
                             ?>
                         </td>
                     </tr>

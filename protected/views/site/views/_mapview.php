@@ -5,7 +5,7 @@
 <script type="text/javascript">
     var geocoder;
     var icon = '/public/images/ih.png';
-    var center = null;
+    var center;
     var map;
     var currentPopup;
     function addMarker(lat, lng, info) {
@@ -32,7 +32,7 @@
     function initMap() {
         var destinations = <?=json_encode($coord)?>;
         geocoder = new google.maps.Geocoder();
-        var latlng = new google.maps.LatLng(destinations[0].Lat,destinations[0].Long);
+        var latlng = new google.maps.LatLng(0,0);
         map = new google.maps.Map(document.getElementById("map_canvas"), {
             zoom: 8,
             center: latlng,
@@ -51,18 +51,21 @@
             var city = destinations[i];
             info = "<a href='<?=baseUrl().'/site/details?HotelCode='?>"+city.HotelCode+"'"+"><b>"+city.HotelName+"</b></a>"+
                     "<br><img src='"+city.Image+"'width=180 height=150 alt=image>"+
-                    "<br><b><img src='<? echo baseUrl() . '/public/images/star_icon.png?>'?><!--<!--'/>"+city.StarRating+"</b>"+
+                    "<br><b><img src='<? echo baseUrl() . '/public/images/star_icon.png?>'?>'/>"+city.StarRating+"</b>"+
                     "<br>Полная стоимость: <b>$"+city.Price+"</b>";
+
             if((city.Lat == "0.000000" || city.Lat == "") && (city.Long == "0.000000" || city.Long == "")){
                 geocoder.geocode( { 'address': city.HotelAddress}, function(results, status) {
                     if (status == google.maps.GeocoderStatus.OK) {
+                        map.setCenter(results[0].geometry.location);
                         addMarker(results[0].geometry.location.lat(),results[0].geometry.location.lng(),info);
                     }
                 })
             }else{
-               addMarker(city.Lat,city.Long,info);
+                addMarker(city.Lat,city.Long,info);
             }
         }
+
         var weatherLayer = new google.maps.weather.WeatherLayer({
             temperatureUnits: google.maps.weather.TemperatureUnit.Celsius
         });
