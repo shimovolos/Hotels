@@ -3,79 +3,42 @@ Yii::app()->getClientScript()->registerCoreScript('jquery.ui');
 registerCss('/public/css/jquery.ui.min.css');
 registerScript('/public/js/chosen.jquery.js');
 registerCss('/public/css/chosen.css');
-registerScript("/public/js/search_form.js");
+//registerScript("/public/js/search_form.js");
 registerScript('/public/js/jquery.validate.min.js');
+registerScript('/public/js/filter_form.js');
 registerCss('/public/css/table.css');
 $parameters = unserialize(Yii::app()->cache->get('parameters'));
-
-Yii::app()->clientScript->registerScript('preload','
-$(function (){
-            $("#search_result").css("background", "url(/public/images/301.gif) no-repeat center center");
-            var url = window.location.href;
-            var param = url.split("?");
-            $.ajax({
-                url: "'.baseUrl().'/site/update",
-                data: param[1],
-                success:function(response) {
-                $("#search_result").css("background","#fff").html(response);
-
-                },
-                error:function(){alert()}
-                })
-            });');
-
 ?>
 <div id="advanced_search">
     <?
         $this->renderPartial("columns/_filterform");
         $this->renderPartial("columns/_searchform", array('parameters' => $parameters));
-
     ?>
 </div>
 <div id="search_result">
 
 </div>
 <script>
-    $("#radio2").click(function(){
-        $.ajax({
-            url: "<?=baseUrl()."/site/map"?>",
-            data: $("#adv_search").serialize(),
-            success:function(response){
-                $("#search_result").html(response);
-
-            },
-            error:function(){
-                alert('ad');
+    $(document).ready(function () {
+        filter = <?=json_encode($filter)?>;
+        var price, star;
+        if(filter){
+            price = filter.price.split("-");
+            price[0] = price[0].replace('$', '');price[1] = price[1].replace('$', '')
+            star = filter.StarRating.split('-');
+            for(var check in filter){
+                if(check != 'radio' && check!='price' && radio!='StarRating'){
+                    $('#adv_search input:checkbox[name*='+check+']').attr('checked', 'checked');
+                }
             }
-        })
-    })
-
-    $('.filter').change(function(){
-
-        if($("#ajaxListView").length){
-            param = $('#adv_search').serialize();
-            $('head script').remove();
-            $.fn.yiiListView.update(
-                'ajaxListView',
-                {
-                    data: param
-                }
-            );
+            $("[value='"+filter.radio+"']").attr('checked','checked');
+        }else{
+            price = new Array(2);price[0]=5;price[1]=2000;
+            star = new Array(2);star[0]=0;star[1]=5;
         }
-        else{
-            $("#search_result").prepend('<img src="/public/images/ajax-loader.gif" alt=""/>');
+        setRanges(price,star);
 
-            param = $('#adv_search').serialize();
-            $.ajax({
-                url: "<?=baseUrl()."/site/update"?>",
-                data: param,
-                success:function(response){
-                   $("#search_result").html(response);
-                },
-                error:function(){
-                    alert('ad');
-                }
-            })
-        }
-    })
+    });
+
+
 </script>

@@ -8,7 +8,7 @@
         registerCss("/public/css/style.css");
         registerCss("/public/css/menu.css");
         registerScript("/public/js/upButton.js");
-        Yii::app()->getClientScript()->registerCoreScript('jquery');
+//        Yii::app()->getClientScript()->registerCoreScript('jquery');
     ?>
     <title><?php echo CHtml::encode($this->pageTitle); ?></title>
 </head>

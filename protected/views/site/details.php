@@ -1,14 +1,14 @@
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css"/>
-<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js">
-</script>
+<?
+Yii::app()->getClientScript()->registerCoreScript('jquery.ui');
+registerCss('/public/css/jquery.ui.min.css')
+?>
 <script>
     $(function () {
         $("#tabs").tabs();
     });
 </script>
 
-<script type="text/javascript"
-        src="http://maps.googleapis.com/maps/api/js?key=<?php echo Yii::app()->params['GOOGLE_MAPS_API_KEY']; ?>&sensor=true&language=ru">
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=<?php echo Yii::app()->params['GOOGLE_MAPS_API_KEY']; ?>&sensor=true&language=ru">
 </script>
 
 <?php

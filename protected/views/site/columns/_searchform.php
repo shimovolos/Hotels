@@ -20,7 +20,7 @@
     });");
     ?>
 
-<form method="get" class="adv_search" action="" style="padding-top: 10px; border-top: 1px solid rgba(173,170,140,0.63)">
+<form method="get" class="adv_search" action="<?php echo baseUrl() ?>/site/hotels" style="padding-top: 10px; border-top: 1px solid rgba(173,170,140,0.63)">
     <table>
         <tr>
             <td>

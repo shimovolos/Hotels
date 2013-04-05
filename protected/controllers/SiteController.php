@@ -134,9 +134,16 @@ class SiteController extends Controller
 
         $hotelsCode = $this->client->removeDuplicateHotels(unserialize(Yii::app()->cache->get('response')));
         $criteria = new CDbCriteria;
-        $viewType = '_hotelview';
+        if(isset(Yii::app()->request->cookies['filter'])){
+            $filter = unserialize(Yii::app()->request->cookies['filter']->value);
+            $viewType = $filter['radio'];
+        }else{
+            $viewType = '_hotelview';
+        }
 
         if(isset($_GET['adv_param'])) {
+            Yii::app()->request->cookies['filter'] = new CHttpCookie('filter',serialize($_GET['adv_param']));
+
             $filterResult = $this->dataDB->filterSearchData($_GET['adv_param'], $hotelsCode);
             $criteria = $filterResult['criteria'];
             $viewType = $filterResult['viewType'];
@@ -161,6 +168,7 @@ class SiteController extends Controller
                 'hotels'=>$this->hotelsResponse(),
                 'viewType' => $viewType,
                 'template' => Yii::app()->params[$viewType],
+
             ), false, true);
         }
 
@@ -172,6 +180,7 @@ class SiteController extends Controller
         Yii::app()->cache->set('parameters', serialize($_GET['param']));
         $this->render('hotels', array(
             'hotels'=>$this->hotelsResponse(),
+            'filter' => unserialize(Yii::app()->request->cookies['filter']->value)
         ), false);
     }
 
