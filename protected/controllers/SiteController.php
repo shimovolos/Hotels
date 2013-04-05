@@ -250,50 +250,29 @@ class SiteController extends Controller
         $hotelsCode = $filterResult['hotelsCode'];
         $criteria->addInCondition('HotelCode', $hotelsCode['hotelsCode'], 'AND');
 
-        $test = Hotelslist::model()->findAll($criteria);
-        $price = array();
+        $info = Hotelslist::model()->findAll($criteria);
+
         $coord = array();
-        $hotel = array();
-        foreach ($test as $hotels) {
-//            foreach($this->hotelsResponse() as $key=>$val){
-//                if($val->hotelCode == $hotels->HotelCode){
+        foreach ($info as $hotels) {
+            foreach($this->hotelsResponse() as $key=>$val){
+                if($val->hotelCode == $hotels->HotelCode){
                     $images = explode(';',$hotels->HotelImages);
                     $coord[] = array(
                         'HotelName' => $hotels->HotelName,
                         'HotelCode' => $hotels->HotelCode,
                         'Long' => $hotels->Longitude,
+                        'HotelAddress' =>$hotels->HotelAddress,
                         'Lat' => $hotels->Latitude,
                         'StarRating' => $hotels->StarRating,
                         'Image' => $images[0],
-//                        'Price' => $val->totalPrice,
+                        'Price' => $val->totalPrice,
                     );
-//                }
-//            }
-            $hotel[] = $hotels->HotelCode;
+                break;
+                }
+            }
         }
-        $hotelCode = join("','",$hotel);
-        $data = Hotelslist::model()->findAll(array('condition'=>"HotelCode IN ('".$hotelCode."') AND (Latitude=0.000000 OR Latitude IS NULL)
-                                                    AND (Longitude=0.000000 OR Longitude IS NULL)"));
-        foreach($data as $key=>$value){
-//            foreach($this->hotelsResponse() as $key=>$val){
-//                if($val->hotelCode == $value->HotelCode){
-                    $images = explode(';',$value->HotelImages);
-                    $result[] = array(
-                        'HotelName' => $value->HotelName,
-                        'HotelCode' => $value->HotelCode,
-                        'StarRating' => $value->StarRating,
-                        'Image' => $images[0],
-//                        'Price' => $val->totalPrice,
-                        'HotelAddress' => $value->HotelAddress
-                    );
-//                }
-//            }
-
-        }
-
         $this->renderPartial('views/_mapview', array(
             'coord' => $coord,
-            'result' => $result,
         ), false, true);
     }
 }

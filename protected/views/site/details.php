@@ -124,6 +124,22 @@ if($hotelsCode[$key-1] == null || $hotelsCode[$key+1] == null){
                 <b><?php echo $hotel->HotelPhoneNumber ?></b>
             </td>
         </tr>
+    <tr>
+        <td>
+            <i>Почтовый код: </i>
+        </td>
+        <td>
+            <b><?php echo $hotel->Longitude ?></b>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <i>Номер телефона: </i>
+        </td>
+        <td>
+            <b><?php echo $hotel->Latitude ?></b>
+        </td>
+    </tr>
     </table>
     </p>
     <br>

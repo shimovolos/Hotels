@@ -12,5 +12,5 @@ function registerScript($dirName)
 
 function registerCss($dirName)
 {
-    return Yii::app()->getClientScript()->registerCssFile(Yii::app()->request->baseUrl.$dirName, CClientScript::POS_HEAD);
+    return Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl.$dirName,'screen');
 }
