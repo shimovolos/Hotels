@@ -1,25 +1,4 @@
-$(function() {
-    $( "#coming_date" ).datepicker({
-        dateFormat: "yy-mm-dd",
-        changeMonth: true,
-        numberOfMonths: 1,
-        minDate: 1,
-        onSelect: function( selectedDate ) {
-            $( "#leaving_date" ).datepicker( "option", "minDate", selectedDate  );
-            $(this).trigger('keyup')
-        }
-    });
 
-    $( "#leaving_date" ).datepicker({
-        dateFormat: "yy-mm-dd",
-        changeMonth: true,
-        numberOfMonths: 1,
-        onClose: function( selectedDate ) {
-            $( "#coming_date" ).datepicker( "option", "maxDate", selectedDate );
-            $(this).trigger('keyup')
-        }
-    });
-});
 
 function hide_block(){
     if($("#is_child").is(":checked")){
@@ -33,6 +12,28 @@ function hide_block(){
 
 
 $(document).ready(function(){
+    $(function() {
+        $( "#coming_date" ).datepicker({
+            dateFormat: "yy-mm-dd",
+            changeMonth: true,
+            numberOfMonths: 1,
+            minDate: 1,
+            onSelect: function( selectedDate ) {
+                $( "#leaving_date" ).datepicker( "option", "minDate", selectedDate  );
+                $(this).trigger('keyup')
+            }
+        });
+
+        $( "#leaving_date" ).datepicker({
+            dateFormat: "yy-mm-dd",
+            changeMonth: true,
+            numberOfMonths: 1,
+            onClose: function( selectedDate ) {
+                $( "#coming_date" ).datepicker( "option", "maxDate", selectedDate );
+                $(this).trigger('keyup')
+            }
+        });
+    });
     $("#add_child").hide();
     $("#children_age").hide();
     $("#load").hide();
@@ -105,94 +106,10 @@ $(document).ready(function(){
 
 });
 
-
-function submitAdvancedForm(){
-    var url = $("#adv_search").attr("action");
-    $.ajax({
-        url: 'update',
-        type: 'get',
-        data: url+'?' + $("#adv_search").serialize(),
-        success: function(response) {
-            $("#search_result").html(response);
-        },
-        error:function(){
-            alert('Ошибка загрузки формы');
-        }
-    })
-    return false;
-}
-
-
-function load(){
-    $("#load").show();
-    $('.loader').css({
-        position:'absolute',
-        left: ($(window).width() - $('.loader').outerWidth())/2,
-        top: ($(window).height() - $('.loader').outerHeight())/2
-    });
-}
-
 $(function(){
     $("#radio").buttonset();
 });
 
-function mapUpdate(){
-    if($('#ajaxListView').length){
-        param = $('#adv_search').serialize();
-        $.fn.yiiListView.update(
-            'ajaxListView',
-            { data: param }
-        );
-    }else{
-        $("#search_result").prepend('<img src="/public/images/ajax-loader.gif" alt=""/>');
-        param = $('#adv_search').serialize();
-        $.ajax({
-            url: "/site/update",
-            data: param,
-            success:function(response){
-                $("#search_result").html(response);
-            },
-            error:function(){
-                alert('ad');
-            }
-        })
-    }
-}
 
-$(function() {
-    $("#price_range" ).slider({
-        range: true,
-        min: 0,
-        max: 2000,
-        values: [0,2000],
-        step: 50,
-        slide: function( event, ui ) {
-            $( "#price" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
-        },
-        change: function(event, ui){
 
-                mapUpdate();
-        }
-    });
-    $( "#price" ).val( "$" + $( "#price_range" ).slider( "values", 0 ) +
-        " - $" + $( "#price_range" ).slider( "values", 1 ) );
-});
 
-$(function(){
-    $("#star_range").slider({
-        range: true,
-        min: 0,
-        max: 5,
-        values:[0,5],
-        slide: function(event, ui){
-            $("#star").val(ui.values[0] + " - " + ui.values[1]);
-        },
-        change: function(event, ui){
-
-                mapUpdate();
-
-        }
-    });
-    $("#star").val($( "#star_range" ).slider( "values", 0 ) +
-        " - " + $( "#star_range" ).slider( "values", 1 ));
-});
