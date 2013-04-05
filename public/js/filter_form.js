@@ -3,12 +3,13 @@ function mapUpdate(){
         param = $('#adv_search').serialize();
         $.fn.yiiListView.update(
             'ajaxListView',
-            { data: param }
+            { type:"post",data: param }
         );
     }else{
         $("#search_result").prepend('<img src="/public/images/ajax-loader.gif" alt=""/>');
         param = $('#adv_search').serialize();
         $.ajax({
+            type:"post",
             url: "/site/update",
             data: param,
             success:function(response){
@@ -47,6 +48,7 @@ $('.filter').change(function(){
         $.fn.yiiListView.update(
             'ajaxListView',
             {
+                type: 'post',
                 data: param
             }
         );
@@ -56,6 +58,7 @@ $('.filter').change(function(){
 
         param = $('#adv_search').serialize();
         $.ajax({
+            type:'post',
             url: "/site/update",
             data: param,
             success:function(response){
@@ -89,23 +92,7 @@ $(document).ready(function(){
             }
         });
     });
-    $(function (){
-        $("#search_result").css("background", "url(/public/images/301.gif) no-repeat center center");
-        var url = window.location.href;
-        var param = url.split("?");
-        var filter = $('#adv_search').serialize();
-        $.ajax({
-            url: "/site/update",
-            data: param[1]+'&'+filter,
-            success:function(response) {
-                $("#search_result").css("background","#fff").html(response);
 
-            },
-            error:function(){
-                $("#search_result").html("<span class='error'>Что-то пошло не так! Попробуйте ещё раз!</span> ")
-            }
-        })
-    })
 })
 
 function setRanges(price, star){

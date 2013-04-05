@@ -14,18 +14,18 @@
     table-layout: fixed;
 }
 
-.info_table tr:nth-child(odd) {
-    background-color: rgba(170, 212, 255, 0.37);
-}
+/*.info_table tr:nth-child(odd) {*/
+    /*background-color: rgba(170, 212, 255, 0.37);*/
+/*}*/
 
-.info_table tr:nth-child(even) {
-    background-color: rgba(211, 233, 255, 0.34);
-}
+/*.info_table tr:nth-child(even) {*/
+    /*background-color: rgba(211, 233, 255, 0.34);*/
+/*}*/
 
 .info_table td {
     position: relative;
     vertical-align: text-top;
-    border: 1px solid #ffffff;
+    border: 1px solid rgba(0, 165, 215, 0.19);
     border-width: 1px 1px 1px 1px;
     text-align: left;
     padding: 7px;

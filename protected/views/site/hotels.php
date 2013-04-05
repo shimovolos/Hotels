@@ -11,6 +11,23 @@ $parameters = unserialize(Yii::app()->cache->get('parameters'));
 ?>
 <div id="advanced_search">
     <?
+    Yii::app()->clientScript->registerScript('preload','
+$(function (){
+            $("#search_result").css("background", "url(/public/images/301.gif) no-repeat center center");
+            var url = window.location.href;
+            var param = url.split("?");
+            var filter = $("#adv_search").serialize();
+            $.ajax({
+                type: "post",
+                url: "'.baseUrl().'/site/update",
+                data: filter+"&"+param[1],
+                success:function(response) {
+                $("#search_result").css("background","#fff").html(response);
+
+                },
+                error:function(){alert()}
+                })
+            });');
         $this->renderPartial("columns/_filterform");
         $this->renderPartial("columns/_searchform", array('parameters' => $parameters));
     ?>

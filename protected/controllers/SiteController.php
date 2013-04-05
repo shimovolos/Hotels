@@ -80,9 +80,9 @@ class SiteController extends Controller
 
     private function setDataToCache()
     {
-        $response = $this->client->getAvailableHotel($_GET['param']);
+        $response = $this->client->getAvailableHotel($_POST['param']);
         Yii::app()->cache->set('response', serialize($response));
-        Yii::app()->cache->set('parameters', serialize($_GET['param']));
+        Yii::app()->cache->set('parameters', serialize($_POST['param']));
         Yii::app()->session['responseData'] = json_encode(array(
             'responseID' => $response->responseId,
             'searchID' => $response->searchId
@@ -125,10 +125,10 @@ class SiteController extends Controller
 
     public function actionUpdate()
     {
-        if(isset($_GET['search_hotel'])){
+        if(isset($_POST['search_hotel'])){
             Yii::app()->cache->delete('response');
             $this->setDataToCache();
-        }elseif(isset($_GET['search']) && Yii::app()->cache->get('response')===false){
+        }elseif(isset($_POST['search']) && Yii::app()->cache->get('response')===false){
             $this->setDataToCache();
         }
 
@@ -141,10 +141,10 @@ class SiteController extends Controller
             $viewType = '_hotelview';
         }
 
-        if(isset($_GET['adv_param'])) {
-            Yii::app()->request->cookies['filter'] = new CHttpCookie('filter',serialize($_GET['adv_param']));
+        if(isset($_POST['adv_param'])) {
+            Yii::app()->request->cookies['filter'] = new CHttpCookie('filter',serialize($_POST['adv_param']));
 
-            $filterResult = $this->dataDB->filterSearchData($_GET['adv_param'], $hotelsCode);
+            $filterResult = $this->dataDB->filterSearchData($_POST['adv_param'], $hotelsCode);
             $criteria = $filterResult['criteria'];
             $viewType = $filterResult['viewType'];
             $hotelsCode = $filterResult['hotelsCode'];
@@ -157,11 +157,12 @@ class SiteController extends Controller
         }else{
             $dataProvider = new CActiveDataProvider(Hotelslist::model(), array(
                 'pagination' => array(
-                    'pageSize' => 12
+                    'pageSize' => 12,
                 ),
                 'criteria' => $criteria,
                 'sort' => $this->Sort(),
             ));
+
             $this->renderPartial('views/listview',array(
                 'dataProvider'=>$dataProvider,
                 'availableRooms' => $hotelsCode['availableRooms'],
