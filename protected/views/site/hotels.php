@@ -18,7 +18,7 @@ $(function (){
             var param = url.split("?");
             var filter = $("#adv_search").serialize();
             $.ajax({
-                type: "post",
+                type: "get",
                 url: "'.baseUrl().'/site/update",
                 data: filter+"&"+param[1],
                 success:function(response) {

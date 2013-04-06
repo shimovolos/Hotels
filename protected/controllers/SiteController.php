@@ -80,16 +80,16 @@ class SiteController extends Controller
 
     private function setDataToCache()
     {
-        $response = $this->client->getAvailableHotel($_POST['param']);
+        $response = $this->client->getAvailableHotel($_GET['param']);
         Yii::app()->cache->set('response', serialize($response));
-        Yii::app()->cache->set('parameters', serialize($_POST['param']));
+        Yii::app()->cache->set('parameters', serialize($_GET['param']));
         Yii::app()->session['responseData'] = json_encode(array(
             'responseID' => $response->responseId,
             'searchID' => $response->searchId
         ));
     }
 
-    private function Sort()
+    private function Sort($paramsFromUrl)
     {
         $sort = new CSort();
         $sort->sortVar = 'sort';
@@ -109,6 +109,12 @@ class SiteController extends Controller
                 'label'=>'звёздам',
             ),
         );
+        $sort->route = 'site/update';
+        $params = array();
+        foreach($paramsFromUrl as $key=>$value){
+            $params['adv_param'][$key] = $value;
+        }
+        $sort->params = $params;
         return $sort;
     }
 
@@ -125,10 +131,10 @@ class SiteController extends Controller
 
     public function actionUpdate()
     {
-        if(isset($_POST['search_hotel'])){
+        if(isset($_GET['search_hotel'])){
             Yii::app()->cache->delete('response');
             $this->setDataToCache();
-        }elseif(isset($_POST['search']) && Yii::app()->cache->get('response')===false){
+        }elseif(isset($_GET['search']) && Yii::app()->cache->get('response')===false){
             $this->setDataToCache();
         }
 
@@ -140,16 +146,17 @@ class SiteController extends Controller
         }else{
             $viewType = '_hotelview';
         }
-
-        if(isset($_POST['adv_param'])) {
-            Yii::app()->request->cookies['filter'] = new CHttpCookie('filter',serialize($_POST['adv_param']));
-
-            $filterResult = $this->dataDB->filterSearchData($_POST['adv_param'], $hotelsCode);
+        $params = array();
+        if(isset($_GET['adv_param'])) {
+            Yii::app()->request->cookies['filter'] = new CHttpCookie('filter',serialize($_GET['adv_param']));
+            foreach($_GET['adv_param'] as $key=>$value){
+                $params['adv_param'][$key] = $value;
+            }
+            $filterResult = $this->dataDB->filterSearchData($_GET['adv_param'], $hotelsCode);
             $criteria = $filterResult['criteria'];
             $viewType = $filterResult['viewType'];
             $hotelsCode = $filterResult['hotelsCode'];
         }
-
         $criteria->addInCondition('HotelCode', $hotelsCode['hotelsCode'], 'AND');
 
         if($viewType == '_mapview'){
@@ -158,9 +165,11 @@ class SiteController extends Controller
             $dataProvider = new CActiveDataProvider(Hotelslist::model(), array(
                 'pagination' => array(
                     'pageSize' => 12,
+                    'route' => 'site/update',
+                    'params' => $params
                 ),
                 'criteria' => $criteria,
-                'sort' => $this->Sort(),
+                'sort' => $this->Sort($_GET["adv_param"]),
             ));
 
             $this->renderPartial('views/listview',array(
