@@ -3,13 +3,13 @@ function mapUpdate(){
         param = $('#adv_search').serialize();
         $.fn.yiiListView.update(
             'ajaxListView',
-            { type:"post",data: param }
+            { type:"get",data: param }
         );
     }else{
         $("#search_result").prepend('<img src="/public/images/ajax-loader.gif" alt=""/>');
         param = $('#adv_search').serialize();
         $.ajax({
-            type:"post",
+            type:"get",
             url: "/site/update",
             data: param,
             success:function(response){
@@ -30,7 +30,7 @@ $(function(){
 
 $("#radio2").click(function(){
     $.ajax({
-        type: 'post',
+        type: 'get',
         url: "/site/map",
         data: $("#adv_search").serialize(),
         success:function(response){
@@ -49,7 +49,7 @@ $('.filter').change(function(){
         $.fn.yiiListView.update(
             'ajaxListView',
             {
-                type: 'post',
+                type: 'get',
                 data: param
             }
         );
@@ -59,7 +59,7 @@ $('.filter').change(function(){
 
         param = $('#adv_search').serialize();
         $.ajax({
-            type:'post',
+            type:'get',
             url: "/site/update",
             data: param,
             success:function(response){
