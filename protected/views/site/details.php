@@ -21,8 +21,10 @@ registerCss("/public/css/global.css");
 registerCss("/public/css/table.css");
 $images = explode(';',$hotel->HotelImages);
 
-if($hotelsCode[$key-1] == null || $hotelsCode[$key+1] == null){
+if($hotelsCode[$key-1] == null){
     $hotelsCode[$key-1] = $hotelsCode[$key];
+
+}elseif($hotelsCode[$key+1] == null){
     $hotelsCode[$key+1] = $hotelsCode[$key];
 }
 ?>

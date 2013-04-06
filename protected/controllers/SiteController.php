@@ -265,7 +265,7 @@ class SiteController extends Controller
     public function  actionMap()
     {
         $hotelsCode = $this->client->removeDuplicateHotels(unserialize(Yii::app()->cache->get('response')));
-        $filterResult = $this->dataDB->filterSearchData($_POST['adv_param'], $hotelsCode);
+        $filterResult = $this->dataDB->filterSearchData($_GET['adv_param'], $hotelsCode);
         $criteria = $filterResult['criteria'];
         $hotelsCode = $filterResult['hotelsCode'];
         $criteria->addInCondition('HotelCode', $hotelsCode['hotelsCode'], 'AND');
