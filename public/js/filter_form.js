@@ -45,7 +45,7 @@ $("#radio2").click(function(){
 $('.filter').change(function(){
     if($("#ajaxListView").length){
         param = $('#adv_search').serialize();
-        $('head script').remove();
+        $("[src *=maps]").remove();
         $.fn.yiiListView.update(
             'ajaxListView',
             {
