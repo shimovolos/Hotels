@@ -1,5 +1,11 @@
 <table>
-    <tr><td><label>Код операции бронирования:</label></td><td><? echo $trackingID?></td></tr>
+    <?
+    if(isset($trackingID)){
+        echo "<tr><td><label>Код операции бронирования:</label></td><td>$trackingID</td></tr>";
+    }
+    if(isset($getHotelBookingStatus->bookingStatus)):
+    ?>
+
     <tr><td><label>Статус бронирования:</label></td>
         <td>
             <?
@@ -9,24 +15,43 @@
                 case 3: echo 'Заказ отклонён'; break;
                 case 4: echo 'Заказ отменён'; break;
                 case 5: echo 'Обработка платежа'; break;
-
             }
             ?>
         </td>
     </tr>
-    <tr><td><label>Номер подтверждения:</label></td><td><? echo $getHotelBookingStatus->confirmationNumber;?></td></tr>
-    <tr><td><label>Код отеля:</label></td><td><? echo $getHotelBookingStatus->hotelCode;?></td></tr>
-    <tr><td><label>Дата прибытия:</label></td><td><? echo $getHotelBookingStatus->checkIn;?></td></tr>
-    <tr><td><label>Дата отъезда:</label></td><td><? echo $getHotelBookingStatus->checkOut;?></td></tr>
-    <tr><td><label>Полная стоимость:</label></td><td><? echo $getHotelBookingStatus->totalPrice;?></td></tr>
-    <tr><td><label>Скидка:</label></td><td><? echo $getHotelBookingStatus->totalSalePrice;?></td></tr>
-    <tr><td><label>Валюта:</label></td><td><? echo $getHotelBookingStatus->currency;?></td></tr>
-    <tr><td><label>Тип комнаты:</label></td><td><? echo $getHotelBookingStatus->boardType;?></td></tr>
-    <tr><td><label>Номер агенства:</label></td><td><? echo $getHotelBookingStatus->agencyReferenceNumber;?></td></tr>
-    <tr><td><label>Комментарии:</label></td><td><? echo $getHotelBookingStatus->comments;?></td></tr>
+    <?endif?>
+    <?
+    if(isset($getHotelBookingStatus->confirmationNumber)){
+        echo "<tr><td><label>Номер подтверждения:</label></td><td>$getHotelBookingStatus->confirmationNumber</td></tr>";
+    }
+    if(isset($getHotelBookingStatus->hotelCode)){
+        echo "<tr><td><label>Код отеля:</label></td><td><a href='".baseUrl().'/site/details?HotelCode='.$getHotelBookingStatus->hotelCode."'> $getHotelBookingStatus->hotelCode</a></td></tr>";
+    }
+    if(isset($getHotelBookingStatus->checkIn)){
+        echo "<tr><td><label>Дата прибытия:</label></td><td>$getHotelBookingStatus->checkIn</td></tr>";
+    }
+    if(isset($getHotelBookingStatus->checkOut)){
+        echo "<tr><td><label>Дата отъезда:</label></td><td>$getHotelBookingStatus->checkOut</td></tr>";
+    }
+    if(isset($getHotelBookingStatus->totalPrice)){
+        echo "<tr><td><label>Полная стоимость:</label></td><td>$getHotelBookingStatus->totalPrice</td></tr>";
+    }
+    if(isset($getHotelBookingStatus->totalSalePrice)){
+        echo "<tr><td><label>Скидка:</label></td><td>$getHotelBookingStatus->totalSalePrice</td></tr>";
+    }
+    if(isset($getHotelBookingStatus->currency)){
+        echo "<tr><td><label>Тип валюты:</label></td><td>$getHotelBookingStatus->currency</td></tr>";
+    }
+    if(isset($getHotelBookingStatus->boardType)){
+        echo "<tr><td><label>Тип комнаты:</label></td><td>$getHotelBookingStatus->boardType</td></tr>";
+    }
+    if(isset($getHotelBookingStatus->agencyReferenceNumber)){
+        echo "<tr><td><label>Номер агенства:</label></td><td>$getHotelBookingStatus->agencyReferenceNumber</td></tr>";
+    }
+    if(isset($getHotelBookingStatus->comments)){
+        echo "<tr><td><label>Комментарии:</label></td><td>$getHotelBookingStatus->comments</td></tr>";
+    }
+    ?>
+
+
 </table>
-<p>
-    <label style="font-size: 13pt">
-        Внимание: для просмотра статуса заказа и отмены заказа Вам необходимо сохранить код операции бронирования.
-    </label>
-</p>

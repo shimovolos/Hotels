@@ -12,13 +12,14 @@ class DataReader
     {
         $criteria = new CDbCriteria;
         $result = array();
-
-        $internet = $filter['Internet'];
-        $restaurant = $filter['Restaurant'];
-        $parking = $filter['Parking'];
-        $bar = $filter['Bar'];
-        $swimming = $filter['Swimming'];
         $viewType = $filter['radio'];
+        $amenities = array_slice($filter,3);
+        $queryString = "";
+        if(count($amenities)){
+            foreach($amenities as $key=>$value){
+                $queryString .= " AND PAmenities LIKE '%$value%' ";
+            }
+        }
         foreach($filter as $key=>$value){
             if($key == 'price'){
                 $hotelsCode = HotelsProAPI::sortByPrice($value, unserialize(Yii::app()->cache->get('response')));
@@ -26,9 +27,7 @@ class DataReader
                 $criteria->addInCondition($key,$this->pullStarRange($value), 'AND');
             }else{
                 $hotelCode = join("','",$hotelsCode['hotelsCode']);
-                $data = Hotelsamenities::model()->findAll(array('condition'=>"HotelCode IN ('".$hotelCode."')
-                    AND PAmenities LIKE '%$internet%' AND PAmenities LIKE '%$restaurant%' AND PAmenities LIKE '%$parking%' AND
-                    PAmenities LIKE '%$bar%' AND PAmenities LIKE '%$swimming%'"));
+                $data = Hotelsamenities::model()->findAll(array('condition'=>"HotelCode IN ('".$hotelCode."') ".$queryString));
 
                 foreach($data as $key=>$val){
                     $result[] = $val->HotelCode;

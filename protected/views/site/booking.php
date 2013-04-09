@@ -1,13 +1,68 @@
 <?
+Yii::app()->getClientScript()->registerCoreScript('jquery');
 registerCss('/public/css/style.css');
 registerCss('/public/css/table.css');
+registerScript('/public/js/arcticmodal.js');
+registerCss('/public/css/arcticmodal.css');
 ?>
-<form method="post" action="">
-    <table class="specialty">
+
+
+<div class="g-hidden">
+    <div class="box-modal" id='modal'>
+        <table class="info_table">
+            <tr>
+                <td style="width:100px">
+                    Количество дней до заселения, когда возможно отменить бронирование:
+                </td>
+                <td>
+                    <?if(isset($policy->cancellationDay)) echo $policy->cancellationDay ?>
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    Тип комиссии:
+                </td>
+                <td>
+                    <?
+                        if(isset($policy->feeType)){
+                            switch($policy->feeType){
+                                case 'Percent': echo 'процент';break;
+                                case 'Night': echo 'За ночь';break;
+                                case 'Amount': echo 'Общая стоимость';break;
+                            }
+                        }
+                    ?>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Размер комиссии:
+                </td>
+                <td><?if(isset($policy->feeAmount)) echo $policy->feeAmount ?></td>
+            </tr>
+            <tr>
+                <td>
+                    Валюта:
+                </td>
+                <td><?if(isset($policy->currency)) echo $policy->currency ?></td>
+            </tr>
+            <tr>
+                <td>
+                    Замечания:
+                </td>
+                <td><?if(isset($policy->remarks)) echo $policy->remarks ?></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<form method="post" action="" style="margin: auto">
+    <table style="margin: auto">
         <tr>
-            <td colspan="2">
+
+            <td colspan="3">
                 <input type="hidden" name="processId" value="<?=$_GET['processId']?>"  >
-                <label>Ответственное лицо:</label><br>
+                <label style="font-size: 15px; font-style: italic; font-weight: bold">Ответственное лицо:</label><br>
             </td>
         </tr>
         <tr>
@@ -15,26 +70,25 @@ registerCss('/public/css/table.css');
                 <label for="lead_title">Привествие:</label><br>
             </td>
             <td>
+                <label for="lead_1st_name">Имя:</label><br>
+            </td>
+            <td>
+                <label for="lead_2nd_name">Фамилия:</label><br>
+            </td>
+
+        </tr>
+        <tr>
+            <td>
                 <select class="booking" style="width: 80px;" name="lead_title" id="lead_title">
                     <option>Mr</option>
                     <option>Ms</option>
                 </select>
             </td>
-        </tr>
-        <tr>
-            <td>
-                <label for="lead_1st_name">Имя:</label><br>
-            </td>
             <td>
                 <input class="booking" type="text" name="lead_1st_name" id="lead_1st_name"/>
             </td>
-        </tr>
-        <tr>
             <td>
-                <label for="lead_2nd_name">Фамилия:</label><br>
-            </td>
-            <td>
-                <input class="booking" type="text" name="lead_2nd_name" id="lead_2nd_name"/><span style="color: #ff8e83">*</span>
+                <input class="booking" type="text" name="lead_2nd_name" id="lead_2nd_name"/>
             </td>
         </tr>
     <tr>
@@ -47,11 +101,10 @@ registerCss('/public/css/table.css');
             }
             if($paxCount  > 1):
         ?>
-        <label>Другие посетители:</label>
+        <label style="font-size: 15px; font-style: italic; font-weight: bold">Другие посетители:</label>
    </td>
     </tr>
         <?php
-
         {
             for($i = 0; $i < $paxCount - 1; $i++){
                 echo '
@@ -60,40 +113,50 @@ registerCss('/public/css/table.css');
                             <label for="other_title_'.$i.'">Привествие:</label>
                         </td>
                         <td>
+                            <label for="other_1st_name_'.$i.'">Имя:</label>
+                        </td>
+                         <td>
+                            <label for="other_1st_name_'.$i.'">Фамилия:</label>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
                             <select class="booking" style="width: 80px;" name="other_title_'.$i.'" id="other_title_'.$i.'">
                                 <option>Mr</option>
                                 <option>Ms</option>
                             </select>
                         </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="other_1st_name_'.$i.'">Имя:</label>
-                        </td>
                         <td>
                             <input class="booking" type="text" name="other_1st_name_'.$i.'" id="other_1st_name_'.$i.'"/>
                         </td>
+                        <td>
+                            <input class="booking" type="text" name="other_2nd_name_'.$i.'" id="other_2nd_name_'.$i.'"/>
+                        </td>
                     </tr>
-                        <td>
-                            <label for="other_1st_name_'.$i.'">Фамилия:</label>
-                        </td>
-                        <td>
-                            <input class="booking" type="text" name="other_2nd_name_'.$i.'" id="other_2nd_name_'.$i.'"/><span style="color: #ff8e83">*</span>
-                        </td>
+
                     </tr>';
             }
         }
         ?>
+        <tr>
+            <td colspan="3">
+                <label>Примечания:</label>
+                <textarea class="booking" name="note" style="width: 300px"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <div id="button_wrap">
+                    <input type="submit" name="get_booking" value="Забронировать"/>
+                </div>
+            </td>
+        </tr>
         <?endif?>
     </table>
-    <label>Примечания:</label>
-    <br/>
-    <textarea class="booking" name="note" style="width: 300px"></textarea>
-    <div id="button_wrap">
-        <input type="submit" name="get_booking" value="Забронировать"/>
-    </div>
-    <br>
-    <label>
-        <span style="color: #ff8e83">*</span> - поля обязательные для заполнения
-    </label>
 </form>
+<p style="text-align: center; font-weight: bold; font-style: italic">
+    <a id="get_policy" href="#" onclick="$('#modal').arcticmodal()">
+        Внимание!!! Перед бронирование настоятельно рекомендуем ознакомится с политикой отмены брони!
+    </a>
+</p>

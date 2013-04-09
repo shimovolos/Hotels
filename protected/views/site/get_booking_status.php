@@ -1,5 +1,5 @@
 <form action="" method="post">
-    <table>
+    <table style="margin: auto">
     <tr>
         <td><label>Для проверки сострояния заказа введите код бронирования полученный после операции оформления заказа:</label></td>
     </tr>

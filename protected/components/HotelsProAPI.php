@@ -166,4 +166,14 @@ class HotelsProAPI
             throw new CHttpException($exception->getCode(), $exception->getMessage());
         }
     }
+
+    public function getHotelCancellationPolicy($processId){
+        try{
+            $response = $this->client->getHotelCancellationPolicy(Yii::app()->params['HP_API_KEY'], $processId);
+            return $response;
+        }
+        catch(SoapFault $exception){
+            throw new CHttpException($exception->getCode(), $exception->getMessage());
+        }
+    }
 }

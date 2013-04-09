@@ -121,12 +121,14 @@ class SiteController extends Controller
     private function hotelsResponse()
     {
         $response = unserialize(Yii::app()->cache->get('response'));
-        if (is_object($response->availableHotels)) {
-            $hotels[] = $response->availableHotels;
-        } else {
-            $hotels = $response->availableHotels;
+        if(isset($response->availableHotels)){
+            if (is_object($response->availableHotels)) {
+                $hotels[] = $response->availableHotels;
+            } else {
+                $hotels = $response->availableHotels;
+            }
+            return $hotels;
         }
-        return $hotels;
     }
 
     public function actionUpdate()
@@ -198,7 +200,9 @@ class SiteController extends Controller
     {
         $searchData = unserialize(Yii::app()->cache['parameters']);
         if(!isset($_POST['get_booking'])){
-            $this->render('booking', array('data' => $searchData));
+            $response = $this->client->getHotelCancellationPolicy($_GET['processId']);
+            $policy = is_array($response->cancellationPolicy) ? $response->cancellationPolicy : array($response->cancellationPolicy);
+            $this->render('booking', array('data' => $searchData, 'policy' => $policy[0]));
         }
         else{
             $lead_traveller['paxInfo'] = array(
