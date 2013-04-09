@@ -190,9 +190,13 @@ class SiteController extends Controller
     {
         Yii::app()->session['url'] = Yii::app()->request->getUrl();
         Yii::app()->cache->set('parameters', serialize($_GET['param']));
+        $filter = null;
+        if(Yii::app()->request->cookies->contains('filter')){
+           $filter = unserialize(Yii::app()->request->cookies['filter']->value);
+        }
         $this->render('hotels', array(
             'hotels'=>$this->hotelsResponse(),
-            'filter' => unserialize(Yii::app()->request->cookies['filter']->value)
+            'filter' => $filter
         ), false);
     }
 
