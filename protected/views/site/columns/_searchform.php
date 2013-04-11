@@ -1,4 +1,8 @@
     <?
+    registerCss('/public/css/jquery.qtip.min.css');
+    registerScript('/public/js/jquery.qtip.min.js');
+    registerScript('/public/js/messages_ru.js');
+    registerScript('/public/js/jquery.validate.min.js');
     registerScript("/public/js/search_form.js");
     Yii::app()->clientScript->registerScript('cities', "$(function(){
         $('#param_city').chosen().change(function(){
@@ -19,20 +23,43 @@
             );
         });
     });");
+    Yii::app()->clientScript->registerScript('datepickers',
+        '
+       $(function() {
+        $( "#coming_date" ).datepicker({
+            dateFormat: "yy-mm-dd",
+            changeMonth: true,
+            numberOfMonths: 1,
+            minDate: 1,
+            onSelect: function( selectedDate ) {
+                $( "#leaving_date" ).datepicker( "option", "minDate", selectedDate  );
+            }
+        });
+
+        $( "#leaving_date" ).datepicker({
+            dateFormat: "yy-mm-dd",
+            changeMonth: true,
+            numberOfMonths: 1,
+            onClose: function( selectedDate ) {
+                $( "#coming_date" ).datepicker( "option", "maxDate", selectedDate );
+            }
+        });
+    });
+    $(function(){
+        if($("#is_child").is(":checked")){
+            $("#add_child").show();
+            $("#children_age").show()
+        }
+    })
+
+        ')
     ?>
 
-<form method="get" class="adv_search" action="<?php echo baseUrl() ?>/site/hotels" style="padding-top: 10px; border-top: 1px solid rgba(173,170,140,0.63)">
+<form method="get" id=search_form class="adv_search" action="<?php echo baseUrl() ?>/site/hotels" style="padding-top: 10px; border-top: 1px solid rgba(173,170,140,0.63)">
     <table>
         <tr>
             <td>
                 <label>Повторить поиск</label>
-                <? if(isset($parameters['child_age'])): ?>
-                    <input type="hidden" name="param[children_paxes]" value="<? echo $parameters['children_paxes']?>">
-                    <? foreach($parameters['child_age'] as $key=>$value):?>
-                        <input type="hidden" name="param[child_age][]" value="'.$value.'">
-                    <? endforeach; ?>
-                <? endif; ?>
-                <input type="hidden" name="param[adult_paxes]" value="<? echo $parameters['adult_paxes']?>"/>
                 <input type="hidden" name="param[city_id]" id="city_id" value="<?=$parameters['city_id']?>"/>
                 <input type="hidden" name="param[search_city]" id="search_city" value="<?=$parameters['search_city']?>"/>
                 <?
@@ -86,7 +113,26 @@
         <tr>
             <td>
                 <label>Взрослых:<br></label>
-                <input type="text" name="param[adult_paxes]" id="adult" autocomplete="off" value="<? echo $parameters['adult_paxes']?>" placeholder="взрослых" style="width: 85px"/>
+                <input type="text" name="param[adult_paxes]" id="adult" autocomplete="off" value="<? echo $parameters['adult_paxes']?>" placeholder="взрослых" style="width: 65px"/>
+                <input type="checkbox" name="param[is_child]" id="is_child" onchange="hide_block()" <?if(isset($parameters['is_child'])) echo "checked=true"?>/><label>&nbsp c детьми</label><br/>
+            </td>
+        </tr>
+        <tr id="add_child">
+            <td>
+                <label>Детей:</label><br/>
+                <input type="text" name="param[children_paxes]" id="children_paxes" autocomplete="off" style="width: 65px"
+                <?if(isset($parameters['is_child'])) echo "value=".$parameters['children_paxes']?>><br/>
+            </td>
+        </tr>
+        <tr id="children_age">
+            <td id="container">
+        <?if(isset($parameters['is_child']) && isset($parameters['child_age'])):?>
+                <?foreach($parameters['child_age'] as $key=>$value):?>
+                        <label class="age_label">возраст детей<br/></label>
+                    <input type="text" class="child_age" autocomplete="off" name="param[child_age][]" value="<?=$value?>"  style="width:35px; margin-right:3px" />
+                <?endforeach?>
+
+        <?endif?>
             </td>
         </tr>
         <tr>

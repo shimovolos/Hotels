@@ -7,6 +7,7 @@ registerScript("/public/js/search_form.js");
 registerScript('/public/js/jquery.qtip.min.js');
 registerScript('/public/js/jquery.validate.min.js');
 registerScript('/public/js/messages_ru.js');
+
 registerCss('/public/css/chosen.css');
 unset(Yii::app()->session['adv_param']);
 unset(Yii::app()->session['responseData']);
@@ -39,12 +40,32 @@ unset(Yii::app()->session['responseData']);
         }).ajaxStop(function(){
                     $(this).hide();
                 });
+        $(function() {
+            $( "#coming_date" ).datepicker({
+                dateFormat: "yy-mm-dd",
+                changeMonth: true,
+                numberOfMonths: 1,
+                minDate: 1,
+                onSelect: function( selectedDate ) {
+                    $( "#leaving_date" ).datepicker( "option", "minDate", selectedDate  );
+                }
+            });
+
+            $( "#leaving_date" ).datepicker({
+                dateFormat: "yy-mm-dd",
+                changeMonth: true,
+                numberOfMonths: 1,
+                onClose: function( selectedDate ) {
+                    $( "#coming_date" ).datepicker( "option", "maxDate", selectedDate );
+                }
+            });
+        });
     })
 </script>
 <div id="info">
     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus adipisci aspernatur autem eum facere illum in, iure mollitia nobis obcaecati, officiis pariatur perferendis placeat quis recusandae repellendus, reprehenderit sapiente sit ut voluptatum? Aspernatur, blanditiis culpa ea eos explicabo mollitia natus omnis quibusdam suscipit temporibus! Alias at autem beatae consequatur delectus distinctio illo labore libero, nemo non sint tempore vel, vero? Deleniti enim laboriosam perferendis quibusdam vero. Accusantium at dolorum laboriosam? Alias aspernatur aut beatae culpa cum cupiditate eligendi excepturi illum impedit ipsa ipsam itaque labore laborum, minus nam natus, quia quis, quod rerum sed sequi similique suscipit velit vero voluptate.
 </div>
-<form name=search_form id=search_form action='<?php echo baseUrl() ?>/site/hotels' method='get'>
+<form name=search_form class="search_form" id=search_form action='<?php echo baseUrl() ?>/site/hotels' method='get'>
     <table>
         <tr>
             <td>

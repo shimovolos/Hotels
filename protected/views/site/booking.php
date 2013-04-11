@@ -139,6 +139,8 @@ registerCss('/public/css/arcticmodal.css');
             }
         }
         ?>
+
+        <?endif?>
         <tr>
             <td colspan="3">
                 <label>Примечания:</label>
@@ -152,7 +154,6 @@ registerCss('/public/css/arcticmodal.css');
                 </div>
             </td>
         </tr>
-        <?endif?>
     </table>
 </form>
 <p style="text-align: center; font-weight: bold; font-style: italic">

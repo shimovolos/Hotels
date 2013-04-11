@@ -11,40 +11,19 @@ function hide_block(){
 }
 
 
-$(document).ready(function(){
-    $(function() {
-        $( "#coming_date" ).datepicker({
-            dateFormat: "yy-mm-dd",
-            changeMonth: true,
-            numberOfMonths: 1,
-            minDate: 1,
-            onSelect: function( selectedDate ) {
-                $( "#leaving_date" ).datepicker( "option", "minDate", selectedDate  );
-                $(this).trigger('keyup')
-            }
-        });
+$(function(){
 
-        $( "#leaving_date" ).datepicker({
-            dateFormat: "yy-mm-dd",
-            changeMonth: true,
-            numberOfMonths: 1,
-            onClose: function( selectedDate ) {
-                $( "#coming_date" ).datepicker( "option", "maxDate", selectedDate );
-                $(this).trigger('keyup')
-            }
-        });
-    });
     $("#add_child").hide();
     $("#children_age").hide();
     $("#load").hide();
     $("#children_paxes").keyup(function(){
         $("input.child_age").remove();
-        $("#age_label").remove()
+        $(".age_label").remove()
         $('<label>возраст детей</label><br/>').remove();
         $("#children_age").show(200);
         var children = $("#children_paxes").val();
         if(children > 0 && children <=5){
-            $('<label id="age_label">возраст детей<br/></label>').fadeIn('slow').appendTo('#container');
+            $('<label class="age_label">возраст детей<br/></label>').fadeIn('slow').appendTo('#container');
             for(var i = 0; i < children; i++ ){
                 $('<input type="text" class="child_age" autocomplete="off" name="param[child_age][]"  style="width:35px; margin-right:3px" />').fadeIn('slow').appendTo('#container');
             }

@@ -135,6 +135,7 @@ class SiteController extends Controller
     {
         if(isset($_GET['search_hotel'])){
             Yii::app()->cache->delete('response');
+            Yii::app()->cache->delete('parameters');
             $this->setDataToCache();
         }elseif(isset($_GET['search']) && Yii::app()->cache->get('response')===false){
             $this->setDataToCache();

@@ -55,7 +55,7 @@ div#menu{
     width: 70%;
     float: left;
 }
-#search_form{
+.search_form{
     float: right;
     width: 260px;
     margin: auto;

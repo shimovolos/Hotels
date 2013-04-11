@@ -73,26 +73,7 @@ $('.filter').change(function(){
 })
 
 $(document).ready(function(){
-    $(function() {
-        $( "#coming_date" ).datepicker({
-            dateFormat: "yy-mm-dd",
-            changeMonth: true,
-            numberOfMonths: 1,
-            minDate: 1,
-            onSelect: function( selectedDate ) {
-                $( "#leaving_date" ).datepicker( {minDate: selectedDate  });
-            }
-        });
 
-        $( "#leaving_date" ).datepicker({
-            dateFormat: "yy-mm-dd",
-            changeMonth: true,
-            numberOfMonths: 1,
-            onSelect: function( selectedDate ) {
-                $( "#coming_date" ).datepicker( "option", "maxDate", selectedDate );
-            }
-        });
-    });
 
 })
 
