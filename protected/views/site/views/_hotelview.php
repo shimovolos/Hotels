@@ -6,7 +6,11 @@ $price = 0;
     <td style="padding: 1px; width: 150px; overflow: visible">
         <div style="height: 100px; overflow-y: hidden">
             <a href="<? echo baseUrl().'/site/details?HotelCode='.$data->HotelCode?>">
+                <? if(($images[0]) == false): ?>
+                <img class="thumb" style="width: 150px;" src="<? echo baseUrl().'/public/images/no_photo.png'?>"/>
+                    <? else: ?>
                 <img class="thumb" style="width: 150px;" src="<? echo $images[0]?>" alt="logo"/>
+                    <? endif; ?>
             </a>
         </div>
     </td>

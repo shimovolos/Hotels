@@ -79,9 +79,11 @@
 <span id="title">
     Найдено <? echo count($coord); ?> отелей.
 </span>
+    <? if(count($coord) != 0): ?>
 <div  id="map_canvas" style="height:500px;margin-top: 20px">
 
 </div>
+    <? endif; ?>
 
 
 

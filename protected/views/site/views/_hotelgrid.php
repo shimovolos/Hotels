@@ -7,7 +7,11 @@ $images = explode(';',$data->HotelImages);
             <td>
                 <div style="overflow: hidden; height: 150px; text-align: center">
                     <a href="<? echo baseUrl().'/site/details?HotelCode='.$data->HotelCode?>" target="_blank">
+                        <? if(($images[0]) == false): ?>
+                        <img class="thumb" style="width: 200px;" src="<? echo baseUrl().'/public/images/no_photo.png'?>"/>
+                        <? else: ?>
                         <img src="<? echo $images[0]?>" alt="logo" width="230"/>
+                        <? endif; ?>
                     </a>
                 </div>
             </td>

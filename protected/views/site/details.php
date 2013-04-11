@@ -45,6 +45,7 @@ if(!isset($hotelsCode[$key-1])){
     <a href="<? echo baseUrl().Yii::app()->session['url'];?>" style="float: right;padding-top: 7px;padding-right: 5px">Возврат к списку отелей</a>
 </ul>
 <div id="tabs-1">
+    <? if(isset($images[1])): ?>
     <div id="container">
         <div id="example">
             <div id="slides">
@@ -52,7 +53,7 @@ if(!isset($hotelsCode[$key-1])){
                     <?php
                     for ($i = 0; $i < count($images) - 1; $i++) {
                         echo '<div>
-                    <img src=' . $images[$i] . ' width="370" height="260" alt="Slide">
+                    <img src=' . $images[$i] . ' width="370" height="260" alt="Logo">
                     </div>';
                     }
                     ?>
@@ -65,6 +66,7 @@ if(!isset($hotelsCode[$key-1])){
             <img src=<?php echo baseUrl() . "/public/img/example-frame.png" ?> width="739" height="341" alt="Frame" id="frame">
         </div>
     </div>
+        <? endif; ?>
     <p align="justify"><br>
     <table class="specialty">
         <tr>
@@ -136,8 +138,7 @@ if(!isset($hotelsCode[$key-1])){
     </table>
     </p>
     <br>
-
-    <body onload="initialize(<? echo "'".$hotel->HotelAddress."'";?>)">
+    <body onload="initialize(<? echo "'".$hotel->HotelAddress."'";?>,<? echo "'".$hotel->Latitude."'";?>,<? echo "'".$hotel->Longitude."'";?>)">
 
     <div id="map_canvas" style="width:100%; height:500px">
 
