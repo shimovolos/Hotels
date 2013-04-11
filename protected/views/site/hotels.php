@@ -25,7 +25,9 @@ $(function (){
                 $("#search_result").css("background","#fff").html(response);
 
                 },
-                error:function(){alert("controller failed.LOL")}
+                error:function(){
+                    $("#search_ewsult").html("<span>Что-то пошло не так! Попробуйте повторить поиск</span>").css("background","#fff");
+                }
                 })
             });');
         $this->renderPartial("columns/_filterform");

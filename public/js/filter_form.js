@@ -16,7 +16,7 @@ function mapUpdate(){
                 $("#search_result").html(response);
             },
             error:function(){
-                $("#search_result").html("<span class='error'>Что-то пошло не так! Попробуйте ещё раз!</span> ")
+                $("#search_result").html("<span class='error'>Что-то пошло не так! Попробуйте ещё раз!</span> ").css("background","#fff");
             }
         })
     }
@@ -66,7 +66,7 @@ $('.filter').change(function(){
                 $("#search_result").html(response);
             },
             error:function(){
-                alert('ad');
+                $("#search_result").html("<span class='error'>Что-то пошло не так! Попробуйте ещё раз!</span> ").css("background","#fff");
             }
         })
     }

@@ -1,10 +1,11 @@
 <?
 $images = explode(';',$data->HotelImages);
+$price = 0;
 ?>
 <tr style="height: 100px">
     <td style="padding: 1px; width: 150px; overflow: visible">
         <div style="height: 100px; overflow-y: hidden">
-            <a href="<? echo baseUrl().'/site/details?HotelCode='.$data->HotelCode?>" target="_blank">
+            <a href="<? echo baseUrl().'/site/details?HotelCode='.$data->HotelCode?>">
                 <img class="thumb" style="width: 150px;" src="<? echo $images[0]?>" alt="logo"/>
             </a>
         </div>
@@ -15,7 +16,9 @@ $images = explode(';',$data->HotelImages);
         <?
         foreach((array)$hotels as $key=>$hotel ){
             if($hotel->hotelCode == $data->HotelCode){
-                $price = $hotel->totalPrice;
+                if(isset($priceRange)){
+                    $price = $priceRange[$hotel->hotelCode];
+                }
                 echo '<label>Тип номера: '.$hotel->boardType.'</label><br/>';
                 break;
             }
@@ -29,7 +32,7 @@ $images = explode(';',$data->HotelImages);
         <br/>
     </td>
     <td>
-        <label>Полная стоимость: <b>$<?=$price?></b></label><br/>
+        <label>Полная стоимость: <b>$<? echo $price;?></b></label><br/>
         <label>Доступных номеров:
             <?
                 foreach($availableRooms as $key=>$value){
