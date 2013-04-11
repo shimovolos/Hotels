@@ -2,11 +2,27 @@ var geocoder;
 var image = '/public/images/ih.png';
 var map;
 
-function initialize(address)
+function addMarker(point)
+{
+    var marker = new google.maps.Marker({
+        position: point,
+        icon: image,
+        map: map,
+        draggable:true
+    });
+    google.maps.event.addListener(marker, 'click', function(){
+        if (marker.getAnimation() != null) {
+            marker.setAnimation(null);
+        } else {
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+        }
+    });
+}
+function initialize(address,lat,long)
 {
     geocoder = new google.maps.Geocoder();
 
-    var latlng = new google.maps.LatLng(0,0);
+    var latlng = new google.maps.LatLng(lat,long);
     var settings = {
         zoom: 16,
         center: latlng,
@@ -17,7 +33,7 @@ function initialize(address)
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
 
-    var map = new google.maps.Map(document.getElementById("map_canvas"),settings);
+    map = new google.maps.Map(document.getElementById("map_canvas"),settings);
     map.setMapTypeId(google.maps.MapTypeId.TERRAIN);
 
     var transitLayer = new google.maps.TransitLayer();
@@ -26,22 +42,9 @@ function initialize(address)
     geocoder.geocode( { 'address': address}, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
             map.setCenter(results[0].geometry.location);
-            var marker = new google.maps.Marker({
-                position: results[0].geometry.location,
-                map: map,
-                icon: image,
-                draggable:true
-            });
-            google.maps.event.addListener(marker, 'click', function(){
-                if (marker.getAnimation() != null) {
-                    marker.setAnimation(null);
-                } else {
-                    marker.setAnimation(google.maps.Animation.BOUNCE);
-                }
-            });
-        } else {
-            alert("Данный отель не может быть отображен по следующим причинам: неверно указан адрес отеля либо отсутствуют верные координаты. Приносим свои извинения.");
+            addMarker(results[0].geometry.location);
+        } else{
+            addMarker(latlng);
         }
     });
-
 }

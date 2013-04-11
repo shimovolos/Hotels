@@ -136,8 +136,7 @@ if(!isset($hotelsCode[$key-1])){
     </table>
     </p>
     <br>
-
-    <body onload="initialize(<? echo "'".$hotel->HotelAddress."'";?>)">
+    <body onload="initialize(<? echo "'".$hotel->HotelAddress."'";?>,<? echo "'".$hotel->Latitude."'";?>,<? echo "'".$hotel->Longitude."'";?>)">
 
     <div id="map_canvas" style="width:100%; height:500px">
 
