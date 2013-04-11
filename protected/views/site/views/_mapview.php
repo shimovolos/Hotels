@@ -32,11 +32,10 @@
     function initMap() {
         var destinations = <?=json_encode($coord)?>;
         geocoder = new google.maps.Geocoder();
-        for(var i=0;i<destinations.length;i++){
+        for(var i=1;i<destinations.length;i++){
             if((destinations[i].Lat != "0.000000" || destinations[i].Lat != "") && (destinations[i].Long != "0.000000" || destinations[i].Long != "")){
                 var latlng = new google.maps.LatLng(destinations[i].Lat,destinations[i].Long);
             }
-            break;
         }
         map = new google.maps.Map(document.getElementById("map_canvas"), {
             zoom: 8,

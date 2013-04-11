@@ -30,8 +30,7 @@ function initialize(address)
                 position: results[0].geometry.location,
                 map: map,
                 icon: image,
-                draggable:true,
-                animation: google.maps.Animation.DROP
+                draggable:true
             });
             google.maps.event.addListener(marker, 'click', function(){
                 if (marker.getAnimation() != null) {
@@ -41,7 +40,7 @@ function initialize(address)
                 }
             });
         } else {
-            alert("Некоторые отели не были отображениы по следующим причинам: " + status);
+            alert("Данный отель не может быть отображен по следующим причинам: неверно указан адрес отеля либо отсутствуют верные координаты. Приносим свои извинения.");
         }
     });
 

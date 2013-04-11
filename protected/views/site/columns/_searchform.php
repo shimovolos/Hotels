@@ -1,4 +1,5 @@
     <?
+    registerScript("/public/js/search_form.js");
     Yii::app()->clientScript->registerScript('cities', "$(function(){
         $('#param_city').chosen().change(function(){
             var selected = $(this).find('option').eq(this.selectedIndex);
@@ -79,9 +80,15 @@
         </tr>
         <tr>
             <td>
-                <input type="text" class="date_picker advanced" name="param[coming_date]" id="coming_date" autocomplete="off" style="width: 75px;" value placeholder="прибытие"/> -
-                <input type="text" class="date_picker advanced" name="param[leaving_date]" id="leaving_date" autocomplete="off" style="width: 75px;" value placeholder="отъезд" />
+                <input type="text" class="date_picker advanced" name="param[coming_date]" id="coming_date" autocomplete="off" style="width: 75px;" value="<? echo $parameters['coming_date']?>" placeholder="прибытие"/> -
+                <input type="text" class="date_picker advanced" name="param[leaving_date]" id="leaving_date" autocomplete="off" style="width: 75px;" value="<? echo $parameters['leaving_date']?>" placeholder="отъезд" />
             </td>
+        <tr>
+            <td>
+                <label>Взрослых:<br></label>
+                <input type="text" name="param[adult_paxes]" id="adult" autocomplete="off" value="<? echo $parameters['adult_paxes']?>" placeholder="взрослых" style="width: 85px"/>
+            </td>
+        </tr>
         <tr>
             <td>
                 <div id="button_wrap"><input type="submit" name="search_hotel" value="Повторить" /></div>
