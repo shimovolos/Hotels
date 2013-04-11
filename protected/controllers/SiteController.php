@@ -180,6 +180,7 @@ class SiteController extends Controller
                 'hotels'=>$this->hotelsResponse(),
                 'viewType' => $viewType,
                 'template' => Yii::app()->params[$viewType],
+                'priceRange' => $hotelsCode['priceRange']
 
             ), false, true);
         }

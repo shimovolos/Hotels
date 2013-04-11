@@ -7,7 +7,7 @@ $this->widget('zii.widgets.CListView', array(
     'itemView'=> 'views/'.$viewType,
     'sortableAttributes'=>array('starRating', 'hotelName'),
     'sorterHeader'=>'Сортировать по:',
-    'viewData' => array('hotels' => $hotels, 'availableRooms' => $availableRooms ),
+    'viewData' => array('hotels' => $hotels, 'availableRooms' => $availableRooms, 'priceRange' => $priceRange ),
     'template'=> $template,
     'pager' => array(
         'header' => '',

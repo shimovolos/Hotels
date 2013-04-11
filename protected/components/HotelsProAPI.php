@@ -107,11 +107,13 @@ class HotelsProAPI
 
         $hotels = HotelsProAPI::responseToArray($response);
         $hotelsCode = array();
+        $priceRange = array();
 
         foreach((array)$hotels as $hotel){
 
             if($hotel->totalPrice >= $price['from'] && $hotel->totalPrice <= $price['to']){
                 $hotelsCode[] = $hotel->hotelCode;
+                $priceRange[$hotel->hotelCode] = $hotel->totalPrice;
             }
         }
         $availableRooms =array_count_values($hotelsCode);
@@ -122,7 +124,8 @@ class HotelsProAPI
             'searchId' => $response->searchId,
             'totalFound' =>count($hotelsCode),
             'hotelsCode' => $hc,
-            'availableRooms' => $availableRooms
+            'availableRooms' => $availableRooms,
+            'priceRange' => $priceRange
         );
     }
 
