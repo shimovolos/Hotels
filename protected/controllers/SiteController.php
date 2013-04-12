@@ -288,6 +288,8 @@ class SiteController extends Controller
                 if($val->hotelCode == $hotels->HotelCode){
                     $images = explode(';',$hotels->HotelImages);
                     $coord[] = array(
+                        'Country' => $hotels->Country,
+                        'City' => $hotels->Destination,
                         'HotelName' => $hotels->HotelName,
                         'HotelCode' => $hotels->HotelCode,
                         'Long' => $hotels->Longitude,

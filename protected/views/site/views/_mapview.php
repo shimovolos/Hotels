@@ -32,10 +32,12 @@
     function initMap() {
         var destinations = <?=json_encode($coord)?>;
         geocoder = new google.maps.Geocoder();
-        for(var i=1;i<destinations.length;i++){
-            if((destinations[i].Lat != "0.000000" || destinations[i].Lat != "") && (destinations[i].Long != "0.000000" || destinations[i].Long != "")){
+        for(var i=0;i<destinations.length;i++){
+            if((destinations[i].Lat == "0.000000" || destinations[i].Lat == "") && (destinations[i].Long == "0.000000" || destinations[i].Long == "")){
+            }else{
                 var latlng = new google.maps.LatLng(destinations[i].Lat,destinations[i].Long);
             }
+
         }
         map = new google.maps.Map(document.getElementById("map_canvas"), {
             zoom: 8,
@@ -59,7 +61,7 @@
                     "<br>Полная стоимость: <b>$"+city.Price+"</b>";
 
             if((city.Lat == "0.000000" || city.Lat == "") && (city.Long == "0.000000" || city.Long == "")){
-                geocoder.geocode( { 'address': city.HotelAddress}, function(results, status) {
+                geocoder.geocode( { 'address': city.Country+','+city.City+','+city.HotelAddress}, function(results, status) {
                     if (status == google.maps.GeocoderStatus.OK) {
 //                        map.setCenter(results[0].geometry.location);
                         addMarker(results[0].geometry.location.lat(),results[0].geometry.location.lng(),info);

@@ -18,7 +18,7 @@ function addMarker(point)
         }
     });
 }
-function initialize(address,lat,long)
+function initialize(address,lat,long,country,city)
 {
     geocoder = new google.maps.Geocoder();
 
@@ -39,12 +39,14 @@ function initialize(address,lat,long)
     var transitLayer = new google.maps.TransitLayer();
     transitLayer.setMap(map);
 
-    geocoder.geocode( { 'address': address}, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-            map.setCenter(results[0].geometry.location);
-            addMarker(results[0].geometry.location);
-        } else{
-            addMarker(latlng);
-        }
-    });
+    if((lat == "0.000000" || lat == "") && (long == "0.000000" || long == "")){
+        geocoder.geocode( { 'address': city+','+address+','+country}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                map.setCenter(results[0].geometry.location);
+                addMarker(results[0].geometry.location);
+            }
+        });
+    }else{
+        addMarker(latlng);
+    }
 }
