@@ -8,7 +8,6 @@
         registerCss("/public/css/style.css");
         registerCss("/public/css/menu.css");
         registerScript("/public/js/upButton.js");
-//        Yii::app()->getClientScript()->registerCoreScript('jquery');
     ?>
     <title><?php echo CHtml::encode($this->pageTitle); ?></title>
 </head>
@@ -17,7 +16,7 @@
     <div id="main">
         <div id="header">
             <div id="logo">
-                <a href="index">
+                <a href="<?=Yii::app()->homeUrl?>">
                     <img src="<? echo baseUrl().'/public/images/my_Logo.png';?>" alt="logo"/>
                 </a>
 

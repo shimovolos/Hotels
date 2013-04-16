@@ -14,7 +14,7 @@
         $('#param_country').chosen().change(function(){
             $('#param_city option').remove();
             $('#param_city').append('<option>Выберите город...</option>');
-            $.post('". baseUrl()."/site/autocomplete','key='+$(this).val(), function(cities){
+            $.post('". baseUrl()."/search/autocomplete','key='+$(this).val(), function(cities){
                     $.each(cities, function(){
                         $('#param_city').append($('<option value='+ this.id +'>' + this.city +'</option>'));
                     });
@@ -55,7 +55,7 @@
         ')
     ?>
 
-<form method="get" id=search_form class="adv_search" action="<?php echo baseUrl() ?>/site/hotels" style="padding-top: 10px; border-top: 1px solid rgba(173,170,140,0.63)">
+<form method="get" id=search_form class="adv_search" action="<?php echo baseUrl() ?>/search" style="padding-top: 10px; border-top: 1px solid rgba(173,170,140,0.63)">
     <table>
         <tr>
             <td>

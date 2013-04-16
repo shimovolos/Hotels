@@ -28,11 +28,11 @@ if(!isset($hotelsCode[$key-1])){
     $hotelsCode[$key+1] = $hotelsCode[$key];
 }
 ?>
-<a href="<? echo baseUrl().'/site/details?HotelCode='.$hotelsCode[$key-1];?>">
+<a href="<? echo baseUrl().'/details?HotelCode='.$hotelsCode[$key-1];?>">
     <img src="<?echo baseUrl().'/public/images/back.png'?>" style="padding-right: 4px">
     Предыдуший отель
 </a>
-<a href="<? echo baseUrl().'/site/details?HotelCode='.$hotelsCode[$key+1];?>" style="float: right">
+<a href="<? echo baseUrl().'/details?HotelCode='.$hotelsCode[$key+1];?>" style="float: right">
     Следующий отель
     <img src="<?echo baseUrl().'/public/images/forward.png'?>"style="padding-left: 4px">
 </a>
@@ -293,7 +293,7 @@ if(!isset($hotelsCode[$key-1])){
             ?>
 
             <div class="info_table" style="border: #8d889e 1px solid; border-radius: 2px;padding: 10px;">
-                <a href="<? echo baseUrl() . '/site/booking?processId=' . $hotel->processId ?>" style="float: right">Забронировать</a><br/>
+                <a href="<? echo baseUrl() . '/booking?processId=' . $hotel->processId ?>" style="float: right">Забронировать</a><br/>
                 <table class="specialty">
                     <tr>
                         <td style="width: 300px">
