@@ -1,7 +1,6 @@
 <script type="text/javascript"
         src="http://maps.google.com/maps/api/js?v=3.9&sensor=false&&libraries=weather&language=ru&callback=initMap">
 </script>
-<!--&libraries=weather-->
 <script type="text/javascript">
     var geocoder;
     var icon = '/public/images/ih.png';
@@ -15,11 +14,11 @@
             icon: icon,
             map: map
         });
-        var popup = new google.maps.InfoWindow({
-            content: info,
-            maxWidth: 200
-        });
         google.maps.event.addListener(marker, "click", function() {
+            popup = new google.maps.InfoWindow({
+                content: info,
+                maxWidth: 200
+            });
             if (currentPopup != null) {
                 currentPopup.close();
                 currentPopup = null;
@@ -53,22 +52,28 @@
             }
         });
 
+        var arr = new Array();
+
         for(var i = 0; i<destinations.length; i++){
             var city = destinations[i];
-            info = "<a href='<?=baseUrl().'/site/details?HotelCode='?>"+city.HotelCode+"'"+"><b>"+city.HotelName+"</b></a>"+
-                    "<br><img src='"+city.Image+"'width=180 height=150 alt=image>"+
-                    "<br><b><img src='<? echo baseUrl() . '/public/images/star_icon.png?>'?>'/>"+city.StarRating+"</b>"+
-                    "<br>Полная стоимость: <b>$"+city.Price+"</b>";
 
             if((city.Lat == "0.000000" || city.Lat == "") && (city.Long == "0.000000" || city.Long == "")){
-                geocoder.geocode( { 'address': city.Country+','+city.City+','+city.HotelAddress}, function(results, status) {
-                    if (status == google.maps.GeocoderStatus.OK) {
-//                        map.setCenter(results[0].geometry.location);
-                        addMarker(results[0].geometry.location.lat(),results[0].geometry.location.lng(),info);
-                    }
-                })
-            }else{
-                addMarker(city.Lat,city.Long,info);
+                arr.push(city);
+            } else {
+                addMarker(city.Lat, city.Long, getInfo(city));
+            }
+        }
+
+        if(arr.length !=0){
+            for(var i=0;i<arr.length;++i){
+                (function(info){
+                    geocoder.geocode( { 'address': arr[i].City + ',' + arr[i].HotelAddress + ',' + arr[i].Country},
+                            function(results, status) {
+                                if (status == google.maps.GeocoderStatus.OK) {
+                                    addMarker(results[0].geometry.location.lat(), results[0].geometry.location.lng(),info);
+                                }
+                            })
+                })(getInfo(arr[i]));
             }
         }
 
@@ -76,6 +81,17 @@
             temperatureUnits: google.maps.weather.TemperatureUnit.Celsius
         });
         weatherLayer.setMap(map);
+    }
+
+    function getCoordinates(){
+
+    }
+
+    function getInfo(city){
+        return info = "<a href='<?=baseUrl().'/site/details?HotelCode='?>"+city.HotelCode+"'"+"><b>"+city.HotelName+"</b></a>"+
+                "<br><img src='"+city.Image+"' width=180 height=150 alt=image>"+
+                "<br><b><img src='<? echo baseUrl() . '/public/images/star_icon.png?>'?>'/>"+city.StarRating+"</b>"+
+                "<br>Полная стоимость: <b>$"+city.Price+"</b>";
     }
 </script>
 <span id="title">

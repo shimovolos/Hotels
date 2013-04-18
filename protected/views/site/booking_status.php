@@ -1,12 +1,20 @@
 <table>
-    <?
-    if(isset($trackingID)){
-        echo "<tr><td><label>Код операции бронирования:</label></td><td>$trackingID</td></tr>";
-    }
-    if(isset($getHotelBookingStatus->bookingStatus)):
-    ?>
+    <? if(isset($trackingID)): ?>
+    <tr>
+       <td>
+            <label>Код операции бронирования:</label>
+        </td>
+        <td>
+            $trackingID
+        </td>
+    </tr>
+    <? endif; ?>
 
-    <tr><td><label>Статус бронирования:</label></td>
+    <? if(isset($getHotelBookingStatus->bookingStatus)):?>
+    <tr>
+        <td>
+            <label>Статус бронирования:</label>
+        </td>
         <td>
             <?
             switch($getHotelBookingStatus->bookingStatus){
@@ -19,11 +27,17 @@
             ?>
         </td>
     </tr>
-    <?endif?>
-    <?
-    if(isset($getHotelBookingStatus->confirmationNumber)){
-        echo "<tr><td><label>Номер подтверждения:</label></td><td>$getHotelBookingStatus->confirmationNumber</td></tr>";
-    }
+    <? endif; ?>
+    <? if(isset($getHotelBookingStatus->confirmationNumber)): ?>
+   <tr>
+        <td>
+            <label>Номер подтверждения:</label>
+            </td>
+        <td>
+            $getHotelBookingStatus->confirmationNumber
+        </td>
+   </tr>
+    <? endif;
     if(isset($getHotelBookingStatus->hotelCode)){
         echo "<tr><td><label>Код отеля:</label></td><td><a href='".baseUrl().'/site/details?HotelCode='.$getHotelBookingStatus->hotelCode."'> $getHotelBookingStatus->hotelCode</a></td></tr>";
     }
