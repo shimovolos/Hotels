@@ -6,7 +6,7 @@ class BookingController extends Controller {
     {
         $searchData = unserialize(Yii::app()->cache['parameters']);
         if(!isset($_POST['get_booking'])){
-            $response = $this->client->getHotelCancellationPolicy($_GET['processId']);
+            $response = $this->client->getHotelCancellationPolicy(Yii::app()->request->getParam('id'));
             $policy = is_array($response->cancellationPolicy) ? $response->cancellationPolicy : array($response->cancellationPolicy);
             $this->render('booking', array('data' => $searchData, 'policy' => $policy[0]));
         }

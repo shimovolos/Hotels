@@ -5,8 +5,8 @@ class DetailsController extends Controller {
     public function actionIndex()
     {
         $result = array();
-        $responseData = json_decode(Yii::app()->session['responseData']);
-        $hotelCode = $_GET['HotelCode'];
+        $responseData = Yii::app()->request->getParam('id');
+        $hotelCode = Yii::app()->request->getParam('hotel');
 
         $hotelsCode = $this->client->removeDuplicateHotels(unserialize(Yii::app()->cache->get('response')));
 
@@ -16,7 +16,7 @@ class DetailsController extends Controller {
             $result[] = $val->HotelCode;
         }
 
-        $allocateHotelCode = $this->client->allocateHotelCode($hotelCode, $responseData->searchID);
+        $allocateHotelCode = $this->client->allocateHotelCode($hotelCode, $responseData);
 
         $this->render('details',array(
             'hotel'=>$this->dataDB->getHotelDescription($hotelCode),

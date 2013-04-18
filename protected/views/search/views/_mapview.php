@@ -88,7 +88,10 @@
     }
 
     function getInfo(city){
-        return info = "<a href='<?=baseUrl().'/site/details?HotelCode='?>"+city.HotelCode+"'"+"><b>"+city.HotelName+"</b></a>"+
+
+        return info = "<a href='<?=baseUrl().'/details/hotel/'?>"+city.HotelCode.toLowerCase()+
+                "/id/<?=strtolower(json_decode(Yii::app()->session['responseData'])->searchID)?>"+"'"+">"+
+                "<b>"+city.HotelName+"</b></a>"+
                 "<br><img src='"+city.Image+"' width=180 height=150 alt=image>"+
                 "<br><b><img src='<? echo baseUrl() . '/public/images/star_icon.png?>'?>'/>"+city.StarRating+"</b>"+
                 "<br>Полная стоимость: <b>$"+city.Price+"</b>";

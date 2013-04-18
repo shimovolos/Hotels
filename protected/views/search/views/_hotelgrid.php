@@ -6,7 +6,7 @@ $images = explode(';',$data->HotelImages);
         <tr>
             <td>
                 <div style="overflow: hidden; height: 150px; text-align: center">
-                    <a href="<? echo baseUrl().'/details?HotelCode='.$data->HotelCode?>" target="_blank">
+                    <a href="<?=getUrlDetails($data->HotelCode,json_decode(Yii::app()->session['responseData'])->searchID)?>">
                         <? if(($images[0]) == false): ?>
                         <img class="thumb" style="width: 200px;" src="<? echo baseUrl().'/public/images/no_photo.png'?>"/>
                         <? else: ?>
@@ -18,7 +18,7 @@ $images = explode(';',$data->HotelImages);
         </tr>
         <tr>
             <td>
-            <a href="<? echo baseUrl().'/details?HotelCode='.$data->HotelCode?>"><? echo $data->HotelName?></a>
+            <a href="<?=getUrlDetails($data->HotelCode,json_decode(Yii::app()->session['responseData'])->searchID)?>"><? echo $data->HotelName?></a>
             </td>
         </tr>
         <tr>
@@ -47,7 +47,7 @@ $images = explode(';',$data->HotelImages);
                 <img src="<? echo baseUrl().'/public/images/star_icon.png'?>" alt="star"/>
 
             <?endfor?>
-                <a class="button" style="margin: 0;float: right" href="<?=baseUrl().'/details?HotelCode='.$data->HotelCode?>">подробнее</a>
+                <a class="button" style="margin: 0;float: right" href="<?=getUrlDetails($data->HotelCode,json_decode(Yii::app()->session['responseData'])->searchID)?>">подробнее</a>
             </td>
         </tr>
     </table>

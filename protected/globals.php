@@ -14,3 +14,10 @@ function registerCss($dirName)
 {
     return Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl.$dirName,'screen');
 }
+
+function getUrlDetails($hotelCode,$searchId)
+{
+    return Yii::app()->createUrl('details',array(
+        'hotel' => strtolower($hotelCode),
+        'id' => strtolower($searchId)));
+}

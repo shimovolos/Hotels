@@ -28,11 +28,11 @@ if(!isset($hotelsCode[$key-1])){
     $hotelsCode[$key+1] = $hotelsCode[$key];
 }
 ?>
-<a href="<? echo baseUrl().'/details?HotelCode='.$hotelsCode[$key-1];?>">
+<a href="<?=getUrlDetails($hotelsCode[$key-1],json_decode(Yii::app()->session['responseData'])->searchID)?>">
     <img src="<?echo baseUrl().'/public/images/back.png'?>" style="padding-right: 4px">
     Предыдуший отель
 </a>
-<a href="<? echo baseUrl().'/details?HotelCode='.$hotelsCode[$key+1];?>" style="float: right">
+<a href="<?=getUrlDetails($hotelsCode[$key+1],json_decode(Yii::app()->session['responseData'])->searchID)?>" style="float: right">
     Следующий отель
     <img src="<?echo baseUrl().'/public/images/forward.png'?>"style="padding-left: 4px">
 </a>
@@ -293,7 +293,7 @@ if(!isset($hotelsCode[$key-1])){
             ?>
 
             <div class="info_table" style="border: #8d889e 1px solid; border-radius: 2px;padding: 10px;">
-                <a href="<? echo baseUrl() . '/booking?processId=' . $hotel->processId ?>" style="float: right">Забронировать</a><br/>
+                <a href="<?=Yii::app()->createUrl('booking',array('id' => strtolower($hotel->processId))) ?>" style="float: right">Забронировать</a><br/>
                 <table class="specialty">
                     <tr>
                         <td style="width: 300px">

@@ -61,7 +61,7 @@ registerCss('/public/css/arcticmodal.css');
         <tr>
 
             <td colspan="3">
-                <input type="hidden" name="processId" value="<?=$_GET['processId']?>"  >
+                <input type="hidden" name="processId" value="<?=Yii::app()->request->getParam('id')?>"  >
                 <label style="font-size: 15px; font-style: italic; font-weight: bold">Ответственное лицо:</label><br>
             </td>
         </tr>

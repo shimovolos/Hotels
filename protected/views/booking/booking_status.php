@@ -5,7 +5,7 @@
             <label>Код операции бронирования:</label>
         </td>
         <td>
-            $trackingID
+            <?=$trackingID?>
         </td>
     </tr>
     <? endif; ?>
@@ -34,7 +34,7 @@
             <label>Номер подтверждения:</label>
             </td>
         <td>
-            $getHotelBookingStatus->confirmationNumber
+            <?=$getHotelBookingStatus->confirmationNumber?>
         </td>
    </tr>
     <? endif;
