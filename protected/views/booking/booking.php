@@ -79,16 +79,16 @@ registerCss('/public/css/arcticmodal.css');
         </tr>
         <tr>
             <td>
-                <select class="booking" style="width: 80px;" name="lead_title" id="lead_title">
+                <select class="booking" style="width: 80px;" name="booking[lead][title]" id="lead_title">
                     <option>Mr</option>
                     <option>Ms</option>
                 </select>
             </td>
             <td>
-                <input class="booking" type="text" name="lead_1st_name" id="lead_1st_name"/>
+                <input class="booking" type="text" name="booking[lead][1st_name]" id="lead_1st_name"/>
             </td>
             <td>
-                <input class="booking" type="text" name="lead_2nd_name" id="lead_2nd_name"/>
+                <input class="booking" type="text" name="booking[lead][2nd_name]" id="lead_2nd_name"/>
             </td>
         </tr>
     <tr>
@@ -104,47 +104,41 @@ registerCss('/public/css/arcticmodal.css');
         <label style="font-size: 15px; font-style: italic; font-weight: bold">Другие посетители:</label>
    </td>
     </tr>
-        <?php
-        {
-            for($i = 0; $i < $paxCount - 1; $i++){
-                echo '
+        <?php for($i = 0; $i < $paxCount - 1; $i++):?>
                     <tr>
                         <td>
-                            <label for="other_title_'.$i.'">Привествие:</label>
+                            <label>Привествие:</label>
                         </td>
                         <td>
-                            <label for="other_1st_name_'.$i.'">Имя:</label>
+                            <label>Имя:</label>
                         </td>
                          <td>
-                            <label for="other_1st_name_'.$i.'">Фамилия:</label>
+                            <label>Фамилия:</label>
                         </td>
 
                     </tr>
                     <tr>
                         <td>
-                            <select class="booking" style="width: 80px;" name="other_title_'.$i.'" id="other_title_'.$i.'">
+                            <select class="booking" style="width: 80px;" name="booking[other][title][]">
                                 <option>Mr</option>
                                 <option>Ms</option>
                             </select>
                         </td>
                         <td>
-                            <input class="booking" type="text" name="other_1st_name_'.$i.'" id="other_1st_name_'.$i.'"/>
+                            <input class="booking" type="text" name="booking[other][1st_name][]"/>
                         </td>
                         <td>
-                            <input class="booking" type="text" name="other_2nd_name_'.$i.'" id="other_2nd_name_'.$i.'"/>
+                            <input class="booking" type="text" name="booking[other][2nd_name][]"/>
                         </td>
                     </tr>
 
-                    </tr>';
-            }
-        }
-        ?>
+            <?endfor?>
 
         <?endif?>
         <tr>
             <td colspan="3">
                 <label>Примечания:</label>
-                <textarea class="booking" name="note" style="width: 300px"></textarea>
+                <textarea class="booking" name="booking[note]" style="width: 300px"></textarea>
             </td>
         </tr>
         <tr>

@@ -23,7 +23,7 @@ unset(Yii::app()->session['responseData']);
             $("#param_city option").remove();
             $("#param_city").append("<option>Выберите город...</option>");
             $.ajax({
-                url: '<?=Yii::app()->createUrl('site/autocomplete')?>',
+                url: '<?=Yii::app()->createUrl('search/autocomplete')?>',
                 type: 'post',
                 dataType: 'json',
                 data: 'key='+$(this).val(),
@@ -65,7 +65,7 @@ unset(Yii::app()->session['responseData']);
 <div id="info">
     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus adipisci aspernatur autem eum facere illum in, iure mollitia nobis obcaecati, officiis pariatur perferendis placeat quis recusandae repellendus, reprehenderit sapiente sit ut voluptatum? Aspernatur, blanditiis culpa ea eos explicabo mollitia natus omnis quibusdam suscipit temporibus! Alias at autem beatae consequatur delectus distinctio illo labore libero, nemo non sint tempore vel, vero? Deleniti enim laboriosam perferendis quibusdam vero. Accusantium at dolorum laboriosam? Alias aspernatur aut beatae culpa cum cupiditate eligendi excepturi illum impedit ipsa ipsam itaque labore laborum, minus nam natus, quia quis, quod rerum sed sequi similique suscipit velit vero voluptate.
 </div>
-<form name=search_form class="search_form" id=search_form action='<?php echo baseUrl() ?>/site/hotels' method='get'>
+<form name=search_form class="search_form" id=search_form action='<?php echo baseUrl() ?>/search' method='get'>
     <table>
         <tr>
             <td>

@@ -10,7 +10,7 @@ function mapUpdate(){
         param = $('#adv_search').serialize();
         $.ajax({
             type:"get",
-            url: "/site/update",
+            url: "/search/update",
             data: param,
             success:function(response){
                 $("#search_result").html(response);
@@ -31,7 +31,7 @@ $(function(){
 $("#radio2").click(function(){
     $.ajax({
         type: 'get',
-        url: "/site/map",
+        url: "/search/map",
         data: $("#adv_search").serialize(),
         success:function(response){
             $("#search_result").html(response);
@@ -60,7 +60,7 @@ $('.filter').change(function(){
         param = $('#adv_search').serialize();
         $.ajax({
             type:'get',
-            url: "/site/update",
+            url: "/search/update",
             data: param,
             success:function(response){
                 $("#search_result").html(response);

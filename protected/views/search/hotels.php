@@ -27,7 +27,7 @@ $(function (){
             $( "#radio" ).buttonset({ disabled: true });
             $.ajax({
                 type: "get",
-                url: "'.baseUrl().'/site/update",
+                url: "'.baseUrl().'/search/update",
                 data: filter+"&"+param[1],
                 success:function(response) {
                 $("#search_result").css("background","#fff").html(response);

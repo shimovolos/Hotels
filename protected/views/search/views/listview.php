@@ -16,7 +16,7 @@ $this->widget('zii.widgets.CListView', array(
     'itemsTagName' => 'ul',
     'id' => 'ajaxListView',
     'ajaxUpdate' => true,
-    'ajaxUrl' => 'update',
+    'ajaxUrl' => 'search/update',
     'summaryText' =>
         "<span id='title'>{start}-{end} отелей из {count}, найденных в <b>".
             $parameters['search_city']."</b> для проживания с <b>".

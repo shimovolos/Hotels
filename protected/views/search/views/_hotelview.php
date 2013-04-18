@@ -5,7 +5,7 @@ $price = 0;
 <tr style="height: 100px">
     <td style="padding: 1px; width: 150px; overflow: visible">
         <div style="height: 100px; overflow-y: hidden">
-            <a href="<? echo baseUrl().'/site/details?HotelCode='.$data->HotelCode?>">
+            <a href="<? echo baseUrl().'/details?HotelCode='.$data->HotelCode?>">
                 <? if(($images[0]) == false): ?>
                 <img class="thumb" style="width: 150px;" src="<? echo baseUrl().'/public/images/no_photo.png'?>"/>
                     <? else: ?>
@@ -15,7 +15,7 @@ $price = 0;
         </div>
     </td>
     <td style="vertical-align: top;width: 500px">
-        <a style="font-size: 22px; font-weight: 440" href="<? echo baseUrl().'/site/details?HotelCode='.$data->HotelCode?>"><?=$data->HotelName?></a><br/>
+        <a style="font-size: 22px; font-weight: 440" href="<? echo baseUrl().'/details?HotelCode='.$data->HotelCode?>"><?=$data->HotelName?></a><br/>
         <label>Адрес: <?=$data->HotelAddress?></label><br/>
         <?
         foreach((array)$hotels as $key=>$hotel ){
@@ -46,6 +46,6 @@ $price = 0;
                 }
             ?>
         </label><br/>
-        <a class="button" href="<?=baseUrl().'/site/details?HotelCode='.$data->HotelCode?>">подробнее</a>
+        <a class="button" href="<?=baseUrl().'/details?HotelCode='.$data->HotelCode?>">подробнее</a>
     </td>
 </tr>
