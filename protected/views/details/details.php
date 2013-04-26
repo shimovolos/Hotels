@@ -1,4 +1,5 @@
 <?
+registerCss('/public/css/places.css');
 Yii::app()->getClientScript()->registerCoreScript('jquery.ui');
 registerCss('/public/css/jquery.ui.min.css')
 ?>
@@ -8,7 +9,7 @@ registerCss('/public/css/jquery.ui.min.css')
     });
 </script>
 
-<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=<?php echo Yii::app()->params['GOOGLE_MAPS_API_KEY']; ?>&sensor=true&language=ru">
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=<?php echo Yii::app()->params['GOOGLE_MAPS_API_KEY']; ?>&sensor=true&language=ru&libraries=places">
 </script>
 
 <?php
@@ -149,6 +150,58 @@ if(!isset($hotelsCode[$key-1])){
 
     </div>
     </body>
+    <div class="actions">
+<!--            <input hidden="" id="gmap_keyword" type="text" name="gmap_keyword" />-->
+        <div class="buttons">
+            <label for="gmap_type">Тип места:</label>
+            <select id="gmap_type">
+                <option value="airport">Аэропорт</option>
+                <option value="book_store">Книжные магазины</option>
+                <option value="church">Церкви,храмы</option>
+                <option value="liquor_store">Винные магазины</option>
+                <option value="clothing_store">Магазины одежды</option>
+                <option value="convenience_store">Продуктовые магазины</option>
+                <option value="hardware_store">Хозяйственные магазины</option>
+                <option value="doctor">Частные клиники</option>
+                <option value="library">Библиотеки</option>
+                <option value="movie_theater">Кинотеатры</option>
+                <option value="museum">Музеи</option>
+                <option value="night_club">Ночные клубы</option>
+                <option value="pharmacy">Аптеки</option>
+                <option value="post_office">Почтовое отделение</option>
+                <option value="shopping_mall">Торговый центр</option>
+                <option value="art_gallery">Галереи</option>
+                <option value="zoo">Зоопарки</option>
+                <option value="atm">Банкоматы</option>
+                <option value="bank">Банк</option>
+                <option value="park">Парки/места отдыха</option>
+                <option value="bar">Бар</option>
+                <option value="restaurant">Ресторан</option>
+                <option value="cafe">Кафе</option>
+                <option value="food">Закусочные</option>
+                <option value="hospital">Больница</option>
+                <option value="police">Полиция</option>
+                <option value="train_station">Вокзал ж/д</option>
+                <option value="bus_station">Автобусная остановка</option>
+                <option value="local_government_office">Правительственные учреждения</option>
+                <option value="establishment">Государственные заведения</option>
+            </select>
+        </div>
+        <div class="buttons">
+            <label for="gmap_radius">Радиус (м):</label>
+            <select id="gmap_radius">
+                <option value="500">500</option>
+                <option value="1000">1000</option>
+                <option value="1500">1500</option>
+                <option value="3000">3000</option>
+                <option value="5000">5000</option>
+            </select>
+        </div>
+        <input type="hidden" id="lat" name="lat" value="55.755786" />
+        <input type="hidden" id="lng" name="lng" value="37.617633" />
+        <div class="buttons" onclick="findPlaces(); return false;">Найти организации</div>
+        <div class="buttons" onclick="clearOverlays(); return false;">Очистить</div>
+    </div>
 </div>
 
 <div id="tabs-2">
